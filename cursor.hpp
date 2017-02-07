@@ -45,6 +45,7 @@ private:
 
 class Cursor
 {
+	friend class TextEditorCore;
 	position m_cursor;
 	enum class mode : bool
 	{

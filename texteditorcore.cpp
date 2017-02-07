@@ -6,7 +6,7 @@ const char END_OF_LINE = '\n';
 
 using namespace  errorMessage;
 
-TextEditorCore::TextEditorCore() : container{ DEFAULT_DOCUMENT_SIZE }, cursor{std::make_unique<Cursor>()}
+TextEditorCore::TextEditorCore() : m_container{ DEFAULT_DOCUMENT_SIZE }, m_cursor{std::make_unique<Cursor>()}
 {}
 
 TextEditorCore::TextEditorCore( std::istream & stream): TextEditorCore()
@@ -16,7 +16,7 @@ TextEditorCore::TextEditorCore( std::istream & stream): TextEditorCore()
 	while( !stream.eof() )
 	{
 		std::getline(stream, tempLine, END_OF_LINE);
-		container.push_back(tempLine);
+		m_container.push_back(tempLine);
 		tempLine.clear();
 	}
 	/* Если загружен пустой файл - я это ошибкой не считаю,
@@ -26,36 +26,36 @@ TextEditorCore::TextEditorCore( std::istream & stream): TextEditorCore()
 
 TextEditorCore& TextEditorCore::cursorLeft()
 {
-	cursor->cursorLeft(container);
+	m_cursor->cursorLeft(m_container);
 	return *this;
 }
 
 TextEditorCore & TextEditorCore::cursorRight()
 {
-	cursor->cursorRight(container);
+	m_cursor->cursorRight(m_container);
 	return *this;
 }
 
 TextEditorCore & TextEditorCore::cursorDown()
 {
-	cursor->cursorDown(container);
+	m_cursor->cursorDown(m_container);
 	return *this;
 }
 
 TextEditorCore & TextEditorCore::cursorUp()
 {
-	cursor->cursorUp(container);
+	m_cursor->cursorUp(m_container);
 	return *this;
 }
 
 TextEditorCore & TextEditorCore::setCursor(unsigned row, unsigned col)
 {
-	cursor->setCursor(row, col, container);
+	m_cursor->setCursor(row, col, m_container);
 	return *this;
 }
 
 TextEditorCore & TextEditorCore::setCursor(const position & pos)
 {
-	cursor->setCursor(pos, container);
+	m_cursor->setCursor(pos, m_container);
 	return *this;
 }

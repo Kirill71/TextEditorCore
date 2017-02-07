@@ -5,10 +5,8 @@
 #include<memory>
 #include"cursor.hpp"
 
-
 class TextEditorCore {
-	// I think about insertion in middle of sequense and I think about list<T>
-	
+
 public:
 	TextEditorCore();
 	explicit TextEditorCore(std::istream& stream);
@@ -23,7 +21,7 @@ public:
 	// coursor method
 	const position& getCoursorPos() const noexcept
 	{
-		return cursor->getCoursorPos();
+		return m_cursor->getCoursorPos();
 	}
 	TextEditorCore& cursorLeft();
 	TextEditorCore& cursorRight();
@@ -35,8 +33,8 @@ public:
 	
 	
 private:
-	std::unique_ptr<Cursor> cursor;
-	Container container;
+	std::unique_ptr<Cursor> m_cursor;
+	Container m_container;
 };
 
 #endif // !TEXT_EDITOR_CORE_HPP
