@@ -29,6 +29,7 @@ public:
 	TextEditorCore& cursorUp();
 	TextEditorCore& setCursor(unsigned row, unsigned col);
 	TextEditorCore& setCursor(const position& pos);
+	TextEditorCore& write(std::ostream& stream);
 
 	
 	

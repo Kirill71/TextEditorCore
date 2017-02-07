@@ -1,7 +1,6 @@
 #include "cursor.hpp"
 
-Cursor::Cursor() : m_cursor{}, m_currentMode{ mode::Edit }, m_selection{}, m_find{}
-{}
+Cursor::Cursor() : Cursor(0,0) {}
 
 Cursor::Cursor(unsigned row, unsigned col) : m_cursor{row,col}, m_currentMode{ mode::Edit }, m_selection{}, m_find{} {}
 
@@ -32,9 +31,7 @@ void Cursor::cursorRight(const Container& container)
 		cursorDown(container);
 		cursor.m_col = 0;
 	}
-
 }
-
 
 //void Cursor::genericCursorUpDown(bool expression, const Container & container, const std::function<void(unsigned& row)>& cursorAction)
 //{

@@ -1,24 +1,17 @@
 #include "texteditorcore.hpp"
-/* Базовый размер документа,
-чтобы не делать частые перевыделения памяти, устанавливаю размер в 1000 элементов.*/
-const unsigned DEFAULT_DOCUMENT_SIZE = 1000;
-const char END_OF_LINE = '\n';
-
-using namespace  errorMessage;
+#include<iterator>
 
 TextEditorCore::TextEditorCore() : m_container{ DEFAULT_DOCUMENT_SIZE }, m_cursor{std::make_unique<Cursor>()}
 {}
 
-TextEditorCore::TextEditorCore( std::istream & stream): TextEditorCore()
+TextEditorCore::TextEditorCore(std::istream & stream) : TextEditorCore()
 {
-	//TODO: подумать про возможность добавление getline в условие цикла.
-	std::string tempLine;
-	while( !stream.eof() )
-	{
-		std::getline(stream, tempLine, END_OF_LINE);
-		m_container.push_back(tempLine);
-		tempLine.clear();
-	}
+	// противоречит SOLIDу, но да ладно.P.S. Я бы метод чтения и записи в поток
+	//вынес в отдельный класс и сделал его частью ТеxtEditorCore 
+	m_container
+		.assign(( std::istream_iterator<std::string>{ stream }), 
+			std::istream_iterator<std::string>{});
+	
 	/* Если загружен пустой файл - я это ошибкой не считаю,
 	т.к открытие пустого документа,
 	поддерживают все известные мне тектовые редакторы.*/
@@ -30,32 +23,39 @@ TextEditorCore& TextEditorCore::cursorLeft()
 	return *this;
 }
 
-TextEditorCore & TextEditorCore::cursorRight()
+TextEditorCore& TextEditorCore::cursorRight()
 {
 	m_cursor->cursorRight(m_container);
 	return *this;
 }
 
-TextEditorCore & TextEditorCore::cursorDown()
+TextEditorCore& TextEditorCore::cursorDown()
 {
 	m_cursor->cursorDown(m_container);
 	return *this;
 }
 
-TextEditorCore & TextEditorCore::cursorUp()
+TextEditorCore& TextEditorCore::cursorUp()
 {
 	m_cursor->cursorUp(m_container);
 	return *this;
 }
 
-TextEditorCore & TextEditorCore::setCursor(unsigned row, unsigned col)
+TextEditorCore& TextEditorCore::setCursor(unsigned row, unsigned col)
 {
 	m_cursor->setCursor(row, col, m_container);
 	return *this;
 }
 
-TextEditorCore & TextEditorCore::setCursor(const position & pos)
+TextEditorCore& TextEditorCore::setCursor(const position & pos)
 {
 	m_cursor->setCursor(pos, m_container);
+	return *this;
+}
+
+TextEditorCore & TextEditorCore::write(std::ostream& stream)
+{  
+	std::copy(m_container.cbegin(), m_container.cend(),
+		std::ostream_iterator<std::string>(stream, END_OF_LINE));
 	return *this;
 }

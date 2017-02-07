@@ -7,7 +7,7 @@
 
 struct position
 {
-	position() : m_row{ 0 }, m_col{ 0 } {}
+	position() : position(0,0){}
 
 	position(unsigned row_, unsigned col_) : m_row{ validate(row_) }, m_col{ validate(col_) } {}
 	// copy operations
@@ -39,7 +39,7 @@ struct position
 private:
 	unsigned validate(unsigned param) const noexcept
 	{
-		return param > 0 ? param : 0;
+		return param >= 0 ? param : 0;
 	}
 };
 
@@ -90,9 +90,4 @@ public:
 	void setCursor(unsigned row, unsigned col, const Container& container);
 	void setCursor(const position& pos, const Container& container);
 };
-
-
-
 #endif // !CURSOR_HPP
-
-
