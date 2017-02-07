@@ -39,7 +39,7 @@ public:
 
 
 	TextEditorCore();
-	explicit TextEditorCore(const std::istream&);
+	explicit TextEditorCore(std::istream& stream);
 	// copy operations
 	TextEditorCore(const TextEditorCore&) = delete;
 	TextEditorCore& operator=(const TextEditorCore&) = delete;
