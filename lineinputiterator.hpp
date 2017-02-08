@@ -1,9 +1,10 @@
-#ifndef LINEINPUT_ITERATOR_HPP
-#define LINEINPUT_ITERATOR_HPP
+#ifndef LINE_INPUT_ITERATOR_HPP
+#define LINE_INPUT_ITERATOR_HPP
 
 #include <iterator>
 #include <istream>
 #include <string>
+#include"message.hpp"
 
 namespace customIterator {
 
@@ -16,14 +17,14 @@ namespace customIterator {
 		typedef typename StringT::traits_type traits_type;
 		typedef std::basic_istream<char_type, traits_type> istream_type;
 
-		LineInputIterator() : is{ nullptr } {}
-		LineInputIterator(istream_type& is) : is{ &is } {}
+		LineInputIterator() : is{ nullptr }, value{} {}
+		explicit LineInputIterator(istream_type& is) : is{ &is }, value{} { std::getline(*is, value) }
 		const StringT& operator*() const { return value; }
 		const StringT* operator->() const { return &value; }
-		LineInputIterator<StringT>& operator++()
+		virtual LineInputIterator<StringT>& operator++()
 		{
-			if (is && !getline(*is, value)) {
-				is = nullptr;
+			if (is && !std::getline(*is, value)) {
+					is = nullptr;
 			}
 			return *this;
 		}
@@ -41,9 +42,33 @@ namespace customIterator {
 		{
 			return !(*this != other);
 		}
-	private:
+	protected:
 		istream_type* is;
 		StringT value;
+	};
+
+
+
+	template <class StringT = std::string>
+	class LineInsertIterator :
+		public LineInputIterator<StringT> 
+	{
+	public:
+		LineInsertIterator() : LineInputIterator(), new_line{} {}
+		explicit LineInsertIterator(istream_type& is, bool new_line_) : LineInputIterator(), is{ &is }, new_line{new_line_} { std::getline(is, value) }
+		LineInputIterator<StringT>& operator++() override
+		{
+			if (is->eof()) {
+				is = nullptr;
+			}
+			if (is && !std::getline(*is, value) && new_line) {
+				new_line = false;
+				value = END_OF_LINE_CHAR;
+			}
+			return *this;
+		}
+	private:
+		bool new_line;
 	};
 } // end ub
 #endif
