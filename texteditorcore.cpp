@@ -9,8 +9,8 @@ TextEditorCore::TextEditorCore(std::istream & stream) : TextEditorCore()
 	// противоречит SOLIDу, но да ладно.P.S. Я бы метод чтения и записи в поток
 	//вынес в отдельный класс и сделал его частью ТеxtEditorCore 
 	m_container
-		.assign(( std::istream_iterator<std::string>{ stream }), 
-			std::istream_iterator<std::string>{});
+		.assign(( customIterator::LineInputIterator<>{ stream }), 
+			customIterator::LineInputIterator<>{});
 	
 	/* Если загружен пустой файл - я это ошибкой не считаю,
 	т.к открытие пустого документа,

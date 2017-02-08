@@ -4,6 +4,7 @@
 #include<istream>
 #include<memory>
 #include"cursor.hpp"
+#include"lineinputiterator.hpp"
 
 class TextEditorCore {
 
@@ -31,8 +32,6 @@ public:
 	TextEditorCore& setCursor(const position& pos);
 	TextEditorCore& write(std::ostream& stream);
 
-	
-	
 private:
 	std::unique_ptr<Cursor> m_cursor;
 	Container m_container;
