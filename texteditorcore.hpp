@@ -27,6 +27,10 @@ public:
 	{
 		return m_cursor->getCoursorPos();
 	}
+	const position& maxPosition() const noexcept 
+	{
+		m_cursor->maxPosition(m_container);
+	}
 	TextEditorCore& cursorLeft();
 	TextEditorCore& cursorRight();
 	TextEditorCore& cursorDown();
@@ -39,13 +43,17 @@ public:
 	TextEditorCore& insert(char character);
 	TextEditorCore& insert(const char* c_str);
 	TextEditorCore& insert( std::string& str);
+	// TODO: range insertion and removing
 private:
 	std::unique_ptr<Cursor> m_cursor;
 	Container m_container;
 
 	//private methods
-	void insertText(const position& pos, std::string& text) noexcept;
-	void deleteText(const position& from, const position& to) noexcept;
+	void insertText(const position& pos, std::string& text);
+	void deleteText(const position& from, const position& to);
+	void deleteRow(unsigned row) noexcept; 
+	void deleteRowTextFragment(const position& from);
+	void deleteColTextFragment(const position& to);
 };
 
 #endif // !TEXT_EDITOR_CORE_HPP

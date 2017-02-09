@@ -86,8 +86,10 @@ TextEditorCore & TextEditorCore::insert( std::string & str)
 
 
 // private methods
-void TextEditorCore::insertText(const position& pos,  std::string& text) noexcept
+void TextEditorCore::insertText(const position& pos,  std::string& text) 
 {
+	if (pos > maxPosition())
+		throw std::logic_error(errorMessage::INVALID_POSITION);
 	if (text.empty()) // empty input string => return
 		return;
 
@@ -120,3 +122,43 @@ void TextEditorCore::insertText(const position& pos,  std::string& text) noexcep
 	m_container.at(current_row).append(end_of_current_string);
 	setCursor(position(current_row,m_container.at(current_row).length()));
 }
+
+void TextEditorCore::deleteText(const position & from, const position & to) {
+	if (from > maxPosition() || to > maxPosition())
+		throw std::logic_error(errorMessage::INVALID_POSITION);
+
+	if (from == to) // nothing delete
+		return;
+
+	if (from.m_row == to.m_row) {
+		m_container.at(from.m_row).erase(from.m_col, to.m_col - from.m_col);
+	}
+	else {
+		deleteRowTextFragment(from);
+		deleteColTextFragment(to);
+	}
+	if ((to - from) > 1)   
+		m_container.erase(m_container.begin() + from.m_row + 1, m_container.begin() + to.m_row - 1);
+}
+
+void TextEditorCore::deleteRow(unsigned row) noexcept{
+	m_container.erase(m_container.cbegin() + row);
+}
+
+void TextEditorCore::deleteRowTextFragment(const position& from) {
+	long from_row_len = m_container.at(from.m_row).length();
+
+	if (from.m_col == 0) // col == zero - delete all line.
+		deleteRow(from.m_row); 
+	else 
+		m_container.at(from.m_row).erase(from.m_col, from_row_len - from.m_col);
+}
+
+void TextEditorCore::deleteColTextFragment(const position & to){
+	if (to.m_col == m_container.at(to.m_row).length()) // delete all line from zero to end
+		deleteRow(to.m_row); // removing to end of line(from end position)
+	else 
+		m_container.at(to.m_row).erase(0, to.m_col);
+}
+
+

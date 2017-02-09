@@ -7,8 +7,7 @@ Cursor::Cursor(unsigned row, unsigned col) : m_cursor{row,col}, m_currentMode{ m
 // проверять индекс через at() смысла нет, 
 //так как возвращаемый getPositionObject() курсор, всегда меньше или равен максимально возможной позиции.
 
-void Cursor::cursorLeft(const Container& container)
-{
+void Cursor::cursorLeft(const Container& container){
 	auto& cursor{ getPositionObject() };
 
 	if (cursor.m_col > 0)
