@@ -43,7 +43,15 @@ public:
 	TextEditorCore& insert(char character);
 	TextEditorCore& insert(const char* c_str);
 	TextEditorCore& insert( std::string& str);
+	TextEditorCore& removeSelectedText();
 	// TODO: range insertion and removing
+
+	// some specified keys
+	TextEditorCore& HomeKeyPressed();
+	TextEditorCore& EndKeyPressed();
+	TextEditorCore& CtrlHomeKeyPressed();
+	TextEditorCore& CtrlEndKeyPressed();
+
 private:
 	std::unique_ptr<Cursor> m_cursor;
 	Container m_container;
@@ -54,6 +62,8 @@ private:
 	void deleteRow(unsigned row) noexcept; 
 	void deleteRowTextFragment(const position& from);
 	void deleteColTextFragment(const position& to);
+	void getEndPartOfChangeString(std::string& text, std::string& end_of_current_string, const position& pos);
+	void addFirstLineOfNewText(std::string & text, const position& pos);
 };
 
 #endif // !TEXT_EDITOR_CORE_HPP

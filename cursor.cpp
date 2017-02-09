@@ -1,5 +1,20 @@
 #include "cursor.hpp"
 
+void Cursor::reverseSelection()
+{ 
+	/*These variables are created more 
+	for readability and understanding, 
+	rather than for need.*/
+	unsigned from_row{ m_selection.first.m_row };
+	unsigned from_col{ m_selection.first.m_col };
+	unsigned to_row{ m_selection.second.m_row };
+	unsigned to_col{ m_selection.second.m_col };
+
+	if (from_row > to_row ||
+		(from_row == to_row  && from_col > to_col)) 
+		std::swap(m_selection.first, m_selection.second);//swap from with to
+}
+
 Cursor::Cursor() : Cursor(0,0) {}
 
 Cursor::Cursor(unsigned row, unsigned col) : m_cursor{row,col}, m_currentMode{ mode::Edit }, m_selection{}, m_find{} {}
@@ -73,4 +88,20 @@ void Cursor::setCursor(const position& pos, const Container& container)
 		cursor = pos;
 	else
 		throw std::logic_error(errorMessage::INVALID_POSITION);
+}
+
+void Cursor::startSelection(){
+	m_currentMode = mode::Select;
+	// selection begin == selection end and equils current cursor position;
+	m_selection.first = m_selection.second = m_cursor;
+}
+
+void Cursor::finishSelection(){
+	m_currentMode = mode::Edit;
+
+	m_cursor = m_selection.second;
+}
+
+void Cursor::resetSelection(){
+	startSelection();
 }

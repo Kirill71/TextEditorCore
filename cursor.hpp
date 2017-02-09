@@ -50,7 +50,7 @@ class Cursor{
 	// fields
 	mode m_currentMode;
 	// first == from, second == to
-	std::pair<position, position> m_selection;
+	std::pair<position /*from*/, position /*to*/> m_selection;
 	//first == pos, second == searchString
 	std::pair<position, std::string> m_find;
 	// methods
@@ -60,6 +60,7 @@ class Cursor{
 		return (m_currentMode == mode::Edit) ? m_cursor : m_selection.first;
 	}
 	//void genericCursorUpDown(bool expressionFirst, const Container& container, const std::function<void(unsigned& row)>& cursorAction);
+	void reverseSelection();
 public:
 	Cursor();
 	Cursor(unsigned row, unsigned col);
@@ -81,5 +82,10 @@ public:
 	void cursorUp(const Container& container);
 	void setCursor(unsigned row, unsigned col, const Container& container);
 	void setCursor(const position& pos, const Container& container);
+	// selection
+	void startSelection();
+	void finishSelection();
+	void resetSelection();
+
 };
 #endif // !CURSOR_HPP
