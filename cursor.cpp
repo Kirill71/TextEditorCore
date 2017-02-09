@@ -1,23 +1,15 @@
 #include "cursor.hpp"
 
-void Cursor::reverseSelection()
+void Cursor::cancelReverseSelection()
 { 
-	/*These variables are created more 
-	for readability and understanding, 
-	rather than for need.*/
-	unsigned from_row{ m_selection.first.m_row };
-	unsigned from_col{ m_selection.first.m_col };
-	unsigned to_row{ m_selection.second.m_row };
-	unsigned to_col{ m_selection.second.m_col };
-
-	if (from_row > to_row ||
-		(from_row == to_row  && from_col > to_col)) 
-		std::swap(m_selection.first, m_selection.second);//swap from with to
+	if (m_selectedText.from().m_row > m_selectedText.to().m_row ||
+		(m_selectedText.from().m_row == m_selectedText.to().m_row  && m_selectedText.from().m_col > m_selectedText.to().m_col))
+		std::swap(m_selectedText.from(),m_selectedText.to());//swap from with to
 }
 
 Cursor::Cursor() : Cursor(0,0) {}
 
-Cursor::Cursor(unsigned row, unsigned col) : m_cursor{row,col}, m_currentMode{ mode::Edit }, m_selection{}, m_find{} {}
+Cursor::Cursor(unsigned row, unsigned col) : m_cursor{ row,col }, m_currentMode{ mode::Edit }, m_selectedText{}, m_find{} {}
 
 // проверять индекс через at() смысла нет, 
 //так как возвращаемый getPositionObject() курсор, всегда меньше или равен максимально возможной позиции.
@@ -90,18 +82,43 @@ void Cursor::setCursor(const position& pos, const Container& container)
 		throw std::logic_error(errorMessage::INVALID_POSITION);
 }
 
-void Cursor::startSelection(){
+void Cursor::startSelection() noexcept {
 	m_currentMode = mode::Select;
 	// selection begin == selection end and equils current cursor position;
-	m_selection.first = m_selection.second = m_cursor;
+	m_selectedText.from() = m_selectedText.to() = m_cursor;
 }
 
-void Cursor::finishSelection(){
+void Cursor::finishSelection() noexcept {
 	m_currentMode = mode::Edit;
-
-	m_cursor = m_selection.second;
+	m_cursor = m_selectedText.to();
 }
-
 void Cursor::resetSelection(){
 	startSelection();
+}
+
+std::string Cursor::getSelectedText(const Container& container) noexcept
+{
+	//	TODO: not beautiful!!!!! I want improve it in future. 
+	cancelReverseSelection();
+	std::string selectedText{};
+	   // if selected one row, but no one columns, get this substr
+	if ((m_selectedText.from().m_row == m_selectedText.to().m_row )&& (m_selectedText.from() != m_selectedText.to())) 
+			selectedText
+				.assign(container[m_selectedText.from().m_row]
+					.substr(m_selectedText.from().m_col, m_selectedText.to().m_col - m_selectedText.from().m_col));
+	else {
+		if (m_selectedText.from().m_row != m_selectedText.to().m_row) {
+			selectedText
+				.append(container[m_selectedText.from().m_row]
+					.substr(m_selectedText.from().m_col,
+						container[m_selectedText.from().m_row].length() - m_selectedText.from().m_col)
+							.append(END_OF_LINE));
+		}
+
+		if ((m_selectedText.to() - m_selectedText.from()) > 1) {
+			for (auto row = (m_selectedText.from().m_row + 1); row < m_selectedText.to().m_row; ++row)
+				selectedText.append(container[row]).append(END_OF_LINE);
+		};
+	}
+	return selectedText;
 }

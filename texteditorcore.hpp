@@ -52,6 +52,12 @@ public:
 	TextEditorCore& CtrlHomeKeyPressed();
 	TextEditorCore& CtrlEndKeyPressed();
 
+	// selectedText
+	TextEditorCore& startSelection() noexcept;
+	TextEditorCore& finishSelection() noexcept;
+	TextEditorCore& resetSelection() noexcept;
+	std::string getSelectedText() noexcept;
+
 private:
 	std::unique_ptr<Cursor> m_cursor;
 	Container m_container;

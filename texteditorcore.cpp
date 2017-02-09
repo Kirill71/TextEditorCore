@@ -106,6 +106,29 @@ TextEditorCore & TextEditorCore::CtrlEndKeyPressed()
 	return *this;
 }
 
+TextEditorCore & TextEditorCore::startSelection() noexcept
+{
+	m_cursor->startSelection();
+	return *this;
+}
+
+TextEditorCore & TextEditorCore::finishSelection() noexcept
+{
+	m_cursor->finishSelection();
+	return *this;
+}
+
+TextEditorCore & TextEditorCore::resetSelection() noexcept
+{
+	m_cursor->resetSelection();
+	return *this;
+}
+
+std::string TextEditorCore::getSelectedText() noexcept
+{
+	return m_cursor->getSelectedText(m_container);
+}
+
 
 
 

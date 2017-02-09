@@ -50,17 +50,29 @@ class Cursor{
 	// fields
 	mode m_currentMode;
 	// first == from, second == to
-	std::pair<position /*from*/, position /*to*/> m_selection;
+	struct selectedText{
+	private:
+		std::pair<position /*from*/, position /*to*/> m_selection;
+	public:
+		selectedText() : m_selection{} {};
+		position& from() {
+			return m_selection.first;
+		}
+		position& to() {
+			return m_selection.second;
+		}
+	};
+	selectedText m_selectedText;
 	//first == pos, second == searchString
 	std::pair<position, std::string> m_find;
 	// methods
 
 	// if mode == Edit return coursor, if Select return first position of selection;
 	position& getPositionObject() noexcept{
-		return (m_currentMode == mode::Edit) ? m_cursor : m_selection.first;
+		return (m_currentMode == mode::Edit) ? m_cursor : m_selectedText.from();
 	}
 	//void genericCursorUpDown(bool expressionFirst, const Container& container, const std::function<void(unsigned& row)>& cursorAction);
-	void reverseSelection();
+	void cancelReverseSelection();
 public:
 	Cursor();
 	Cursor(unsigned row, unsigned col);
@@ -83,9 +95,11 @@ public:
 	void setCursor(unsigned row, unsigned col, const Container& container);
 	void setCursor(const position& pos, const Container& container);
 	// selection
-	void startSelection();
-	void finishSelection();
-	void resetSelection();
+	void startSelection() noexcept;
+	void finishSelection() noexcept;
+	void resetSelection() noexcept;
+	std::string getSelectedText(const Container& container) noexcept;
+
 
 };
 #endif // !CURSOR_HPP
