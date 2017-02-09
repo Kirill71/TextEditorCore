@@ -75,8 +75,8 @@ TextEditorCore & TextEditorCore::insert( std::string & str){
 
 TextEditorCore & TextEditorCore::removeSelectedText()
 {
-	deleteText(/*from*/m_cursor->m_selection.first, /*to*/ m_cursor->m_selection.second);
-	m_cursor->m_selection.second = m_cursor->m_selection.first; // to = from after deleting;
+	deleteText(m_cursor->m_selectedText.from(),  m_cursor->m_selectedText.to());
+	m_cursor->m_selectedText.to() = m_cursor->m_selectedText.from(); 
 	return *this;
 }
 
@@ -128,8 +128,6 @@ std::string TextEditorCore::getSelectedText() noexcept
 {
 	return m_cursor->getSelectedText(m_container);
 }
-
-
 
 
 // private methods
