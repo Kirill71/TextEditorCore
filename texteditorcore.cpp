@@ -66,14 +66,22 @@ TextEditorCore & TextEditorCore::write(std::ostream& stream)
 }
 
 // insertion methods
-TextEditorCore & TextEditorCore::insert(char)
+TextEditorCore & TextEditorCore::insert(char character)
 {
-	// TODO: вставьте здесь оператор return
+	insertText(m_cursor->getCoursorPos(), std::string{ character });
+	return *this;
 }
 
-TextEditorCore & TextEditorCore::insert(const char *)
+TextEditorCore & TextEditorCore::insert(const char * c_str)
 {
-	// TODO: вставьте здесь оператор return
+	insertText(m_cursor->getCoursorPos(), std::string{ c_str });
+	return *this;
+}
+
+TextEditorCore & TextEditorCore::insert( std::string & str)
+{
+	insertText(m_cursor->getCoursorPos(), str);
+	return *this;
 }
 
 
@@ -92,7 +100,7 @@ void TextEditorCore::insertText(const position& pos,  std::string& text) noexcep
 	// add this line in container on end(variable) position
 	m_container.at(pos.m_row).append(firstLine);
 	// delete first line from  input text
-	text.erase(FIRST_INDEX, firstLine.length());
+	text.erase(FIRST_INDEX, firstLine.length() + 1);
 
 
 	bool is_new_line_need = text.back() == END_OF_LINE_CHAR;
@@ -103,9 +111,9 @@ void TextEditorCore::insertText(const position& pos,  std::string& text) noexcep
 	m_container.insert(m_container.cbegin() + pos.m_row, begin, end);
 	// row position after insertion input text
 
-	unsigned added_rows{
+	unsigned number_of_added_rows{
 		std::distance(customIterator::LineInsertIterator<>(std::stringstream{ text},is_new_line_need),
-		customIterator::LineInsertIterator<>()) }, current_row{ pos.m_row + added_rows };
+		customIterator::LineInsertIterator<>()) }, current_row{ pos.m_row + number_of_added_rows };
 	// end string append to
 
 

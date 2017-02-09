@@ -47,15 +47,13 @@ namespace customIterator {
 		StringT value;
 	};
 
-
-
 	template <class StringT = std::string>
 	class LineInsertIterator :
 		public LineInputIterator<StringT> 
 	{
 	public:
 		LineInsertIterator() : LineInputIterator(), new_line{} {}
-		explicit LineInsertIterator(istream_type& is, bool new_line_) : LineInputIterator(), is{ &is }, new_line{new_line_} { std::getline(is, value) }
+		explicit LineInsertIterator(istream_type& is, bool new_line_) : LineInputIterator(), is{ &is }, new_line{new_line_} { }
 		LineInputIterator<StringT>& operator++() override
 		{
 			if (is->eof()) {

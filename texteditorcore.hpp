@@ -36,15 +36,16 @@ public:
 	TextEditorCore& write(std::ostream& stream);
 
 	// insertion 
-	TextEditorCore& insert(char);
-	TextEditorCore& insert(const char*);
+	TextEditorCore& insert(char character);
+	TextEditorCore& insert(const char* c_str);
+	TextEditorCore& insert( std::string& str);
 private:
 	std::unique_ptr<Cursor> m_cursor;
 	Container m_container;
 
 	//private methods
 	void insertText(const position& pos, std::string& text) noexcept;
+	void deleteText(const position& from, const position& to) noexcept;
 };
 
 #endif // !TEXT_EDITOR_CORE_HPP
-
