@@ -16,7 +16,6 @@ const position & Finder::find_base(const std::string & str, const position & max
 		return  find_pos->m_col != std::string::npos;
 	};
 
-	
 	auto it = std::find_if(container.begin() + pos.m_row , container.end(),
 		std::bind(&search_predicate, std::placeholders::_1,
 			str,&m_findText.lastPosition()));
