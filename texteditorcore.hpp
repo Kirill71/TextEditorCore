@@ -5,10 +5,10 @@
 #include<istream>
 #include<memory>
 #include"cursor.hpp"
+#include"finder.hpp"
 #include"lineinputiterator.hpp"
 
 class TextEditorCore {
-
 public:
 	TextEditorCore();
 	explicit TextEditorCore(std::istream& stream);
@@ -21,8 +21,6 @@ public:
 	~TextEditorCore() = default;
 
 	// coursor methods
-
-
 	const position& getCoursorPos() const noexcept
 	{
 		return m_cursor->getCoursorPos();
@@ -58,8 +56,14 @@ public:
 	TextEditorCore& resetSelection() noexcept;
 	std::string getSelectedText() noexcept;
 
+	// find Methods
+	const position& find(const char* c_str);
+	const position& find(const std::string& str);
+	const position& findNext();
+
 private:
 	std::unique_ptr<Cursor> m_cursor;
+	std::unique_ptr<Finder> m_finder;
 	Container m_container;
 
 	//private methods
@@ -71,5 +75,4 @@ private:
 	void getEndPartOfChangeString(std::string& text, std::string& end_of_current_string, const position& pos);
 	void addFirstLineOfNewText(std::string & text, const position& pos);
 };
-
 #endif // !TEXT_EDITOR_CORE_HPP

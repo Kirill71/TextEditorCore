@@ -4,7 +4,8 @@
 #include<list>
 TextEditorCore::TextEditorCore() 
 	: m_container{ DEFAULT_DOCUMENT_SIZE },
-	m_cursor{std::make_unique<Cursor>()}
+	m_cursor{std::make_unique<Cursor>()},
+	m_finder{std::make_unique<Finder>()}
 {}
 
 TextEditorCore::TextEditorCore(std::istream & stream) 
@@ -129,6 +130,20 @@ std::string TextEditorCore::getSelectedText() noexcept
 	return m_cursor->getSelectedText(m_container);
 }
 
+const position & TextEditorCore::find(const char * c_str)
+{
+	return m_finder->find(c_str, maxPosition(), m_container);
+}
+
+const position & TextEditorCore::find(const std::string & str)
+{
+	return m_finder->find(str, maxPosition(), m_container);
+}
+
+const position & TextEditorCore::findNext()
+{
+	return m_finder->findNext(maxPosition(), m_container);
+}
 
 // private methods
 void TextEditorCore::insertText(const position& pos,  std::string& text) {

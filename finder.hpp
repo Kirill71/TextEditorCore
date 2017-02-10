@@ -26,7 +26,6 @@ public:
 	const position& find(const char * c_str, const position& max_pos, const Container& container);
 	const position& find(const std::string& str, const position& max_pos, const Container& container, const position& pos = { 0,0 });
 	const position& findNext(const position& max_pos, const Container& container);
-	
 };
 #endif
 
