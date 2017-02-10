@@ -1,8 +1,11 @@
 #ifndef FINDER_HPP
 #define FINDER_HPP
 #include<string>
+#include<functional>
+#include<algorithm>
 #include"position.hpp"
 #include"message.hpp"
+
 class Finder
 {
 	struct findText {

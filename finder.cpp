@@ -4,17 +4,25 @@ const position & Finder::find_base(const std::string & str, const position & max
 {
 	if (str.empty())
 		throw std::logic_error(errorMessage::EMPTY_SEARCH_STRING);
-	unsigned  col{};
+
 	m_findText.searchString() = str;
-	m_findText.lastPosition() = position{ max_pos };
-	for (unsigned row {pos.m_row}; row < container.size(); ++row)
+
+	// predicate for algorithm find_if (lambda expression) 
+	auto search_predicate = [](const std::string& current_string,
+		const std::string& search_text, position* find_pos)
 	{
-		 col = container[row].find(str, /* for findNext()*/(row == pos.m_row) ? pos.m_col : 0);
-		 if (col != std::string::npos) {
-			 m_findText.lastPosition() = position{ row,col };
-			 break;
-		 }
-	}
+		++find_pos->m_row;
+		find_pos->m_col = current_string.find(search_text);
+		return  find_pos->m_col != std::string::npos;
+	};
+
+	auto it = std::find_if(container.begin(), container.end(),
+		std::bind(&search_predicate, std::placeholders::_1,
+			str,&m_findText.lastPosition()));
+
+	if (it == container.end()) 
+		m_findText.lastPosition() = max_pos;
+
 	return m_findText.lastPosition();
 }
 
