@@ -61,6 +61,14 @@ public:
 	const position& find(const std::string& str);
 	const position& findNext();
 
+	//  replace methods
+	bool replace(char old_char, char  new_char);
+	bool replace(const char* old_c_str, const char* new_c_str);
+	bool replace(const std::string& old_str, const std::string& new_str);
+	bool replaceAll(char old_char, char  new_char);
+	bool replaceAll(const char* old_c_str, const char* new_c_str);
+	bool replaceAll(const std::string& old_str, const std::string& new_str);
+
 private:
 	std::unique_ptr<Cursor> m_cursor;
 	std::unique_ptr<Finder> m_finder;
