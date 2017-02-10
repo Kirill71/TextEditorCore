@@ -15,6 +15,8 @@ const char* SPACE = " ";
 namespace errorMessage  
 {
 	const char* INVALID_POSITION = "Invalid position of cursor";
+	const char* EMPTY_SEARCH_STRING = "Empty search string";
+	const char* TEXT_NOT_FOUND = "Text not found";
 };
  
 #endif // !MESSAGE_HPP

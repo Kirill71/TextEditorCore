@@ -143,12 +143,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="cursor.hpp" />
+    <ClInclude Include="finder.hpp" />
     <ClInclude Include="lineinputiterator.hpp" />
     <ClInclude Include="message.hpp" />
+    <ClInclude Include="position.hpp" />
     <ClInclude Include="texteditorcore.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cursor.cpp" />
+    <ClCompile Include="finder.cpp" />
     <ClCompile Include="texteditorcore.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
