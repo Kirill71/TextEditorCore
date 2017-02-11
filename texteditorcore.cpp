@@ -64,11 +64,6 @@ TextEditorCore & TextEditorCore::insert(char character){
 	return *this;
 }
 
-TextEditorCore & TextEditorCore::insert(const char * c_str){
-	insertText(m_cursor->getCoursorPos(), std::string{ c_str });
-	return *this;
-}
-
 TextEditorCore & TextEditorCore::insert( std::string & str){
 	insertText(m_cursor->getCoursorPos(), str);
 	return *this;

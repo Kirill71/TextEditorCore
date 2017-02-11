@@ -38,9 +38,8 @@ public:
 	TextEditorCore& write(std::ostream& stream);
 
 	// insertion 
-	TextEditorCore& insert(char character);
+ /*deprecated*/	TextEditorCore& insert(char character);
 
-/*deprecated*/	TextEditorCore& insert(const char* c_str);
 	TextEditorCore& insert( std::string& str);
 	TextEditorCore& removeSelectedText();
 	// TODO: range insertion and removing
