@@ -5,7 +5,7 @@
 #include<istream>
 #include<memory>
 #include"cursor.hpp"
-#include"finder.hpp"
+#include"replacer.hpp"
 #include"lineinputiterator.hpp"
 
 class TextEditorCore {
@@ -62,14 +62,12 @@ public:
 	const position& findNext();
 
 	//  replace methods
-	bool replace(char old_char, char  new_char);
 	bool replace(const std::string& old_str, const std::string& new_str);
-	bool replaceAll(char old_char, char  new_char);
 	bool replaceAll(const std::string& old_str, const std::string& new_str);
 
 private:
 	std::unique_ptr<Cursor> m_cursor;
-	std::unique_ptr<Finder> m_finder;
+	std::unique_ptr<Replacer> m_finderReplacer;
 	Container m_container;
 
 	//private methods

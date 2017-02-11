@@ -8,8 +8,9 @@
 
 class Finder
 {
+protected:
 	struct findText {
-		findText() : m_find{} {}
+		findText() = default;
 		position& lastPosition() {
 			return m_find.first;
 		}
@@ -17,15 +18,17 @@ class Finder
 		std::string& searchString() {
 			return m_find.second;
 		}
-
 	private:
 		std::pair<position, std::string> m_find;
 	} m_findText;
-
 	const position& find_base(const std::string & str, const position & max_pos, const Container& container, const position & pos = { 0,0 });
 public:
-	Finder();
-	virtual ~Finder();
+	Finder() = default;
+	Finder(const Finder& rhs) = delete;
+	Finder& operator=(const Finder&) = delete;
+	Finder(const Finder&& rhs) = delete;
+	Finder& operator=(const Finder&&) = delete;
+	virtual ~Finder() = default;
 
 	const position& find(const std::string& str, const position& max_pos, const Container& container);
 	const position& findNext(const position& max_pos, const Container& container);

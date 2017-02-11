@@ -5,7 +5,7 @@
 TextEditorCore::TextEditorCore() 
 	: m_container{ DEFAULT_DOCUMENT_SIZE },
 	m_cursor{std::make_unique<Cursor>()},
-	m_finder{std::make_unique<Finder>()}
+	m_finderReplacer{std::make_unique<Replacer>()}
 {}
 
 TextEditorCore::TextEditorCore(std::istream & stream) 
@@ -132,12 +132,22 @@ std::string TextEditorCore::getSelectedText() noexcept
 
 const position & TextEditorCore::find(const std::string & str)
 {
-	return m_finder->find(str, maxPosition(), m_container);
+	return m_finderReplacer->find(str, maxPosition(), m_container);
 }
 
 const position & TextEditorCore::findNext()
 {
-	return m_finder->findNext(maxPosition(), m_container);
+	return m_finderReplacer->findNext(maxPosition(), m_container);
+}
+
+bool TextEditorCore::replace(const std::string & old_str, const std::string & new_str)
+{
+	return  m_finderReplacer->replace(old_str, new_str, maxPosition(), m_container);
+}
+
+bool TextEditorCore::replaceAll(const std::string & old_str, const std::string & new_str)
+{
+	return m_finderReplacer->replaceAll(old_str, new_str, maxPosition(), m_container);
 }
 
 // private methods

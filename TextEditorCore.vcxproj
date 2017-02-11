@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="cursor.cpp" />
     <ClCompile Include="finder.cpp" />
+    <ClCompile Include="replacer.cpp" />
     <ClCompile Include="texteditorcore.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

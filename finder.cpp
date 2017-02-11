@@ -2,8 +2,7 @@
 
 const position & Finder::find_base(const std::string & str, const position & max_pos, const Container& container, const position & pos = { 0,0 })
 {
-	if (str.empty())
-		throw std::logic_error(errorMessage::EMPTY_SEARCH_STRING);
+	checkEmptyString(str, errorMessage::EMPTY_SEARCH_STRING);
 
 	m_findText.searchString() = str;
 	m_findText.lastPosition() = pos;
@@ -26,10 +25,6 @@ const position & Finder::find_base(const std::string & str, const position & max
 	return m_findText.lastPosition();
 }
 
-Finder::Finder() : m_findText{} {}
-
-Finder::~Finder(){}
-
 const position & Finder::find(const std::string & str, const position & max_pos, const Container & container)
 {
 	position const &  find_pos{ find_base(str, max_pos, container) };
@@ -42,4 +37,3 @@ const position & Finder::findNext(const position& max_pos, const Container& cont
 		position{ m_findText.lastPosition().m_row,
 		m_findText.lastPosition().m_col + m_findText.searchString().length()});
 }
-
