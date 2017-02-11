@@ -53,7 +53,7 @@ namespace customIterator {
 	{
 	public:
 		LineInsertIterator() : LineInputIterator(), new_line{} {}
-		explicit LineInsertIterator(istream_type& is, bool new_line_) : LineInputIterator(), is{ &is }, new_line{new_line_} { }
+		explicit LineInsertIterator(istream_type& _is, bool new_line_) : is{ &_is }, new_line{new_line_} { }
 		LineInputIterator<StringT>& operator++() override
 		{
 			if (is->eof()) {

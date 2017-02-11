@@ -9,7 +9,7 @@ void Cursor::cancelReverseSelection()
 
 Cursor::Cursor() : Cursor(0,0) {}
 
-Cursor::Cursor(unsigned row, unsigned col) : m_cursor{ row,col }, m_currentMode{ mode::Edit }, m_selectedText{}, m_find{} {}
+Cursor::Cursor(unsigned row, unsigned col) : m_cursor{ row,col }, m_currentMode{ mode::Edit }, m_selectedText{} {}
 
 // проверять индекс через at() смысла нет, 
 //так как возвращаемый getPositionObject() курсор, всегда меньше или равен максимально возможной позиции.
@@ -92,7 +92,7 @@ void Cursor::finishSelection() noexcept {
 	m_currentMode = mode::Edit;
 	m_cursor = m_selectedText.to();
 }
-void Cursor::resetSelection(){
+void Cursor::resetSelection() noexcept{
 	startSelection();
 }
 

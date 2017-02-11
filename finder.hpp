@@ -8,16 +8,23 @@
 
 class Finder
 {
+	 // tested
+	bool searchPredicate(const std::string& current_string,
+		const std::string& search_text, position* find_pos) noexcept;
 protected:
 	struct findText {
 		findText() = default;
-		position& lastPosition() {
+		position& lastPosition() noexcept{
 			return m_find.first;
 		}
 
-		std::string& searchString() {
+		std::string& searchString()  noexcept{
 			return m_find.second;
 		}
+		void setParams(const position& pos, const std::string& find_text) noexcept {
+			m_find.first = pos;
+			m_find.second = find_text;
+		 }
 	private:
 		std::pair<position, std::string> m_find;
 	} m_findText;
@@ -29,8 +36,9 @@ public:
 	Finder(const Finder&& rhs) = delete;
 	Finder& operator=(const Finder&&) = delete;
 	virtual ~Finder() = default;
-
+	//tested
 	const position& find(const std::string& str, const position& max_pos, const Container& container);
+	//tested
 	const position& findNext(const position& max_pos, const Container& container);
 };
 #endif

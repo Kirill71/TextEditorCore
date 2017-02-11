@@ -145,7 +145,7 @@ bool TextEditorCore::replaceAll(const std::string & old_str, const std::string &
 	return m_finderReplacer->replaceAll(old_str, new_str, maxPosition(), m_container);
 }
 
-// private methods
+// private methods // MUST BE IMPROWED
 void TextEditorCore::insertText(const position& pos,  std::string& text) {
 	if (pos > maxPosition())
 		throw std::logic_error(errorMessage::INVALID_POSITION);
@@ -165,14 +165,15 @@ void TextEditorCore::insertText(const position& pos,  std::string& text) {
 	// row position after insertion input text
 
 	unsigned number_of_added_rows{
-		std::distance(customIterator::LineInsertIterator<>(std::stringstream{ text},is_new_line_need),
-		customIterator::LineInsertIterator<>()) }, current_row{ pos.m_row + number_of_added_rows };
+		static_cast<unsigned>(std::distance(customIterator::LineInsertIterator<>(std::stringstream{ text},is_new_line_need),
+		customIterator::LineInsertIterator<>())) },
+		current_row{ pos.m_row + number_of_added_rows };
 	// end string append to
 
 	m_container.at(current_row).append(end_of_current_string);
 	setCursor(position(current_row,m_container.at(current_row).length()));
 }
-
+// ANALIZED
 void TextEditorCore::deleteText(const position & from, const position & to) {
 	if (from > maxPosition() || to > maxPosition())
 		throw std::logic_error(errorMessage::INVALID_POSITION);
