@@ -20,14 +20,14 @@ class Finder
 
 	private:
 		std::pair<position, std::string> m_find;
-	}m_findText;
+	} m_findText;
+
 	const position& find_base(const std::string & str, const position & max_pos, const Container& container, const position & pos = { 0,0 });
 public:
 	Finder();
 	virtual ~Finder();
 
-	const position& find(const char * c_str, const position& max_pos, const Container& container);
-	const position& find(const std::string& str, const position& max_pos, const Container& container, const position& pos = { 0,0 });
+	const position& find(const std::string& str, const position& max_pos, const Container& container);
 	const position& findNext(const position& max_pos, const Container& container);
 };
 #endif

@@ -147,6 +147,7 @@
     <ClInclude Include="lineinputiterator.hpp" />
     <ClInclude Include="message.hpp" />
     <ClInclude Include="position.hpp" />
+    <ClInclude Include="replacer.hpp" />
     <ClInclude Include="texteditorcore.hpp" />
   </ItemGroup>
   <ItemGroup>

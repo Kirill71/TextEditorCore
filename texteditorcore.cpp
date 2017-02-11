@@ -130,11 +130,6 @@ std::string TextEditorCore::getSelectedText() noexcept
 	return m_cursor->getSelectedText(m_container);
 }
 
-const position & TextEditorCore::find(const char * c_str)
-{
-	return m_finder->find(c_str, maxPosition(), m_container);
-}
-
 const position & TextEditorCore::find(const std::string & str)
 {
 	return m_finder->find(str, maxPosition(), m_container);

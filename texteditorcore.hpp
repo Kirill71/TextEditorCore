@@ -39,7 +39,8 @@ public:
 
 	// insertion 
 	TextEditorCore& insert(char character);
-	TextEditorCore& insert(const char* c_str);
+
+/*deprecated*/	TextEditorCore& insert(const char* c_str);
 	TextEditorCore& insert( std::string& str);
 	TextEditorCore& removeSelectedText();
 	// TODO: range insertion and removing
@@ -57,16 +58,13 @@ public:
 	std::string getSelectedText() noexcept;
 
 	// find Methods
-	const position& find(const char* c_str);
 	const position& find(const std::string& str);
 	const position& findNext();
 
 	//  replace methods
 	bool replace(char old_char, char  new_char);
-	bool replace(const char* old_c_str, const char* new_c_str);
 	bool replace(const std::string& old_str, const std::string& new_str);
 	bool replaceAll(char old_char, char  new_char);
-	bool replaceAll(const char* old_c_str, const char* new_c_str);
 	bool replaceAll(const std::string& old_str, const std::string& new_str);
 
 private:
