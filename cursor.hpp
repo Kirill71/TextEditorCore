@@ -21,21 +21,25 @@ class Cursor{
 		std::pair<position /*from*/, position /*to*/> m_selection;
 	public:
 		selectedText() : m_selection{} {};
-		position& from() {
+		position& from() noexcept {
 			return m_selection.first;
 		}
-		position& to() {
+		position& to() noexcept {
 			return m_selection.second;
 		}
 	} m_selectedText;
 	
+	//tested
 	// methods
 	// if mode == Edit return coursor, if Select return first position of selection;
 	position& getPositionObject() noexcept{
-		return (m_currentMode == mode::Edit) ? m_cursor : m_selectedText.from();
+		return (m_currentMode == mode::Edit) ? m_cursor : m_selectedText.to();
 	}
-	//void genericCursorUpDown(bool expressionFirst, const Container& container, const std::function<void(unsigned& row)>& cursorAction);
 	void cancelReverseSelection();
+	void addLastRowToSelectText(std::string& selectedText, const Container& container) noexcept;
+	void addSingleRow(std::string& selectedText, const Container& container) noexcept;
+	void addFirstRowFromMiltilineSelection(std::string& selectedText, const Container& container) noexcept;
+	void multilineRowSelection(std::string& selectedText, const Container& container) noexcept;
 public:
 	Cursor();
 	Cursor(unsigned row, unsigned col);
@@ -44,22 +48,30 @@ public:
 	Cursor& operator=(const Cursor& csr) = delete;
 	Cursor& operator=(const Cursor&& csr) = delete;
 	~Cursor() = default;
-
+	// tested
 	const position& getCoursorPos() const noexcept{
 		return m_cursor;
 	}
-	const position& maxPosition(const Container& container) const noexcept{
+	//RVO //tested
+	 position maxPosition(const Container& container) const noexcept{
 		return position(container.size() - 1, container.back().length());
 	}
+	//tested
 	void cursorLeft(const Container& container);
+	//tested
 	void cursorRight(const Container& container);
+	//tested
 	void cursorDown(const Container& container);
+	//tested
 	void cursorUp(const Container& container);
+	// tested  think to int int.
 	void setCursor(unsigned row, unsigned col, const Container& container);
+	//tested
 	void setCursor(const position& pos, const Container& container);
 	// selection
 	void startSelection() noexcept;
 	void finishSelection() noexcept;
+	void continueSelection();
 	void resetSelection() noexcept;
 	std::string getSelectedText(const Container& container) noexcept;
 };

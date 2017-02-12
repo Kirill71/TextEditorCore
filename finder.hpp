@@ -8,9 +8,6 @@
 
 class Finder
 {
-	 // tested
-	bool searchPredicate(const std::string& current_string,
-		const std::string& search_text, position* find_pos) noexcept;
 protected:
 	struct findText {
 		findText() = default;

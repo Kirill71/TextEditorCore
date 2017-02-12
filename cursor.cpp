@@ -3,8 +3,45 @@
 void Cursor::cancelReverseSelection()
 { 
 	if (m_selectedText.from().m_row > m_selectedText.to().m_row ||
-		(m_selectedText.from().m_row == m_selectedText.to().m_row  && m_selectedText.from().m_col > m_selectedText.to().m_col))
-		std::swap(m_selectedText.from(),m_selectedText.to());//swap from with to
+		(m_selectedText.from().m_row == m_selectedText.to().m_row  && m_selectedText.from().m_col > m_selectedText.to().m_col)) {
+		std::swap(m_selectedText.from(), m_selectedText.to());//swap from with to
+		++m_selectedText.to().m_col;   //[to,from) after swap[from, to.m_col+1) for right reverse selection
+		// for exemple from {3,5}, to {0,0} after swap from{0,0} to{3,5+1}
+	}
+}
+
+void Cursor::addLastRowToSelectText(std::string& selectedText, const Container& container) noexcept
+{
+	selectedText
+		.append(container[m_selectedText.to().m_row].substr(0, m_selectedText.to().m_col))
+		.append(END_OF_LINE);
+}
+
+void Cursor::addSingleRow(std::string& selectedText, const Container & container) noexcept
+{
+	unsigned count_characters { m_selectedText.to().m_col - m_selectedText.from().m_col };
+	selectedText
+		.assign(container[m_selectedText.from().m_row]
+			.substr(m_selectedText.from().m_col, count_characters));
+}
+
+void Cursor::addFirstRowFromMiltilineSelection(std::string& selectedText, const Container & container) noexcept
+{
+	unsigned count_characters{ container[m_selectedText.from().m_row].length() - m_selectedText.from().m_col };
+	selectedText
+		.append(container[m_selectedText.from().m_row]
+			.substr(m_selectedText.from().m_col,
+				count_characters)
+			.append(END_OF_LINE));
+}
+
+void Cursor::multilineRowSelection(std::string& selectedText, const Container & container) noexcept
+{
+	for (auto row = (m_selectedText.from().m_row + 1); row < m_selectedText.to().m_row; ++row)
+		selectedText.append(container[row]).append(END_OF_LINE);
+	// если завершающий столбец == 0,то нет смысла добовл€ть завершитель иначе добавл€етс€ последн€€ строка и завершающий перенос каретки.
+	if (m_selectedText.to().m_col != 0)
+		addLastRowToSelectText(selectedText, container);
 }
 
 Cursor::Cursor() : Cursor(0,0) {}
@@ -19,7 +56,7 @@ void Cursor::cursorLeft(const Container& container){
 
 	if (cursor.m_col > 0)
 		--cursor.m_col;
-	else if (cursor.m_row - 1 > 0)
+	else if (cursor.m_row > 0)
 	{
 		cursorUp(container);
 		cursor.m_col = container[cursor.m_row].length();
@@ -29,43 +66,30 @@ void Cursor::cursorLeft(const Container& container){
 void Cursor::cursorRight(const Container& container)
 {
 	auto& cursor{ getPositionObject() };
-	
+
 	if (cursor.m_col < container[cursor.m_row].length())
 		++cursor.m_col;
-	else if (cursor.m_row + 1 < container.size())
+	else if (cursor.m_row < container.size() - 1)
 	{
 		cursorDown(container);
 		cursor.m_col = 0;
 	}
 }
 
-//void Cursor::genericCursorUpDown(bool expression, const Container & container, const std::function<void(unsigned& row)>& cursorAction)
-//{
-//	auto& cursor{ getPositionObject() };
-//	if (expression)
-//		cursorAction(cursor.m_row);
-//	else if (cursor.m_col > container[cursor.m_row].length())
-//		cursor.m_col = container[cursor.m_row].length();
-//}
-
 void Cursor::cursorDown(const Container& container)
 {
 	auto& cursor{ getPositionObject() };
-	/*bool expression{ cursor.m_row + 1 < container.size() };
-	genericCursorUpDown(expression, container, [](unsigned & col) {  ++col; });*/
-	if (cursor.m_row + 1 < container.size())
-		++cursor.m_row;
-	else if (cursor.m_col > container[cursor.m_row].length())
+	if (cursor.m_row < container.size() - 1 && /*check next row  cursor column position*/cursor.m_col > container[++cursor.m_row].length()) {
 		cursor.m_col = container[cursor.m_row].length();
+	}
 }
 
 void Cursor::cursorUp(const Container& container)
 {
 	auto& cursor{ getPositionObject() };
-	if (cursor.m_row > 0)
-		--cursor.m_row;
-	else if (cursor.m_col > container[cursor.m_row].length())
+	if (cursor.m_row > 0 && /*check prev row  cursor column position*/ cursor.m_col > container[--cursor.m_row].length()) {
 		cursor.m_col = container[cursor.m_row].length();
+	}
 }
 
 void Cursor::setCursor(unsigned row, unsigned col, const Container& container)
@@ -76,7 +100,7 @@ void Cursor::setCursor(unsigned row, unsigned col, const Container& container)
 void Cursor::setCursor(const position& pos, const Container& container)
 {
 	auto& cursor{ getPositionObject() };
-	if (cursor < maxPosition(container))
+	if (pos < maxPosition(container) && /* check current row lenght*/pos.m_col <= container[pos.m_row].length())
 		cursor = pos;
 	else
 		throw std::logic_error(errorMessage::INVALID_POSITION);
@@ -92,33 +116,44 @@ void Cursor::finishSelection() noexcept {
 	m_currentMode = mode::Edit;
 	m_cursor = m_selectedText.to();
 }
+
+void Cursor::continueSelection()
+{
+	// если курсор в конце и режим не равен режиму выделени€, значит мы закончили выделение и остались на той же позиции(тогда продолжаем выдел€ть)
+	if (m_cursor == m_selectedText.to() && m_currentMode == mode::Edit)
+		m_currentMode = mode::Select;
+	else
+		throw std::logic_error("Bad continue selection");
+}
+
 void Cursor::resetSelection() noexcept{
-	startSelection();
+	// если выбран режим выделени€ значит, сбрасываем его и возращаем курсор в начало выделени€, иначе ничего 
+	if (m_currentMode == mode::Select) {
+		m_currentMode = mode::Edit;
+		m_cursor = m_selectedText.from(); // при наличии режима выделени€ эта строка не к чему, 
+										  //однако € хочу в будущем от него отказатьс€, так как думаю,
+										  //что смогу реализовать эквивалентный функционал и без него и там она пригодитс€.
+	}
 }
 
 std::string Cursor::getSelectedText(const Container& container) noexcept
 {
-	//	TODO: not beautiful!!!!! I want improve it in future. 
+	//выделение текста лежит в следующих границах [from, to) 
 	cancelReverseSelection();
 	std::string selectedText{};
-	   // if selected one row, but no one columns, get this substr
-	if ((m_selectedText.from().m_row == m_selectedText.to().m_row )&& (m_selectedText.from() != m_selectedText.to())) 
-			selectedText
-				.assign(container[m_selectedText.from().m_row]
-					.substr(m_selectedText.from().m_col, m_selectedText.to().m_col - m_selectedText.from().m_col));
+	// if selected one row, but no one columns, get this substr
+	if ((m_selectedText.from().m_row == m_selectedText.to().m_row) && (m_selectedText.from() != m_selectedText.to())) {
+		addSingleRow(selectedText, container);
+	}
 	else {
 		if (m_selectedText.from().m_row != m_selectedText.to().m_row) {
-			selectedText
-				.append(container[m_selectedText.from().m_row]
-					.substr(m_selectedText.from().m_col,
-						container[m_selectedText.from().m_row].length() - m_selectedText.from().m_col)
-							.append(END_OF_LINE));
+			addFirstRowFromMiltilineSelection(selectedText, container);
 		}
 
-		if ((m_selectedText.to() - m_selectedText.from()) > 1) {
-			for (auto row = (m_selectedText.from().m_row + 1); row < m_selectedText.to().m_row; ++row)
-				selectedText.append(container[row]).append(END_OF_LINE);
+		if ((m_selectedText.to() - m_selectedText.from()) >= 1) {
+			multilineRowSelection(selectedText, container);
 		};
 	}
+	//Return value optimization
 	return selectedText;
 }

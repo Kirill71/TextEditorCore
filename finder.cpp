@@ -1,6 +1,6 @@
 #include "finder.hpp"
 
-bool Finder::searchPredicate(const std::string& current_string,
+bool searchPredicate(const std::string& current_string,
 	const std::string& search_text, position* find_pos) noexcept
 {
 	++find_pos->m_row;
