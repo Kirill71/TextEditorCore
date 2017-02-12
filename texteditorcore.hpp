@@ -1,4 +1,3 @@
-
 #ifndef TEXT_EDITOR_CORE_HPP
 #define TEXT_EDITOR_CORE_HPP
 
@@ -42,13 +41,28 @@ public:
 
 	TextEditorCore& insert( std::string& str);
 	TextEditorCore& removeSelectedText();
-	// TODO: range insertion and removing
 
 	// some specified keys
-	TextEditorCore& HomeKeyPressed();
-	TextEditorCore& EndKeyPressed();
-	TextEditorCore& CtrlHomeKeyPressed();
-	TextEditorCore& CtrlEndKeyPressed();
+	TextEditorCore& HomeKeyPressed() noexcept 
+	{
+		m_cursor->currentLineBegin();
+		return *this;
+	}
+	TextEditorCore& EndKeyPressed() noexcept 
+	{
+		m_cursor->currentLineEnd(m_container);
+		return *this;
+	}
+	TextEditorCore& CtrlHomeKeyPressed() noexcept 
+	{
+		m_cursor->documentBegin();
+		return *this;
+	}
+	TextEditorCore& CtrlEndKeyPressed() noexcept 
+	{
+		m_cursor->documentEnd(m_container);
+		return *this;
+	}
 
 	// selectedText
 	TextEditorCore& startSelection() noexcept;

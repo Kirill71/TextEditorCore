@@ -76,30 +76,6 @@ TextEditorCore & TextEditorCore::removeSelectedText()
 	return *this;
 }
 
-TextEditorCore & TextEditorCore::HomeKeyPressed()
-{
-	m_cursor->currentLineBegin();
-	return *this;
-}
-
-TextEditorCore & TextEditorCore::EndKeyPressed()
-{
-	m_cursor->currentLineEnd(m_container);
-	return *this;
-}
-
-TextEditorCore & TextEditorCore::CtrlHomeKeyPressed()
-{
-	m_cursor->documentBegin();
-	return *this;
-}
-
-TextEditorCore & TextEditorCore::CtrlEndKeyPressed()
-{
-	m_cursor->documentEnd(m_container);
-	return *this;
-}
-
 TextEditorCore & TextEditorCore::startSelection() noexcept
 {
 	m_cursor->startSelection();
