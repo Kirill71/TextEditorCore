@@ -78,27 +78,25 @@ TextEditorCore & TextEditorCore::removeSelectedText()
 
 TextEditorCore & TextEditorCore::HomeKeyPressed()
 {
-	setCursor(position(m_cursor->getCoursorPos().m_row, 0));
+	m_cursor->currentLineBegin();
 	return *this;
 }
 
 TextEditorCore & TextEditorCore::EndKeyPressed()
 {
-	unsigned row{ m_cursor->getCoursorPos().m_row };
-	setCursor(position(row,m_container.at(row).length()));
+	m_cursor->currentLineEnd(m_container);
 	return *this;
 }
 
 TextEditorCore & TextEditorCore::CtrlHomeKeyPressed()
 {
-	setCursor(position{});
+	m_cursor->documentBegin();
 	return *this;
 }
 
 TextEditorCore & TextEditorCore::CtrlEndKeyPressed()
 {
-	unsigned lenght{ m_container.size() - 1 };
-	setCursor(position(lenght, m_container.back().length()));
+	m_cursor->documentEnd(m_container);
 	return *this;
 }
 
@@ -111,6 +109,12 @@ TextEditorCore & TextEditorCore::startSelection() noexcept
 TextEditorCore & TextEditorCore::finishSelection() noexcept
 {
 	m_cursor->finishSelection();
+	return *this;
+}
+
+TextEditorCore & TextEditorCore::continueSelection()
+{
+	m_cursor->continueSelection();
 	return *this;
 }
 
@@ -221,9 +225,9 @@ void TextEditorCore::getEndPartOfChangeString(std::string & text, std::string & 
 
 void TextEditorCore::addFirstLineOfNewText(std::string & text, const position & pos){
 	//get  first line from input text
-	std::string firstLine = text.substr(FIRST_INDEX, text.find_first_of(END_OF_LINE, FIRST_INDEX) - FIRST_INDEX);
+	std::string firstLine = text.substr(LINE_BEGIN, text.find_first_of(END_OF_LINE, LINE_BEGIN) - LINE_BEGIN);
 	// add this line in container on end(variable) position
 	m_container.at(pos.m_row).append(firstLine);
 	// delete first line from  input text
-	text.erase(FIRST_INDEX, firstLine.length() + 1);
+	text.erase(LINE_BEGIN, firstLine.length() + 1);
 }

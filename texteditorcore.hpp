@@ -53,6 +53,7 @@ public:
 	// selectedText
 	TextEditorCore& startSelection() noexcept;
 	TextEditorCore& finishSelection() noexcept;
+	TextEditorCore& continueSelection();
 	TextEditorCore& resetSelection() noexcept;
 	std::string getSelectedText() noexcept;
 

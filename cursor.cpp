@@ -13,7 +13,7 @@ void Cursor::cancelReverseSelection()
 void Cursor::addLastRowToSelectText(std::string& selectedText, const Container& container) noexcept
 {
 	selectedText
-		.append(container[m_selectedText.to().m_row].substr(0, m_selectedText.to().m_col))
+		.append(container[m_selectedText.to().m_row].substr(LINE_BEGIN, m_selectedText.to().m_col))
 		.append(END_OF_LINE);
 }
 
@@ -40,11 +40,11 @@ void Cursor::multilineRowSelection(std::string& selectedText, const Container & 
 	for (auto row = (m_selectedText.from().m_row + 1); row < m_selectedText.to().m_row; ++row)
 		selectedText.append(container[row]).append(END_OF_LINE);
 	// если завершающий столбец == 0,то нет смысла добовлять завершитель иначе добавляется последняя строка и завершающий перенос каретки.
-	if (m_selectedText.to().m_col != 0)
+	if (m_selectedText.to().m_col != LINE_BEGIN)
 		addLastRowToSelectText(selectedText, container);
 }
 
-Cursor::Cursor() : Cursor(0,0) {}
+Cursor::Cursor() : Cursor(LINE_BEGIN,LINE_BEGIN) {}
 
 Cursor::Cursor(unsigned row, unsigned col) : m_cursor{ row,col }, m_currentMode{ mode::Edit }, m_selectedText{} {}
 
@@ -54,9 +54,9 @@ Cursor::Cursor(unsigned row, unsigned col) : m_cursor{ row,col }, m_currentMode{
 void Cursor::cursorLeft(const Container& container){
 	auto& cursor{ getPositionObject() };
 
-	if (cursor.m_col > 0)
+	if (cursor.m_col > LINE_BEGIN)
 		--cursor.m_col;
-	else if (cursor.m_row > 0)
+	else if (cursor.m_row > LINE_BEGIN)
 	{
 		cursorUp(container);
 		cursor.m_col = container[cursor.m_row].length();
@@ -72,7 +72,7 @@ void Cursor::cursorRight(const Container& container)
 	else if (cursor.m_row < container.size() - 1)
 	{
 		cursorDown(container);
-		cursor.m_col = 0;
+		cursor.m_col = LINE_BEGIN;
 	}
 }
 
@@ -87,7 +87,7 @@ void Cursor::cursorDown(const Container& container)
 void Cursor::cursorUp(const Container& container)
 {
 	auto& cursor{ getPositionObject() };
-	if (cursor.m_row > 0 && /*check prev row  cursor column position*/ cursor.m_col > container[--cursor.m_row].length()) {
+	if (cursor.m_row > LINE_BEGIN && /*check prev row  cursor column position*/ cursor.m_col > container[--cursor.m_row].length()) {
 		cursor.m_col = container[cursor.m_row].length();
 	}
 }
@@ -123,7 +123,7 @@ void Cursor::continueSelection()
 	if (m_cursor == m_selectedText.to() && m_currentMode == mode::Edit)
 		m_currentMode = mode::Select;
 	else
-		throw std::logic_error("Bad continue selection");
+		throw std::logic_error(errorMessage::BAD_CONTINUE_SELECTION);
 }
 
 void Cursor::resetSelection() noexcept{

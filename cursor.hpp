@@ -68,11 +68,36 @@ public:
 	void setCursor(unsigned row, unsigned col, const Container& container);
 	//tested
 	void setCursor(const position& pos, const Container& container);
+
+	void currentLineBegin() noexcept 
+	{
+		m_cursor.m_col = LINE_BEGIN;
+	};
+
+	void currentLineEnd(const Container & container) noexcept
+	{
+		m_cursor.m_col = container[m_cursor.m_row].length();
+	}
+
+	void documentBegin() noexcept 
+	{
+		m_cursor.m_row = m_cursor.m_col = LINE_BEGIN;
+	}
+	void documentEnd(const Container & container) noexcept
+	{
+		m_cursor = maxPosition(container);
+	}
+
 	// selection
+	//tested
 	void startSelection() noexcept;
+	//tested
 	void finishSelection() noexcept;
+	//tested
 	void continueSelection();
+	//tested
 	void resetSelection() noexcept;
+	//tested
 	std::string getSelectedText(const Container& container) noexcept;
 };
 #endif // !CURSOR_HPP
