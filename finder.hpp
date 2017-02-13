@@ -5,6 +5,7 @@
 #include<algorithm>
 #include"position.hpp"
 #include"message.hpp"
+#include"utils.hpp"
 
 class Finder
 {

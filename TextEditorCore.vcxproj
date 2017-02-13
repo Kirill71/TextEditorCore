@@ -149,6 +149,7 @@
     <ClInclude Include="position.hpp" />
     <ClInclude Include="replacer.hpp" />
     <ClInclude Include="texteditorcore.hpp" />
+    <ClInclude Include="utils.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cursor.cpp" />
@@ -156,6 +157,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="replacer.cpp" />
     <ClCompile Include="texteditorcore.cpp" />
+    <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

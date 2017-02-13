@@ -16,10 +16,6 @@ namespace constants
 	const char		  END_OF_LINE_CHAR = { '\n' };
 	const std::string SPACE{ " " };
 };
-inline void  checkEmptyString(const std::string str, const std::string& exception_string) {
-	if (str.empty())
-		throw std::logic_error(exception_string);
-}
 namespace errorMessage  
 {
 	const  std::string INVALID_POSITION { "Invalid position of cursor" };

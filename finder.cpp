@@ -10,7 +10,7 @@ bool  searchPredicate(const std::string& current_string,
 
 const position & Finder::find_base(const std::string & str, const position & max_pos, const Container& container, const position & pos)
 {
-	checkEmptyString(str, errorMessage::EMPTY_SEARCH_STRING);
+	Utils::checkEmptyString(str, errorMessage::EMPTY_SEARCH_STRING);
 	m_findText.setParams(pos, str);
 
 	auto it = std::find_if(container.begin() + pos.m_row, container.end(),
