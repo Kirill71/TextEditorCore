@@ -1,9 +1,7 @@
 #include "texteditorcore.hpp"
-#include<iterator>
-#include<sstream>
-#include<list>
+
 TextEditorCore::TextEditorCore() 
-	: m_container{ DEFAULT_DOCUMENT_SIZE },
+	: m_container{constants::DEFAULT_DOCUMENT_SIZE },
 	m_cursor{std::make_unique<Cursor>()},
 	m_finderReplacer{std::make_unique<Replacer>()}
 {}
@@ -54,7 +52,7 @@ TextEditorCore& TextEditorCore::setCursor(const position & pos){
 
 TextEditorCore & TextEditorCore::write(std::ostream& stream){  
 	std::copy(m_container.cbegin(), m_container.cend(),
-		std::ostream_iterator<std::string>(stream, END_OF_LINE));
+		std::ostream_iterator<std::string>(stream, constants::END_OF_LINE.c_str()));
 	return *this;
 }
 
@@ -137,7 +135,7 @@ void TextEditorCore::insertText(const position& pos,  std::string& text) {
 	// add first line of new text in container and delete this line in variable text;
 	addFirstLineOfNewText(text, pos);
 
-	bool is_new_line_need{ text.back() == END_OF_LINE_CHAR };
+	bool is_new_line_need{ text.back() == constants::END_OF_LINE_CHAR };
 	auto begin{ customIterator::LineInsertIterator<>(std::stringstream{ text },is_new_line_need) },
 		end{ customIterator::LineInsertIterator<>() };
 
@@ -201,9 +199,9 @@ void TextEditorCore::getEndPartOfChangeString(std::string & text, std::string & 
 
 void TextEditorCore::addFirstLineOfNewText(std::string & text, const position & pos){
 	//get  first line from input text
-	std::string firstLine = text.substr(LINE_BEGIN, text.find_first_of(END_OF_LINE, LINE_BEGIN) - LINE_BEGIN);
+	std::string firstLine = text.substr(constants::LINE_BEGIN, text.find_first_of(constants::END_OF_LINE, constants::LINE_BEGIN) - constants::LINE_BEGIN);
 	// add this line in container on end(variable) position
 	m_container.at(pos.m_row).append(firstLine);
 	// delete first line from  input text
-	text.erase(LINE_BEGIN, firstLine.length() + 1);
+	text.erase(constants::LINE_BEGIN, firstLine.length() + 1);
 }

@@ -1,7 +1,6 @@
 #ifndef REPLACER_HPP
 #define REPLACER_HPP
 #include"finder.hpp"
-#include"message.hpp"
 class Replacer
 	: public Finder
 {

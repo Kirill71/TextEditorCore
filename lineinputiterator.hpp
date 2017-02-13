@@ -18,7 +18,7 @@ namespace customIterator {
 		typedef std::basic_istream<char_type, traits_type> istream_type;
 
 		LineInputIterator() : is{ nullptr }, value{} {}
-		explicit LineInputIterator(istream_type& is) : is{ &is }, value{} { std::getline(*is, value) }
+		explicit LineInputIterator(istream_type& is) : is{ &is }, value{} { /*std::getline(*is, value);*/ }
 		const StringT& operator*() const { return value; }
 		const StringT* operator->() const { return &value; }
 		virtual LineInputIterator<StringT>& operator++()
@@ -52,21 +52,21 @@ namespace customIterator {
 		public LineInputIterator<StringT> 
 	{
 	public:
-		LineInsertIterator() : LineInputIterator(), new_line{} {}
-		explicit LineInsertIterator(istream_type& _is, bool new_line_) : is{ &_is }, new_line{new_line_} { }
+		LineInsertIterator() : LineInputIterator() {}
+		LineInsertIterator(istream_type& is_, bool new_line_) : m_newLine{ new_line_ } { is = &is_; }
 		LineInputIterator<StringT>& operator++() override
 		{
 			if (is->eof()) {
 				is = nullptr;
 			}
-			if (is && !std::getline(*is, value) && new_line) {
-				new_line = false;
-				value = END_OF_LINE_CHAR;
+			if (is && !std::getline(*is, value) && m_newLine) {
+				m_newLine = false;
+				value = constants::END_OF_LINE_CHAR;
 			}
 			return *this;
 		}
 	private:
-		bool new_line;
+		bool m_newLine;
 	};
 } // end ub
 #endif

@@ -1,12 +1,12 @@
 #include "finder.hpp"
 
-bool searchPredicate(const std::string& current_string,
+bool  searchPredicate(const std::string& current_string,
 	const std::string& search_text, position* find_pos) noexcept
 {
 	++find_pos->m_row;
 	find_pos->m_col = current_string.find(search_text, (find_pos->m_col != std::string::npos) ? find_pos->m_col : 0);
 	return  find_pos->m_col != std::string::npos;
-}
+};
 
 const position & Finder::find_base(const std::string & str, const position & max_pos, const Container& container, const position & pos)
 {

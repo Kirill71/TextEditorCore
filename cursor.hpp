@@ -2,6 +2,7 @@
 #define CURSOR_HPP
 #include<utility>
 #include<string>
+#include<algorithm>
 #include<functional>
 #include"position.hpp"
 #include"message.hpp"
@@ -15,7 +16,6 @@ class Cursor{
 	};
 	// fields
 	mode m_currentMode;
-	// first == from, second == to
 	struct selectedText{
 	private:
 		std::pair<position /*from*/, position /*to*/> m_selection;
@@ -39,6 +39,7 @@ class Cursor{
 	void addLastRowToSelectText(std::string& selectedText, const Container& container) noexcept;
 	void addSingleRow(std::string& selectedText, const Container& container) noexcept;
 	void addFirstRowFromMiltilineSelection(std::string& selectedText, const Container& container) noexcept;
+	//WARNING NOT TESTED
 	void multilineRowSelection(std::string& selectedText, const Container& container) noexcept;
 public:
 	Cursor();
@@ -71,7 +72,7 @@ public:
 
 	void currentLineBegin() noexcept 
 	{
-		m_cursor.m_col = LINE_BEGIN;
+		m_cursor.m_col = constants::LINE_BEGIN;
 	};
 
 	void currentLineEnd(const Container & container) noexcept
@@ -81,7 +82,7 @@ public:
 
 	void documentBegin() noexcept 
 	{
-		m_cursor.m_row = m_cursor.m_col = LINE_BEGIN;
+		m_cursor.m_row = m_cursor.m_col = constants::LINE_BEGIN;
 	}
 	void documentEnd(const Container & container) noexcept
 	{

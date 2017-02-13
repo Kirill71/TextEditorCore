@@ -3,6 +3,9 @@
 
 #include<istream>
 #include<memory>
+#include<iterator>
+#include<sstream>
+#include"message.hpp"
 #include"cursor.hpp"
 #include"replacer.hpp"
 #include"lineinputiterator.hpp"
@@ -24,9 +27,10 @@ public:
 	{
 		return m_cursor->getCoursorPos();
 	}
+	// may be error couse rvo
 	const position& maxPosition() const noexcept 
 	{
-		m_cursor->maxPosition(m_container);
+		return m_cursor->maxPosition(m_container);
 	}
 	TextEditorCore& cursorLeft();
 	TextEditorCore& cursorRight();

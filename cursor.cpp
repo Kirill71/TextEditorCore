@@ -1,5 +1,4 @@
 #include "cursor.hpp"
-
 void Cursor::cancelReverseSelection()
 { 
 	if (m_selectedText.from().m_row > m_selectedText.to().m_row ||
@@ -13,8 +12,8 @@ void Cursor::cancelReverseSelection()
 void Cursor::addLastRowToSelectText(std::string& selectedText, const Container& container) noexcept
 {
 	selectedText
-		.append(container[m_selectedText.to().m_row].substr(LINE_BEGIN, m_selectedText.to().m_col))
-		.append(END_OF_LINE);
+		.append(container[m_selectedText.to().m_row].substr(constants::LINE_BEGIN, m_selectedText.to().m_col))
+		.append(constants::END_OF_LINE);
 }
 
 void Cursor::addSingleRow(std::string& selectedText, const Container & container) noexcept
@@ -32,19 +31,25 @@ void Cursor::addFirstRowFromMiltilineSelection(std::string& selectedText, const 
 		.append(container[m_selectedText.from().m_row]
 			.substr(m_selectedText.from().m_col,
 				count_characters)
-			.append(END_OF_LINE));
+			.append(constants::END_OF_LINE));
 }
 
 void Cursor::multilineRowSelection(std::string& selectedText, const Container & container) noexcept
 {
-	for (auto row = (m_selectedText.from().m_row + 1); row < m_selectedText.to().m_row; ++row)
-		selectedText.append(container[row]).append(END_OF_LINE);
+	auto begin{ container.begin() + (m_selectedText.from().m_row + 1) },
+		 end{ begin + m_selectedText.to().m_row };
+	/*for (auto row = (m_selectedText.from().m_row + 1); row < m_selectedText.to().m_row; ++row)
+		selectedText.append(container[row]).append(END_OF_LINE);*/
+	auto add_row = [&selectedText](const std::string& curr_str)
+	{selectedText.append(curr_str).append(constants:: END_OF_LINE); };
+
+	std::for_each(begin, end,add_row);
 	// если завершающий столбец == 0,то нет смысла добовлять завершитель иначе добавляется последняя строка и завершающий перенос каретки.
-	if (m_selectedText.to().m_col != LINE_BEGIN)
+	if (m_selectedText.to().m_col != constants::LINE_BEGIN)
 		addLastRowToSelectText(selectedText, container);
 }
 
-Cursor::Cursor() : Cursor(LINE_BEGIN,LINE_BEGIN) {}
+Cursor::Cursor() : Cursor(constants::LINE_BEGIN, constants::LINE_BEGIN) {}
 
 Cursor::Cursor(unsigned row, unsigned col) : m_cursor{ row,col }, m_currentMode{ mode::Edit }, m_selectedText{} {}
 
@@ -54,9 +59,9 @@ Cursor::Cursor(unsigned row, unsigned col) : m_cursor{ row,col }, m_currentMode{
 void Cursor::cursorLeft(const Container& container){
 	auto& cursor{ getPositionObject() };
 
-	if (cursor.m_col > LINE_BEGIN)
+	if (cursor.m_col > constants::LINE_BEGIN)
 		--cursor.m_col;
-	else if (cursor.m_row > LINE_BEGIN)
+	else if (cursor.m_row > constants::LINE_BEGIN)
 	{
 		cursorUp(container);
 		cursor.m_col = container[cursor.m_row].length();
@@ -72,7 +77,7 @@ void Cursor::cursorRight(const Container& container)
 	else if (cursor.m_row < container.size() - 1)
 	{
 		cursorDown(container);
-		cursor.m_col = LINE_BEGIN;
+		cursor.m_col = constants::LINE_BEGIN;
 	}
 }
 
@@ -87,7 +92,7 @@ void Cursor::cursorDown(const Container& container)
 void Cursor::cursorUp(const Container& container)
 {
 	auto& cursor{ getPositionObject() };
-	if (cursor.m_row > LINE_BEGIN && /*check prev row  cursor column position*/ cursor.m_col > container[--cursor.m_row].length()) {
+	if (cursor.m_row > constants::LINE_BEGIN && /*check prev row  cursor column position*/ cursor.m_col > container[--cursor.m_row].length()) {
 		cursor.m_col = container[cursor.m_row].length();
 	}
 }
