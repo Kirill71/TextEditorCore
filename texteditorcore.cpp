@@ -1,9 +1,9 @@
 #include "texteditorcore.hpp"
 
 TextEditorCore::TextEditorCore() 
-	: m_container{constants::DEFAULT_DOCUMENT_SIZE },
-	m_cursor{std::make_unique<Cursor>()},
-	m_finderReplacer{std::make_unique<Replacer>()}
+	: m_cursor{std::make_unique<Cursor>()},
+	m_finderReplacer{std::make_unique<Replacer>()},
+	m_container{ constants::DEFAULT_DOCUMENT_SIZE }
 {}
 
 TextEditorCore::TextEditorCore(std::istream & stream) 
@@ -12,7 +12,7 @@ TextEditorCore::TextEditorCore(std::istream & stream)
 	//	P.S. Я бы метод чтения и записи в поток
 	//вынес в отдельный класс и сделал его частью ТеxtEditorCore 
 	m_container
-		.assign(( customIterator::LineInputIterator<>{ stream }), 
+		.assign((customIterator::LineInputIterator<>{ stream }), 
 			customIterator::LineInputIterator<>{});
 	
 	/* Если загружен пустой файл - я это ошибкой не считаю,
@@ -50,20 +50,14 @@ TextEditorCore& TextEditorCore::setCursor(const position & pos){
 	return *this;
 }
 
-TextEditorCore & TextEditorCore::write(std::ostream& stream){  
-	std::copy(m_container.cbegin(), m_container.cend(),
-		std::ostream_iterator<std::string>(stream, constants::END_OF_LINE.c_str()));
-	return *this;
-}
-
 // insertion methods
 TextEditorCore & TextEditorCore::insert(char character){
-	insertText(m_cursor->getCoursorPos(), std::string{ character });
+	insertText(const_cast<position&>(m_cursor->getCoursorPos()), std::string{ character });
 	return *this;
 }
 
 TextEditorCore & TextEditorCore::insert( std::string & str){
-	insertText(m_cursor->getCoursorPos(), str);
+	insertText(const_cast<position&>(m_cursor->getCoursorPos()), str);
 	return *this;
 }
 
@@ -123,33 +117,34 @@ bool TextEditorCore::replaceAll(const std::string & old_str, const std::string &
 	return m_finderReplacer->replaceAll(old_str, new_str, maxPosition(), m_container);
 }
 
+TextEditorCore & TextEditorCore::write(std::ostream& stream) {
+	std::copy(m_container.cbegin(), m_container.cend(),
+		std::ostream_iterator<std::string>(stream, constants::END_OF_LINE.c_str()));
+	return *this;
+}
+
 // private methods // MUST BE IMPROWED
-void TextEditorCore::insertText(const position& pos,  std::string& text) {
+void TextEditorCore::insertText(position& pos, const std::string& text) {
 	if (pos > maxPosition())
 		throw std::logic_error(errorMessage::INVALID_POSITION);
 	if (text.empty()) // empty input string => return
 		return;
 	std::string end_of_current_string{};
+	bool is_new_line_need{ text.back() == constants::END_OF_LINE_CHAR };
 	// this method does logic of method insertText more simple.(as for me.) get end of saving string
 	getEndPartOfChangeString(text, end_of_current_string, pos);
-	// add first line of new text in container and delete this line in variable text;
-	addFirstLineOfNewText(text, pos);
-
-	bool is_new_line_need{ text.back() == constants::END_OF_LINE_CHAR };
-	auto begin{ customIterator::LineInsertIterator<>(std::stringstream{ text },is_new_line_need) },
+	std::string copy_text{ text };
+	auto begin{ customIterator::LineInsertIterator<>(copy_text) },
 		end{ customIterator::LineInsertIterator<>() };
-
-	m_container.insert(m_container.cbegin() + pos.m_row, begin, end);
-	// row position after insertion input text
-
-	unsigned number_of_added_rows{
-		static_cast<unsigned>(std::distance(customIterator::LineInsertIterator<>(std::stringstream{ text},is_new_line_need),
-		customIterator::LineInsertIterator<>())) },
-		current_row{ pos.m_row + number_of_added_rows };
-	// end string append to
-
-	m_container.at(current_row).append(end_of_current_string);
-	setCursor(position(current_row,m_container.at(current_row).length()));
+	m_container.insert(m_container.begin() + pos.m_row, begin, end);
+	unsigned distance = std::distance(customIterator::LineInsertIterator<>(std::string{ text }),
+		customIterator::LineInsertIterator<>());
+	unsigned row{ pos.m_row + --distance }, col{ m_container[row].length() };
+	m_cursor->setCursor(position{ row,col },m_container);
+	if (is_new_line_need)
+		m_container.insert(m_container.begin() + pos.m_row + 1, end_of_current_string);
+	else
+		m_container[pos.m_row].append(end_of_current_string);
 }
 // ANALIZED
 void TextEditorCore::deleteText(const position & from, const position & to) {
@@ -167,7 +162,7 @@ void TextEditorCore::deleteText(const position & from, const position & to) {
 		deleteColTextFragment(to);
 	}
 	if ((to - from) > 1)   
-		m_container.erase(m_container.begin() + from.m_row + 1, m_container.begin() + to.m_row - 1);
+		m_container.erase(m_container.begin() + (from.m_row + 1), m_container.begin() + (to.m_row - 1));
 }
 
 void TextEditorCore::deleteRow(unsigned row) noexcept{
@@ -175,12 +170,12 @@ void TextEditorCore::deleteRow(unsigned row) noexcept{
 }
 
 void TextEditorCore::deleteRowTextFragment(const position& from) {
-	unsigned from_row_len{ m_container.at(from.m_row).length() };
+	unsigned count{ m_container.at(from.m_row).length() - from.m_col};
 
 	if (from.m_col == 0) // col == zero - delete all line.
 		deleteRow(from.m_row); 
 	else 
-		m_container.at(from.m_row).erase(from.m_col, from_row_len - from.m_col);
+		m_container[from.m_row].erase(from.m_col, count);
 }
 
 void TextEditorCore::deleteColTextFragment(const position & to){
@@ -190,18 +185,15 @@ void TextEditorCore::deleteColTextFragment(const position & to){
 		m_container.at(to.m_row).erase(0, to.m_col);
 }
 
-void TextEditorCore::getEndPartOfChangeString(std::string & text, std::string & end_of_current_string, const position& pos){
+void TextEditorCore::getEndPartOfChangeString( const std::string & text, std::string & end_of_current_string, const position& pos){
+	unsigned count{ m_container.at(pos.m_row).length() - pos.m_col };
 	//  remember end of string
-	  end_of_current_string.assign( m_container.at(pos.m_row).substr(pos.m_col, m_container.at(pos.m_row).length() - pos.m_col));
+	  end_of_current_string
+		  .assign( m_container.at(pos.m_row)
+			  .substr(pos.m_col, count)
+		  );
 	// delete end of string from container
 	m_container.at(pos.m_row).erase(m_container.at(pos.m_row).begin() + pos.m_col, m_container.at(pos.m_row).end());
-}
-
-void TextEditorCore::addFirstLineOfNewText(std::string & text, const position & pos){
-	//get  first line from input text
-	std::string firstLine = text.substr(constants::LINE_BEGIN, text.find_first_of(constants::END_OF_LINE, constants::LINE_BEGIN) - constants::LINE_BEGIN);
-	// add this line in container on end(variable) position
-	m_container.at(pos.m_row).append(firstLine);
-	// delete first line from  input text
-	text.erase(constants::LINE_BEGIN, firstLine.length() + 1);
+	if (pos.m_col == constants::LINE_BEGIN) // if get all string. 
+		m_container.erase(m_container.begin() + pos.m_row);
 }

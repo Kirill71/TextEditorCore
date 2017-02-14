@@ -12,7 +12,9 @@
 
 class TextEditorCore {
 public:
+	//tested
 	TextEditorCore();
+	//tested
 	explicit TextEditorCore(std::istream& stream);
 	// copy operations
 	TextEditorCore(const TextEditorCore&) = delete;
@@ -27,18 +29,23 @@ public:
 	{
 		return m_cursor->getCoursorPos();
 	}
-	// may be error couse rvo
-	const position& maxPosition() const noexcept 
+	//  rvo //tested
+	 position maxPosition() const noexcept 
 	{
 		return m_cursor->maxPosition(m_container);
 	}
+	 //tested
 	TextEditorCore& cursorLeft();
+	//tested
 	TextEditorCore& cursorRight();
+	//tested
 	TextEditorCore& cursorDown();
+	//tested
 	TextEditorCore& cursorUp();
+	//tested
 	TextEditorCore& setCursor(unsigned row, unsigned col);
+	//tested
 	TextEditorCore& setCursor(const position& pos);
-	TextEditorCore& write(std::ostream& stream);
 
 	// insertion 
  /*deprecated*/	TextEditorCore& insert(char character);
@@ -47,21 +54,28 @@ public:
 	TextEditorCore& removeSelectedText();
 
 	// some specified keys
+	//tested
 	TextEditorCore& HomeKeyPressed() noexcept 
 	{
 		m_cursor->currentLineBegin();
 		return *this;
 	}
+
+	//tested
 	TextEditorCore& EndKeyPressed() noexcept 
 	{
 		m_cursor->currentLineEnd(m_container);
 		return *this;
 	}
+
+	//tested
 	TextEditorCore& CtrlHomeKeyPressed() noexcept 
 	{
 		m_cursor->documentBegin();
 		return *this;
 	}
+
+	//tested
 	TextEditorCore& CtrlEndKeyPressed() noexcept 
 	{
 		m_cursor->documentEnd(m_container);
@@ -69,32 +83,42 @@ public:
 	}
 
 	// selectedText
+	//tested
 	TextEditorCore& startSelection() noexcept;
+	//tested
 	TextEditorCore& finishSelection() noexcept;
+	//tested
 	TextEditorCore& continueSelection();
+	//tested
 	TextEditorCore& resetSelection() noexcept;
+	//tested
 	std::string getSelectedText() noexcept;
 
 	// find Methods
+	//tested
 	const position& find(const std::string& str);
+	//tested
 	const position& findNext();
 
 	//  replace methods
+	//tested
 	bool replace(const std::string& old_str, const std::string& new_str);
+	//tested
 	bool replaceAll(const std::string& old_str, const std::string& new_str);
-
+	// write to stream
+	//tested
+	TextEditorCore& write(std::ostream& stream);
 private:
 	std::unique_ptr<Cursor> m_cursor;
 	std::unique_ptr<Replacer> m_finderReplacer;
 	Container m_container;
 
 	//private methods
-	void insertText(const position& pos, std::string& text);
+	void insertText( position& pos, const std::string& text);
 	void deleteText(const position& from, const position& to);
 	void deleteRow(unsigned row) noexcept; 
 	void deleteRowTextFragment(const position& from);
 	void deleteColTextFragment(const position& to);
-	void getEndPartOfChangeString(std::string& text, std::string& end_of_current_string, const position& pos);
-	void addFirstLineOfNewText(std::string & text, const position& pos);
+	void getEndPartOfChangeString(const std::string& text, std::string& end_of_current_string, const position& pos);
 };
 #endif // !TEXT_EDITOR_CORE_HPP

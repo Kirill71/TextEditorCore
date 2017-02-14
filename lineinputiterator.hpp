@@ -4,6 +4,7 @@
 #include <iterator>
 #include <istream>
 #include <string>
+#include<cstring>
 #include"message.hpp"
 
 namespace customIterator {
@@ -18,13 +19,13 @@ namespace customIterator {
 		typedef std::basic_istream<char_type, traits_type> istream_type;
 
 		LineInputIterator() : is{ nullptr }, value{} {}
-		explicit LineInputIterator(istream_type& is) : is{ &is }, value{} { /*std::getline(*is, value);*/ }
+		explicit LineInputIterator(istream_type& is_) : is{ &is_ }, value{} { std::getline(*is, value); }
 		const StringT& operator*() const { return value; }
 		const StringT* operator->() const { return &value; }
 		virtual LineInputIterator<StringT>& operator++()
 		{
 			if (is && !std::getline(*is, value)) {
-					is = nullptr;
+				is = nullptr;
 			}
 			return *this;
 		}
@@ -47,26 +48,43 @@ namespace customIterator {
 		StringT value;
 	};
 
+
+
 	template <class StringT = std::string>
 	class LineInsertIterator :
-		public LineInputIterator<StringT> 
+		public std::iterator<std::input_iterator_tag, StringT, std::ptrdiff_t, const StringT*, const StringT&>
 	{
 	public:
-		LineInsertIterator() : LineInputIterator() {}
-		LineInsertIterator(istream_type& is_, bool new_line_) : m_newLine{ new_line_ } { is = &is_; }
-		LineInputIterator<StringT>& operator++() override
+		LineInsertIterator() : line{ nullptr }, value{} {};
+		explicit LineInsertIterator(std::string& text_) : LineInsertIterator() { line = strtok(const_cast<char*>(text_.c_str()), constants::END_OF_LINE.c_str()); value = line; }
+		LineInsertIterator<StringT>& operator++()
 		{
-			if (is->eof()) {
-				is = nullptr;
+			if (line = strtok(nullptr, constants::END_OF_LINE.c_str())) {
+				value = line;
 			}
-			if (is && !std::getline(*is, value) && m_newLine) {
-				m_newLine = false;
-				value = constants::END_OF_LINE_CHAR;
-			}
+			
 			return *this;
 		}
+		LineInsertIterator<StringT> operator++(int)
+		{
+			LineInsertIterator<StringT> prev(*this);
+			++*this;
+			return prev;
+		}
+
+		bool operator!=(const LineInsertIterator<StringT>& other) const noexcept
+		{
+			return line != other.line;
+		}
+		bool operator==(const LineInsertIterator<StringT>& other) const noexcept
+		{
+			return !(*this != other);
+		}
+		const StringT& operator*() const { return value; }
+		const StringT* operator->() const { return &value; }
 	private:
-		bool m_newLine;
+		char* line;
+		StringT value;
 	};
 } // end ub
 #endif
