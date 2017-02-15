@@ -7,11 +7,7 @@ int main() {
 	TextEditorCore t(std::ifstream("file.txt"));
 	//t.write(std::cout);
 	std::string str{ "Pussy You\n little pussy\n" };
-	t.insert(str);
-	t.startSelection()
-		.setCursor(0, 0)
-		.finishSelection();
-		t.removeSelectedText();
+	std::cout<<t.insert(str).find("my name");
 	t.write(std::cout);
 	system("pause");
 }

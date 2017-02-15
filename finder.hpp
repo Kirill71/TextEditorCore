@@ -3,9 +3,8 @@
 #include<string>
 #include<functional>
 #include<algorithm>
-#include"position.hpp"
-#include"message.hpp"
 #include"utils.hpp"
+#include"message.hpp"
 
 class Finder
 {
