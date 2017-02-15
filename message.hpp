@@ -3,9 +3,7 @@
 #include<vector>
 #include<string>
 #include<stdexcept>
-// I think about insertion in middle of sequense and I think about list<T>
 using Container = std::vector<std::string>;
-
 /*Базовый размер документа,
 чтобы не делать частые перевыделения памяти, устанавливаю размер в 1000 элементов.*/
 namespace constants 

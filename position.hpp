@@ -18,12 +18,19 @@ struct position {
 		return !(*this == rhs);
 	}
 
-	bool operator>(const position& rhs) const  noexcept {
-		return (this->m_row > rhs.m_row) && (this->m_col > rhs.m_col);
+	bool operator<=(const position& rhs) const  noexcept {
+		return (this->m_row <= rhs.m_row);
 	}
 
+	bool operator>=(const position& rhs) const  noexcept {
+		return  !(*this <= rhs);
+	}
 	bool operator<(const position& rhs) const  noexcept {
-		return  !(*this > rhs);
+		return (this->m_row < rhs.m_row);
+	}
+
+	bool operator>(const position& rhs) const  noexcept {
+		return  !(*this < rhs);
 	}
 	int operator-(const position& rhs) const noexcept {
 		return static_cast<int>(this->m_row - rhs.m_row);

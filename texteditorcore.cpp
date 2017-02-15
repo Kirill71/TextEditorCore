@@ -123,32 +123,29 @@ TextEditorCore & TextEditorCore::write(std::ostream& stream) {
 	return *this;
 }
 
-// private methods // MUST BE IMPROWED
-void TextEditorCore::insertText(position& pos, const std::string& text) {
-	if (pos > maxPosition())
-		throw std::logic_error(errorMessage::INVALID_POSITION);
+// private methods 
+void TextEditorCore::insertText(position& pos, const std::string& text)  noexcept {
 	if (text.empty()) // empty input string => return
 		return;
-	std::string end_of_current_string{};
+	std::string end_of_current_string{}, copy_text{ text };
 	bool is_new_line_need{ text.back() == constants::END_OF_LINE_CHAR };
-	// this method does logic of method insertText more simple.(as for me.) get end of saving string
+	// get end part of current change string
 	getEndPartOfChangeString(text, end_of_current_string, pos);
-	std::string copy_text{ text };
-	auto begin{ customIterator::LineInsertIterator<>(copy_text) },
-		end{ customIterator::LineInsertIterator<>() };
-	m_container.insert(m_container.begin() + pos.m_row, begin, end);
-	unsigned distance = std::distance(customIterator::LineInsertIterator<>(std::string{ text }),
-		customIterator::LineInsertIterator<>());
-	unsigned row{ pos.m_row + --distance }, col{ m_container[row].length() };
+	//insertion 
+	// вставка строки в случае вставки не с начала строки
+	m_container.insert(m_container.begin() + pos.m_row, InsertIterator{ copy_text }, InsertIterator());
+	//count insertion string
+	unsigned count = std::distance(InsertIterator{std::string{ text }}, InsertIterator());
+	//  calculate new current row( and remeber about c-style(numeration from zero))(--count)
+	unsigned row{ pos.m_row + --count }, col{ m_container[row].length() };
+	//set cursor on new position
 	m_cursor->setCursor(position{ row,col },m_container);
-	if (is_new_line_need)
-		m_container.insert(m_container.begin() + pos.m_row + 1, end_of_current_string);
-	else
-		m_container[pos.m_row].append(end_of_current_string);
+	// this method or add new last row on new line or append  string to end last row; 
+	addLastRow(is_new_line_need, pos, end_of_current_string);
 }
 // ANALIZED
 void TextEditorCore::deleteText(const position & from, const position & to) {
-	if (from > maxPosition() || to > maxPosition())
+	if (from >= maxPosition() || to >= maxPosition())
 		throw std::logic_error(errorMessage::INVALID_POSITION);
 
 	if (from == to) // nothing delete
@@ -196,4 +193,12 @@ void TextEditorCore::getEndPartOfChangeString( const std::string & text, std::st
 	m_container.at(pos.m_row).erase(m_container.at(pos.m_row).begin() + pos.m_col, m_container.at(pos.m_row).end());
 	if (pos.m_col == constants::LINE_BEGIN) // if get all string. 
 		m_container.erase(m_container.begin() + pos.m_row);
+}
+
+void TextEditorCore::addLastRow(bool is_new_line_need, const position & pos, const std::string & part_of_string) noexcept
+{
+	if (is_new_line_need)
+		m_container.insert(m_container.begin() + pos.m_row + 1, part_of_string);
+	else
+		m_container[pos.m_row].append(part_of_string);
 }

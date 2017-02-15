@@ -57,6 +57,9 @@ public:
 	 position maxPosition(const Container& container) const noexcept{
 		return position(container.size() - 1, container.back().length());
 	}
+	 unsigned currentRowMaxCol(unsigned row,const Container& container) const noexcept {
+		 return container.at(row).length();
+	}
 	//tested
 	void cursorLeft(const Container& container);
 	//tested

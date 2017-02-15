@@ -2,11 +2,8 @@
 void Cursor::cancelReverseSelection()
 { 
 	if (m_selectedText.from().m_row > m_selectedText.to().m_row ||
-		(m_selectedText.from().m_row == m_selectedText.to().m_row  && m_selectedText.from().m_col > m_selectedText.to().m_col)) {
+		(m_selectedText.from().m_row == m_selectedText.to().m_row  && m_selectedText.from().m_col > m_selectedText.to().m_col))
 		std::swap(m_selectedText.from(), m_selectedText.to());//swap from with to
-		++m_selectedText.to().m_col;   //[to,from) after swap[from, to.m_col+1) for right reverse selection
-		// for exemple from {3,5}, to {0,0} after swap from{0,0} to{3,5+1}
-	}
 }
 
 void Cursor::addLastRowToSelectText(std::string& selectedText, const Container& container) noexcept
@@ -105,7 +102,7 @@ void Cursor::setCursor(unsigned row, unsigned col, const Container& container)
 void Cursor::setCursor(const position& pos, const Container& container)
 {
 	auto& cursor{ getPositionObject() };
-	if (pos < maxPosition(container) && /* check current row lenght*/pos.m_col <= container[pos.m_row].length())
+	if (pos <= maxPosition(container) && /* check current row lenght*/pos.m_col <= currentRowMaxCol(pos.m_row, container))
 		cursor = pos;
 	else
 		throw std::logic_error(errorMessage::INVALID_POSITION);
@@ -120,6 +117,7 @@ void Cursor::startSelection() noexcept {
 void Cursor::finishSelection() noexcept {
 	m_currentMode = mode::Edit;
 	m_cursor = m_selectedText.to();
+	cancelReverseSelection();
 }
 
 void Cursor::continueSelection()

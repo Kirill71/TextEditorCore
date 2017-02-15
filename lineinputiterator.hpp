@@ -8,7 +8,6 @@
 #include"message.hpp"
 
 namespace customIterator {
-
 	template <class StringT = std::string>
 	class LineInputIterator :
 		public std::iterator<std::input_iterator_tag, StringT, std::ptrdiff_t, const StringT*, const StringT&>
@@ -87,4 +86,6 @@ namespace customIterator {
 		StringT value;
 	};
 } // end ub
+using InputIterator = customIterator::LineInputIterator<>;
+using InsertIterator = customIterator::LineInsertIterator<>;
 #endif

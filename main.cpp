@@ -6,10 +6,12 @@ int main() {
 
 	TextEditorCore t(std::ifstream("file.txt"));
 	//t.write(std::cout);
-	t.setCursor(1, 0);
-	std::string str{ "Pussy You little pussy" };
+	std::string str{ "Pussy You\n little pussy\n" };
 	t.insert(str);
+	t.startSelection()
+		.setCursor(0, 0)
+		.finishSelection();
+		t.removeSelectedText();
 	t.write(std::cout);
-	std::cout << t.getCoursorPos();
 	system("pause");
 }
