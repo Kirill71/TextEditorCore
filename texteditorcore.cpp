@@ -128,17 +128,20 @@ void TextEditorCore::insertText(position& pos, const std::string& text)  noexcep
 	if (text.empty()) // empty input string => return
 		return;
 	std::string end_of_current_string{}, copy_text{ text };
-	bool is_new_line_need{ text.back() == constants::END_OF_LINE_CHAR };
+	bool is_new_line_need{ text.back() == constants::END_OF_LINE_CHAR }, central_insertion{}; // this variable keeps two value 0 or 1
 	// get end part of current change string
 	getEndPartOfChangeString(text, end_of_current_string, pos);
-	//insertion 
-	// вставка строки в случае вставки не с начала строки
-	m_container.insert(m_container.begin() + pos.m_row, InsertIterator{ copy_text }, InsertIterator());
+	auto begin{ InsertIterator{ copy_text } };
+	// if insertion in string from index not zero
+	if (pos.m_col > 0) {
+		m_container[pos.m_row].insert(pos.m_col, *begin++);//insert first row
+		central_insertion = true;
+	  }
+	m_container.insert(m_container.begin() + pos.m_row +/*implicit cast for uint*/ central_insertion, begin, InsertIterator());
 	//count insertion string
 	unsigned count = std::distance(InsertIterator{std::string{ text }}, InsertIterator());
 	//  calculate new current row( and remeber about c-style(numeration from zero))(--count)
 	unsigned row{ pos.m_row + --count }, col{ m_container[row].length() };
-	//set cursor on new position
 	m_cursor->setCursor(position{ row,col },m_container);
 	// this method or add new last row on new line or append  string to end last row; 
 	addLastRow(is_new_line_need, pos, end_of_current_string);
