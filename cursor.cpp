@@ -139,9 +139,12 @@ void Cursor::resetSelection() noexcept{
 	}
 }
 
-std::string Cursor::getSelectedText(const Container& container) noexcept
+std::string Cursor::getSelectedText(const Container& container)
 {
 	//выделение текста лежит в следующих границах [from, to) 
+	if (m_currentMode == mode::Select)
+		throw std::logic_error(errorMessage::SELECTING_NOT_FINISHED);
+
 	cancelReverseSelection();
 	std::string selectedText{};
 	// if selected one row, but no one columns, get this substr

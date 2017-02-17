@@ -25,9 +25,9 @@ public:
 	~TextEditorCore() = default;
 
 	// coursor methods
-	const position& getCoursorPos() const noexcept
+	const position& getCursorPosition() const noexcept
 	{
-		return m_cursor->getCoursorPos();
+		return m_cursor->getCursorPosition();
 	}
 	//  rvo //tested
 	 position maxPosition() const noexcept 

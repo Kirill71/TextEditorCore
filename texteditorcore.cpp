@@ -3,7 +3,7 @@
 TextEditorCore::TextEditorCore() 
 	: m_cursor{std::make_unique<Cursor>()},
 	m_finderReplacer{std::make_unique<Replacer>()},
-	m_container{ constants::DEFAULT_DOCUMENT_SIZE }
+	m_container{ constants::DEFAULT_DOCUMENT_SIZE, ""}
 {}
 
 TextEditorCore::TextEditorCore(std::istream & stream) 
@@ -52,12 +52,12 @@ TextEditorCore& TextEditorCore::setCursor(const position & pos){
 
 // insertion methods
 TextEditorCore & TextEditorCore::insert(char character){
-	insertText(const_cast<position&>(m_cursor->getCoursorPos()), std::string{ character });
+	insertText(const_cast<position&>(m_cursor->getCursorPosition()), std::string{ character });
 	return *this;
 }
 
 TextEditorCore & TextEditorCore::insert( std::string & str){
-	insertText(const_cast<position&>(m_cursor->getCoursorPos()), str);
+	insertText(const_cast<position&>(m_cursor->getCursorPosition()), str);
 	return *this;
 }
 
@@ -127,6 +127,11 @@ TextEditorCore & TextEditorCore::write(std::ostream& stream) {
 void TextEditorCore::insertText(position& pos, const std::string& text)  noexcept {
 	if (text.empty()) // empty input string => return
 		return;
+	int n{};
+	if (text == constants::END_OF_LINE) {
+		m_container.insert(m_container.begin() + pos.m_row + 1, "");
+		return;
+	}
 	std::string end_of_current_string{}, copy_text{ text };
 	bool is_new_line_need{ text.back() == constants::END_OF_LINE_CHAR }, central_insertion{}; // this variable keeps two value 0 or 1
 	// get end part of current change string

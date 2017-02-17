@@ -22,11 +22,13 @@ bool Replacer::replaceAll(const std::string & old_str, const std::string & new_s
 {
 	if (replace(old_str, new_str, max_pos, container)) {
 		position current_pos{};
-
+		// подумать про предидущую позицию с учетом замены.
 		while ((current_pos = findNext(max_pos, container)) != max_pos) {
+			if (m_findText.lastPosition().m_row == current_pos.m_row)
+				current_pos.m_col -= old_str.length(); // позиция с учетом предидущей замены.
+
 			replaceInContainer(current_pos, container, new_str);
 		}
 	}
-
 	return m_isSuccessfully;
 }

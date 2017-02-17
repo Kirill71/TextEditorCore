@@ -50,7 +50,7 @@ public:
 	Cursor& operator=(const Cursor&& csr) = delete;
 	~Cursor() = default;
 	// tested
-	const position& getCoursorPos() const noexcept{
+	const position& getCursorPosition() const noexcept{
 		return m_cursor;
 	}
 	//RVO //tested
@@ -102,6 +102,6 @@ public:
 	//tested
 	void resetSelection() noexcept;
 	//tested
-	std::string getSelectedText(const Container& container) noexcept;
+	std::string getSelectedText(const Container& container);
 };
 #endif // !CURSOR_HPP
