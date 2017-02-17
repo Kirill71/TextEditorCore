@@ -147,42 +147,45 @@ void TextEditorCore::insertText(position& pos, const std::string& text)  noexcep
 	addLastRow(is_new_line_need, pos, end_of_current_string);
 }
 // ANALIZED
-void TextEditorCore::deleteText(const position & from, const position & to) {
+void TextEditorCore::deleteText(const position & from, position & to) {
 	if (from >= maxPosition() || to >= maxPosition())
 		throw std::logic_error(errorMessage::INVALID_POSITION);
-
 	if (from == to) // nothing delete
 		return;
-
-	if (from.m_row == to.m_row) {
+	m_cursor->setCursor(from, m_container);
+	if (from.m_row == to.m_row) 
+	{
 		m_container.at(from.m_row).erase(from.m_col, to.m_col - from.m_col);
+		if (m_container[from.m_row].empty())
+			deleteRow(from.m_row);
 	}
-	else {
-		deleteRowTextFragment(from);
+	else
+	{
 		deleteColTextFragment(to);
+		if ((to.m_row - from.m_row) > 1)
+			m_container.erase(m_container.begin() + from.m_row + 1, m_container.begin() + to.m_row);
+		deleteRowTextFragment(from);		
 	}
-	if ((to - from) > 1)   
-		m_container.erase(m_container.begin() + (from.m_row + 1), m_container.begin() + (to.m_row - 1));
 }
 
 void TextEditorCore::deleteRow(unsigned row) noexcept{
 	m_container.erase(m_container.cbegin() + row);
 }
 
-void TextEditorCore::deleteRowTextFragment(const position& from) {
+void TextEditorCore::deleteRowTextFragment(const position& from) noexcept{
 	unsigned count{ m_container.at(from.m_row).length() - from.m_col};
-
-	if (from.m_col == 0) // col == zero - delete all line.
-		deleteRow(from.m_row); 
+	if (from.m_col == 0) {
+		deleteRow(from.m_row);
+	}
 	else 
 		m_container[from.m_row].erase(from.m_col, count);
 }
 
-void TextEditorCore::deleteColTextFragment(const position & to){
-	if (to.m_col == m_container.at(to.m_row).length()) // delete all line from zero to end
-		deleteRow(to.m_row); // removing to end of line(from end position)
+void TextEditorCore::deleteColTextFragment(const position & to) noexcept{
+	if (to.m_col == m_container.at(to.m_row).length()) 
+		deleteRow(to.m_row);
 	else 
-		m_container.at(to.m_row).erase(0, to.m_col);
+		m_container.at(to.m_row).erase(constants::LINE_BEGIN, to.m_col);
 }
 
 void TextEditorCore::getEndPartOfChangeString( const std::string & text, std::string & end_of_current_string, const position& pos){

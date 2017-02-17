@@ -115,10 +115,10 @@ private:
 
 	//private methods
 	void insertText( position& pos, const std::string& text) noexcept;
-	void deleteText(const position& from, const position& to);
-	void deleteRow(unsigned row) noexcept; 
-	void deleteRowTextFragment(const position& from);
-	void deleteColTextFragment(const position& to);
+	void deleteText(const position& from, position& to);
+	void deleteRow(unsigned row) noexcept;
+	void deleteRowTextFragment(const position& from) noexcept;
+	void deleteColTextFragment( const position& to) noexcept;
 	void getEndPartOfChangeString(const std::string& text, std::string& end_of_current_string, const position& pos);
 	// this method or add last row on new line or append last row; 
 	void addLastRow(bool is_new_line_need,const position& pos, const std::string& last_row) noexcept;
