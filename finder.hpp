@@ -36,7 +36,7 @@ public:
 	//tested
 	const position& find(const std::string& str, const position& max_pos, const Container& container);
 	//tested
-	const position& findNext(const position& max_pos, const Container& container);
+	const position& findNext(const position& max_pos, const Container& container, bool is_replace = false);
 };
 #endif
 

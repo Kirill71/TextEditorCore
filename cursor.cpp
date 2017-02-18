@@ -6,11 +6,11 @@ void Cursor::cancelReverseSelection()
 		std::swap(m_selectedText.from(), m_selectedText.to());//swap from with to
 }
 
-void Cursor::addLastRowToSelectText(std::string& selectedText, const Container& container) noexcept
+void Cursor::addLastRowFromMultilineSelection(std::string& selectedText, const Container& container) noexcept
 {
 	selectedText
-		.append(container[m_selectedText.to().m_row].substr(constants::LINE_BEGIN, m_selectedText.to().m_col))
-		.append(constants::END_OF_LINE);
+		.append(container[m_selectedText.to().m_row]
+			.substr(constants::LINE_BEGIN, m_selectedText.to().m_col));
 }
 
 void Cursor::addSingleRow(std::string& selectedText, const Container & container) noexcept
@@ -33,17 +33,12 @@ void Cursor::addFirstRowFromMiltilineSelection(std::string& selectedText, const 
 
 void Cursor::multilineRowSelection(std::string& selectedText, const Container & container) noexcept
 {
-	auto begin{ container.begin() + (m_selectedText.from().m_row + 1) },
-		 end{ begin + m_selectedText.to().m_row };
-	/*for (auto row = (m_selectedText.from().m_row + 1); row < m_selectedText.to().m_row; ++row)
-		selectedText.append(container[row]).append(END_OF_LINE);*/
+	auto begin{ container.begin() + (m_selectedText.from().m_row +1 ) },
+		 end{ container.begin() + m_selectedText.to().m_row};
 	auto add_row = [&selectedText](const std::string& curr_str)
 	{selectedText.append(curr_str).append(constants:: END_OF_LINE); };
 
 	std::for_each(begin, end,add_row);
-	// если завершающий столбец == 0,то нет смысла добовлять завершитель иначе добавляется последняя строка и завершающий перенос каретки.
-	if (m_selectedText.to().m_col != constants::LINE_BEGIN)
-		addLastRowToSelectText(selectedText, container);
 }
 
 Cursor::Cursor() : Cursor(constants::LINE_BEGIN, constants::LINE_BEGIN) {}
@@ -139,26 +134,23 @@ void Cursor::resetSelection() noexcept{
 	}
 }
 
-std::string Cursor::getSelectedText(const Container& container)
+std::string Cursor::getSelectedText(const Container& container) noexcept
 {
-	//выделение текста лежит в следующих границах [from, to) 
 	if (m_currentMode == mode::Select)
-		throw std::logic_error(errorMessage::SELECTING_NOT_FINISHED);
-
-	cancelReverseSelection();
+		finishSelection();
 	std::string selectedText{};
-	// if selected one row, but no one columns, get this substr
-	if ((m_selectedText.from().m_row == m_selectedText.to().m_row) && (m_selectedText.from() != m_selectedText.to())) {
-		addSingleRow(selectedText, container);
-	}
-	else {
-		if (m_selectedText.from().m_row != m_selectedText.to().m_row) {
-			addFirstRowFromMiltilineSelection(selectedText, container);
+	// if from == to return.
+	if (!(m_selectedText.from() == m_selectedText.to())) 
+	{
+		if ((m_selectedText.from().m_row == m_selectedText.to().m_row)) {
+			addSingleRow(selectedText, container);
 		}
-
-		if ((m_selectedText.to() - m_selectedText.from()) >= 1) {
-			multilineRowSelection(selectedText, container);
-		};
+		else {
+			addFirstRowFromMiltilineSelection(selectedText, container);
+			if ((m_selectedText.to() - m_selectedText.from()) > 1)
+				multilineRowSelection(selectedText, container);
+			addLastRowFromMultilineSelection(selectedText, container);
+		}
 	}
 	//Return value optimization
 	return selectedText;

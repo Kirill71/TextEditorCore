@@ -12,8 +12,8 @@ TextEditorCore::TextEditorCore(std::istream & stream)
 	//	P.S. Я бы метод чтения и записи в поток
 	//вынес в отдельный класс и сделал его частью ТеxtEditorCore 
 	m_container
-		.assign((customIterator::LineInputIterator<>{ stream }), 
-			customIterator::LineInputIterator<>{});
+		.assign((InputIterator{ stream }), 
+			InputIterator{});
 	
 	/* Если загружен пустой файл - я это ошибкой не считаю,
 	т.к открытие пустого документа,
@@ -63,7 +63,7 @@ TextEditorCore & TextEditorCore::insert( std::string & str){
 
 TextEditorCore & TextEditorCore::removeSelectedText()
 {
-	deleteText(m_cursor->m_selectedText.from(),  m_cursor->m_selectedText.to());
+	deleteText(m_cursor->m_selectedText.from(), m_cursor->m_selectedText.to());
 	m_cursor->m_selectedText.to() = m_cursor->m_selectedText.from(); 
 	return *this;
 }
@@ -117,17 +117,11 @@ bool TextEditorCore::replaceAll(const std::string & old_str, const std::string &
 	return m_finderReplacer->replaceAll(old_str, new_str, maxPosition(), m_container);
 }
 
-TextEditorCore & TextEditorCore::write(std::ostream& stream) {
-	std::copy(m_container.cbegin(), m_container.cend(),
-		std::ostream_iterator<std::string>(stream, constants::END_OF_LINE.c_str()));
-	return *this;
-}
-
 // private methods 
 void TextEditorCore::insertText(position& pos, const std::string& text)  noexcept {
 	if (text.empty()) // empty input string => return
 		return;
-	int n{};
+
 	if (text == constants::END_OF_LINE) {
 		m_container.insert(m_container.begin() + pos.m_row + 1, "");
 		return;
@@ -151,7 +145,7 @@ void TextEditorCore::insertText(position& pos, const std::string& text)  noexcep
 	// this method or add new last row on new line or append  string to end last row; 
 	addLastRow(is_new_line_need, pos, end_of_current_string);
 }
-// ANALIZED
+
 void TextEditorCore::deleteText(const position & from, position & to) {
 	if (from >= maxPosition() || to >= maxPosition())
 		throw std::logic_error(errorMessage::INVALID_POSITION);
@@ -212,4 +206,11 @@ void TextEditorCore::addLastRow(bool is_new_line_need, const position & pos, con
 		m_container.insert(m_container.begin() + pos.m_row + 1, part_of_string);
 	else
 		m_container[pos.m_row].append(part_of_string);
+}
+
+std::ostream & operator<<(std::ostream & lhs,  TextEditorCore & rhs) noexcept
+{
+	std::copy(rhs.m_container.cbegin(), rhs.m_container.cend(),
+		std::ostream_iterator<std::string>(lhs, constants::END_OF_LINE.c_str()));
+	return lhs;
 }

@@ -105,10 +105,8 @@ public:
 	bool replace(const std::string& old_str, const std::string& new_str);
 	//tested
 	bool replaceAll(const std::string& old_str, const std::string& new_str);
-	// write to stream
-	//tested
-	TextEditorCore& write(std::ostream& stream);
 private:
+	friend  std::ostream& operator<< (std::ostream& lhs, TextEditorCore& rhs) noexcept;
 	std::unique_ptr<Cursor> m_cursor;
 	std::unique_ptr<Replacer> m_finderReplacer;
 	Container m_container;

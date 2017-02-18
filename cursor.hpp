@@ -36,7 +36,7 @@ class Cursor{
 		return (m_currentMode == mode::Edit) ? m_cursor : m_selectedText.to();
 	}
 	void cancelReverseSelection();
-	void addLastRowToSelectText(std::string& selectedText, const Container& container) noexcept;
+	void addLastRowFromMultilineSelection(std::string& selectedText, const Container& container) noexcept;
 	void addSingleRow(std::string& selectedText, const Container& container) noexcept;
 	void addFirstRowFromMiltilineSelection(std::string& selectedText, const Container& container) noexcept;
 	//WARNING NOT TESTED
@@ -75,21 +75,21 @@ public:
 
 	void currentLineBegin() noexcept 
 	{
-		m_cursor.m_col = constants::LINE_BEGIN;
+		getPositionObject().m_col = constants::LINE_BEGIN;
 	};
 
 	void currentLineEnd(const Container & container) noexcept
 	{
-		m_cursor.m_col = container[m_cursor.m_row].length();
+		getPositionObject().m_col = container[m_cursor.m_row].length();
 	}
 
 	void documentBegin() noexcept 
 	{
-		m_cursor.m_row = m_cursor.m_col = constants::LINE_BEGIN;
+		getPositionObject().m_row = getPositionObject().m_col = constants::LINE_BEGIN;
 	}
 	void documentEnd(const Container & container) noexcept
 	{
-		m_cursor = maxPosition(container);
+		getPositionObject() = maxPosition(container);
 	}
 
 	// selection
@@ -102,6 +102,6 @@ public:
 	//tested
 	void resetSelection() noexcept;
 	//tested
-	std::string getSelectedText(const Container& container);
+	std::string getSelectedText(const Container& container) noexcept;
 };
 #endif // !CURSOR_HPP

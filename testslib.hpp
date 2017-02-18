@@ -10,11 +10,12 @@
 #include <algorithm>
 #include <iostream>
 #include <string>
+#include<functional>
 
 /*****************************************************************************/
 
 typedef void ( *TestProcedure )( );
-
+//using TestProcedure =  std::function<void()>;
 /*****************************************************************************/
 
 class TestsRunner
@@ -116,6 +117,7 @@ public:
 int main ()
 {
 	gs_TestsRunner.runTests();
+	system("pause");
 }
 
 /*****************************************************************************/

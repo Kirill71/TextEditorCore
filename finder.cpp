@@ -23,9 +23,10 @@ const position & Finder::find(const std::string & str, const position & max_pos,
 	return  (find_pos != max_pos) ? find_pos : throw std::logic_error(errorMessage::TEXT_NOT_FOUND);
 }
 
-const position & Finder::findNext(const position& max_pos, const Container& container)
+const position & Finder::findNext(const position& max_pos, const Container& container, bool is_replace)
 {
+	auto length{ (is_replace) ? 0 : m_findText.searchString().length() };
 	return find_base(m_findText.searchString(), max_pos, container,
 		position{ m_findText.lastPosition().m_row,
-		m_findText.lastPosition().m_col + m_findText.searchString().length()});
+		m_findText.lastPosition().m_col + length});
 }

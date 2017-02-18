@@ -4,11 +4,6 @@
 #include <cassert>
 #include <sstream>
 
-
-
-//note: if: c_strings are equal strcmp => ret 0
-//		if: strings are equal std::basic_string::compare => ret 0
-
 DECLARE_OOP_TEST(empty_constructor) {
 	TextEditorCore t1{};
 	position t1_p = t1.getCursorPosition();
@@ -36,8 +31,8 @@ DECLARE_OOP_TEST(empty_constructor) {
 	t1.cursorDown();
 		t1.cursorDown();
 		t1.finishSelection();
-		
-	assert(!t1.getSelectedText().compare(std::string{ "\n\n\n" }));
+		std::string str = t1.getSelectedText();
+	assert(!str.compare(std::string{ "\n\n" }));
 
 	try {
 		t1.find("Hello");
@@ -200,23 +195,22 @@ DECLARE_OOP_TEST( keys ) {
 
 DECLARE_OOP_TEST(write) {
 
-TextEditorCore t{ std::ifstream{ "loremIO.txt" }};
+TextEditorCore t{ std::ifstream{ "file.txt" }};
 
 std::ofstream ofile("newIO.txt");
 
-t.write(std::ofstream{ "newIO.txt" });
+ofile << t;
+ofile.close();
 
-// check files are equal
-
-std::ifstream ifile1("loremIO.txt");
+std::ifstream ifile1("file.txt");
 std::ifstream ifile2("newIO.txt");
-
+ifile1.close();
+ifile2.close();
 std::stringstream first,second;
 
 first << ifile1.rdbuf();
 second << ifile2.rdbuf();
-
-assert( !first.str().compare( second.str()) );
+assert( !first.str().compare(second.str()));
 std::remove("newIO.txt");
 };
 
@@ -245,31 +239,29 @@ DECLARE_OOP_TEST(selection) {
 
 
 
-	//got = t1.CtrlHomeKeyPressed()
-	//		.cursorRight()
-	//		.startSelection()
-	//		.cursorDown()
-	//		.cursorDown()
-	//		.cursorRight()
-	//		.cursorDown()
-	//		.finishSelection()
-	//		.getSelectedText();
-	////error
-	//assert( !got.compare("12345678901234567890123456789\n012345678901234567890123456789\n012\n01234\n01\n"));
+	got = t1.CtrlHomeKeyPressed()
+			.cursorRight()
+			.startSelection()
+			.cursorDown()
+			.cursorDown()
+			.cursorRight()
+			.cursorDown()
+			.finishSelection()
+			.getSelectedText();
+	//error
+	assert( !got.compare("12345678901234567890123456789\n012345678901234567890123456789\n012\n01"));
 
 
-	//got = t1.CtrlEndKeyPressed()
-	//		.startSelection()
-	//		.cursorUp()
-	//		.cursorUp()
-	//		.cursorUp()
-	//		.cursorUp()
-	//		.finishSelection()
-	//		.getSelectedText();
+	t1.CtrlEndKeyPressed();
+		t1.startSelection();
+		t1.cursorUp();
+		t1.cursorUp();
+		t1.cursorUp();
+		t1.cursorUp();
+	t1.finishSelection();
+	got = t1.getSelectedText();
 
-	//assert(!got.compare("01234\n\n\n\n012345678901234567890123456789"));
-
-
+	assert(!got.compare("01234\n\n\n\n012345678901234567890123456789"));
 };
 
 DECLARE_OOP_TEST(delete_selected) {
@@ -288,7 +280,7 @@ DECLARE_OOP_TEST(delete_selected) {
 					.cursorDown().finishSelection()
 					.getSelectedText();
 
-	assert( got.compare( "012\n01234\n" ) );
+	assert( !got.compare( "012\n01234\n" ) );
 };
 
 DECLARE_OOP_TEST(find) {
@@ -298,14 +290,10 @@ DECLARE_OOP_TEST(find) {
 
 	position f = t1.find("012345");
 
-
 	assert(f == position{});
-
-
 
 	f = t1.findNext();
 	assert( f == position( 0,10 ) );
-
 
 	f = t1.findNext();
 
@@ -314,13 +302,11 @@ DECLARE_OOP_TEST(find) {
 	f = t1.findNext();
 	assert(f == position(1, 0));
 
-
 	try {
 		f = t1.find("");
 	} catch (std::logic_error err) {
 		assert(errorMessage::EMPTY_SEARCH_STRING == err.what());
 	};
-
 		f = t1.findNext();
 		assert(f == position(1,10));
 		
@@ -332,10 +318,7 @@ DECLARE_OOP_TEST(find) {
 		}		
 };
 
-
-
-DECLARE_OOP_TEST(replace) {//replacing non multiline 
-	std::ifstream ("loremIO.txt");
+DECLARE_OOP_TEST(replace) {
 	TextEditorCore t1(std::ifstream("loremIO.txt"));
 
 	t1.replaceAll("0123456789", "*");
