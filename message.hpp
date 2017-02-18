@@ -21,6 +21,5 @@ namespace errorMessage
 	const  std::string EMPTY_REPLACE_STRING { "Empty replace string" };
 	const  std::string TEXT_NOT_FOUND { "Text not found" };
 	const  std::string BAD_CONTINUE_SELECTION{ "Bad continue selection" };
-	const std::string  SELECTING_NOT_FINISHED{ "Selecting text is not finished" };
 };
 #endif
