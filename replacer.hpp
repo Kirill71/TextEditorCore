@@ -19,4 +19,3 @@ public:
 	bool replaceAll(const std::string& old_str, const std::string& new_str, const position& max_pos, Container& container);
 };
 #endif // !REPLACER_HPP
-

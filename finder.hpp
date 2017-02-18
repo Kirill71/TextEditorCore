@@ -39,4 +39,3 @@ public:
 	const position& findNext(const position& max_pos, const Container& container, bool is_replace = false);
 };
 #endif
-
