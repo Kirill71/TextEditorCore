@@ -52,59 +52,49 @@ TextEditorCore & TextEditorCore::insert( const std::string & str){
 	return *this;
 }
 
-TextEditorCore & TextEditorCore::removeSelectedText()
-{
+TextEditorCore & TextEditorCore::removeSelectedText(){
 	deleteText(m_cursor->m_selectedText.from(), m_cursor->m_selectedText.to());
 	m_cursor->m_selectedText.to() = m_cursor->m_selectedText.from(); 
 	return *this;
 }
 
-TextEditorCore & TextEditorCore::startSelection() noexcept
-{
+TextEditorCore & TextEditorCore::startSelection() noexcept{
 	m_cursor->startSelection();
 	return *this;
 }
 
-TextEditorCore & TextEditorCore::finishSelection() noexcept
-{
+TextEditorCore & TextEditorCore::finishSelection() noexcept{
 	m_cursor->finishSelection();
 	return *this;
 }
 
-TextEditorCore & TextEditorCore::continueSelection()
-{
+TextEditorCore & TextEditorCore::continueSelection(){
 	m_cursor->continueSelection();
 	return *this;
 }
 
-TextEditorCore & TextEditorCore::resetSelection() noexcept
-{
+TextEditorCore & TextEditorCore::resetSelection() noexcept{
 	m_cursor->resetSelection();
 	return *this;
 }
 
-std::string TextEditorCore::getSelectedText() noexcept
-{
+std::string TextEditorCore::getSelectedText() noexcept{
 	return m_cursor->getSelectedText(m_container);
 }
 
-const position & TextEditorCore::find(const std::string & str)
-{
+const position & TextEditorCore::find(const std::string & str){
 	return m_finderReplacer->find(str, maxPosition(), m_container);
 }
 
-const position & TextEditorCore::findNext()
-{
+const position & TextEditorCore::findNext(){
 	return m_finderReplacer->findNext(maxPosition(), m_container);
 }
 
-bool TextEditorCore::replace(const std::string & old_str, const std::string & new_str)
-{
+bool TextEditorCore::replace(const std::string & old_str, const std::string & new_str){
 	return  m_finderReplacer->replace(old_str, new_str, maxPosition(), m_container);
 }
 
-bool TextEditorCore::replaceAll(const std::string & old_str, const std::string & new_str)
-{
+bool TextEditorCore::replaceAll(const std::string & old_str, const std::string & new_str){
 	return m_finderReplacer->replaceAll(old_str, new_str, maxPosition(), m_container);
 }
 
@@ -118,6 +108,7 @@ void TextEditorCore::insertText(position& pos,  std::string& text)  noexcept {
 		newLineInsert(text, end_of_current_string, pos);
 		return;
 	}
+
 	bool is_new_line_need{ text.back() == constants::END_OF_LINE_CHAR }, central_insertion{}; // this variable keeps two value 0 or 1																		  // get end part of current change string
 	getEndPartOfChangeString(text, end_of_current_string, pos);
 	auto begin{ InsertIterator{ copy_text } };
@@ -144,19 +135,20 @@ void TextEditorCore::insertText(position& pos,  std::string& text)  noexcept {
 void TextEditorCore::deleteText(const position & from, position & to) {
 	if (from >= maxPosition() || to >= maxPosition())
 		throw std::logic_error(errorMessage::INVALID_POSITION);
+
 	if (m_cursor->m_currentMode == Cursor::mode::Select)
 		finishSelection();
+
 	if (from == to) // nothing delete
 		return;
+
 	m_cursor->setCursor(from, m_container);
-	if (from.m_row == to.m_row) 
-	{
+	if (from.m_row == to.m_row) {
 		m_container.at(from.m_row).erase(from.m_col, to.m_col - from.m_col);
 		if (m_container[from.m_row].empty())
 			deleteRow(from.m_row);
 	}
-	else
-	{
+	else{
 		deleteColTextFragment(to);
 		if ((to.m_row - from.m_row) > 1)
 			m_container.erase(m_container.begin() + from.m_row + 1, m_container.begin() + to.m_row);
@@ -197,35 +189,30 @@ void TextEditorCore::getEndPartOfChangeString( const std::string & text, std::st
 		m_container.erase(m_container.begin() + pos.m_row);
 }
 
-void TextEditorCore::addLastRow(bool is_new_line_need, const position & pos, const std::string & part_of_string) noexcept
-{
+void TextEditorCore::addLastRow(bool is_new_line_need, const position & pos, const std::string & part_of_string) noexcept{
 	if (is_new_line_need)
 		m_container.insert(m_container.begin() + pos.m_row + 1, part_of_string);
 	else
 		m_container[pos.m_row].append(part_of_string);
 }
 
-void TextEditorCore::newLineInsert(const std::string & text, std::string & end_of_string, position & pos) noexcept
-{
+void TextEditorCore::newLineInsert(const std::string & text, std::string & end_of_string, position & pos) noexcept{
 	if (pos.m_col == 0) 
 		m_container.insert(m_container.begin() + pos.m_row, constants::SPACE);
-	else
-	{
+	else{
 		getEndPartOfChangeString(text, end_of_string, pos);
 		m_container.insert(m_container.begin() + pos.m_row + 1, end_of_string);
 	}
 	m_cursor->setCursor(position{ pos.m_row + 1, constants::LINE_BEGIN }, m_container);
 }
 
-std::ostream & operator<<(std::ostream & lhs,  TextEditorCore & rhs) noexcept
-{
+std::ostream & operator<<(std::ostream & lhs,  TextEditorCore & rhs) noexcept{
 	std::copy(rhs.m_container.cbegin(), rhs.m_container.cend(),
 		std::ostream_iterator<std::string>(lhs, constants::END_OF_LINE.c_str()));
 	return lhs;
 }
 
-std::istream & operator >> (std::istream & lhs, TextEditorCore & rhs) noexcept
-{
+std::istream & operator >> (std::istream & lhs, TextEditorCore & rhs) noexcept{
 	rhs.m_container
 		.assign((InputIterator{ lhs }),
 			InputIterator{});

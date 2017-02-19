@@ -32,9 +32,11 @@ struct position {
 	bool operator>(const position& rhs) const  noexcept {
 		return  !(*this < rhs);
 	}
+
 	int operator-(const position& rhs) const noexcept {
 		return static_cast<int>(this->m_row - rhs.m_row);
 	}
+
 	friend std::ostream& operator <<(std::ostream& lhs, const position& rhs) {
 		lhs << rhs.m_row << " - " << rhs.m_col << std::endl;
 		return lhs;

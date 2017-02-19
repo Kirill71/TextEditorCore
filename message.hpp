@@ -5,8 +5,7 @@
 #include<stdexcept>
 using Container = std::vector<std::string>;
 
-namespace constants 
-{
+namespace constants {
 	/*Базовый размер документа,
 	чтобы не делать частые перевыделения памяти, устанавливаю размер в 1000 элементов.*/
 	const unsigned	  DEFAULT_DOCUMENT_SIZE{ 1000 };
@@ -15,8 +14,7 @@ namespace constants
 	const char		  END_OF_LINE_CHAR = { '\n' };
 	const std::string SPACE{ " " };
 };
-namespace errorMessage  
-{
+namespace errorMessage  {
 	const  std::string INVALID_POSITION { "Invalid position of cursor" };
 	const  std::string EMPTY_SEARCH_STRING { "Empty search string" };
 	const  std::string EMPTY_REPLACE_STRING { "Empty replace string" };

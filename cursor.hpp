@@ -64,22 +64,18 @@ public:
 	void setCursor(unsigned row, unsigned col, const Container& container);
 	void setCursor(const position& pos, const Container& container);
 
-	void currentLineBegin() noexcept 
-	{
+	void currentLineBegin() noexcept {
 		getPositionObject().m_col = constants::LINE_BEGIN;
-	};
+	}
 
-	void currentLineEnd(const Container & container) noexcept
-	{
+	void currentLineEnd(const Container & container) noexcept{
 		getPositionObject().m_col = container[m_cursor.m_row].length();
 	}
 
-	void documentBegin() noexcept 
-	{
+	void documentBegin() noexcept {
 		getPositionObject().m_row = getPositionObject().m_col = constants::LINE_BEGIN;
 	}
-	void documentEnd(const Container & container) noexcept
-	{
+	void documentEnd(const Container & container) noexcept{
 		getPositionObject() = maxPosition(container);
 	}
 

@@ -23,13 +23,11 @@ public:
 	~TextEditorCore() = default;
 
 	// coursor methods
-	const position& getCursorPosition() const noexcept
-	{
+	const position& getCursorPosition() const noexcept{
 		return m_cursor->getCursorPosition();
 	}
 	//  rvo 
-	 position maxPosition() const noexcept 
-	{
+	 position maxPosition() const noexcept {
 		return m_cursor->maxPosition(m_container);
 	}
 	TextEditorCore& cursorLeft();
@@ -46,26 +44,22 @@ public:
 	TextEditorCore& removeSelectedText();
 
 	// some specified keys
-	TextEditorCore& HomeKeyPressed() noexcept 
-	{
+	TextEditorCore& HomeKeyPressed() noexcept {
 		m_cursor->currentLineBegin();
 		return *this;
 	}
 
-	TextEditorCore& EndKeyPressed() noexcept 
-	{
+	TextEditorCore& EndKeyPressed() noexcept {
 		m_cursor->currentLineEnd(m_container);
 		return *this;
 	}
 
-	TextEditorCore& CtrlHomeKeyPressed() noexcept 
-	{
+	TextEditorCore& CtrlHomeKeyPressed() noexcept {
 		m_cursor->documentBegin();
 		return *this;
 	}
 
-	TextEditorCore& CtrlEndKeyPressed() noexcept 
-	{
+	TextEditorCore& CtrlEndKeyPressed() noexcept {
 		m_cursor->documentEnd(m_container);
 		return *this;
 	}

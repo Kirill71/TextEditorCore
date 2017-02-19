@@ -3,8 +3,7 @@
 #include"finder.hpp"
 
 class Replacer
-	: public Finder
-{
+	: public Finder{
 	bool m_isSuccessfully;
 	void replaceInContainer(const position& current_pos, Container& container, const std::string new_str);
 public:
