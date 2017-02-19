@@ -107,6 +107,7 @@ public:
 	bool replaceAll(const std::string& old_str, const std::string& new_str);
 private:
 	friend  std::ostream& operator<< (std::ostream& lhs, TextEditorCore& rhs) noexcept;
+	friend  std::istream& operator>> (std::istream& lhs, TextEditorCore& rhs) noexcept;
 	std::unique_ptr<Cursor> m_cursor;
 	std::unique_ptr<Replacer> m_finderReplacer;
 	Container m_container;

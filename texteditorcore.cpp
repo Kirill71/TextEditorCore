@@ -8,16 +8,7 @@ TextEditorCore::TextEditorCore()
 
 TextEditorCore::TextEditorCore(std::istream & stream) 
 	: TextEditorCore(){
-	// противоречит SOLIDу, но да ладно.
-	//	P.S. Я бы метод чтения и записи в поток
-	//вынес в отдельный класс и сделал его частью ТеxtEditorCore 
-	m_container
-		.assign((InputIterator{ stream }), 
-			InputIterator{});
-	
-	/* Если загружен пустой файл - я это ошибкой не считаю,
-	т.к открытие пустого документа,
-	поддерживают все известные мне тектовые редакторы.*/
+	stream >> *this;
 }
 // cursor methods
 TextEditorCore& TextEditorCore::cursorLeft(){
@@ -212,5 +203,13 @@ std::ostream & operator<<(std::ostream & lhs,  TextEditorCore & rhs) noexcept
 {
 	std::copy(rhs.m_container.cbegin(), rhs.m_container.cend(),
 		std::ostream_iterator<std::string>(lhs, constants::END_OF_LINE.c_str()));
+	return lhs;
+}
+
+std::istream & operator >> (std::istream & lhs, TextEditorCore & rhs) noexcept
+{
+	rhs.m_container
+		.assign((InputIterator{ lhs }),
+			InputIterator{});
 	return lhs;
 }
