@@ -37,12 +37,12 @@ void deleter(TextEditorCore& t, const position& from, const position& to) {
 //	inserter(t,position{ 0,0 }, std::string{ "Jully\n My little Jully\n" });
 //	deleter(t, position{ 0,0 }, position{1,16});
 ////	t.insert(std::string{ "bla-bla-bla" });
-////	inserter(t1, position{ 1,0 }, std::string{ "Jully little Jully\n" });
-////	inserter(t2, position{ 1,4 }, std::string{ "Jully little Jully\n" });
-////	inserter(t3, position{ 0,0 }, std::string{ "Jully little Jully" });
-////	inserter(t4, position{ 0,4 }, std::string{ "Jully little Jully\n" });
-////	inserter(t5, position{ 0,0 }, std::string{ "Jully little\n Jully\n" });
-////	inserter(t6, position{ 0,5 }, std::string{ "Jully little\n Jully\n" });
+////	inserter(t1, position{ 1,0 }, std::string{ "Jully, My little Jully\n" });
+////	inserter(t2, position{ 1,4 }, std::string{ "Jully, My little Jully\n" });
+////	inserter(t3, position{ 0,0 }, std::string{ "Jully, My little Jully" });
+////	inserter(t4, position{ 0,4 }, std::string{ "Jully, My little Jully\n" });
+////	inserter(t5, position{ 0,0 }, std::string{ "Jully, My little\n Jully\n" });
+////	inserter(t6, position{ 0,5 }, std::string{ "Jully, My little\n Jully\n" });
 ////	inserter(t7, position{ 1,3 }, std::string{});
 ////	inserter(t8, position{ 0,0 }, std::string{ constants::END_OF_LINE });
 ////	inserter(t9, position{ 0,4 }, std::string{ constants::END_OF_LINE });
