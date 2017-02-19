@@ -33,9 +33,7 @@ public:
 	Finder(const Finder&& rhs) = delete;
 	Finder& operator=(const Finder&&) = delete;
 	virtual ~Finder() = default;
-	//tested
 	const position& find(const std::string& str, const position& max_pos, const Container& container);
-	//tested
 	const position& findNext(const position& max_pos, const Container& container, bool is_replace = false);
 };
 #endif

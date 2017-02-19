@@ -3,7 +3,7 @@ void Cursor::cancelReverseSelection()
 { 
 	if (m_selectedText.from().m_row > m_selectedText.to().m_row ||
 		(m_selectedText.from().m_row == m_selectedText.to().m_row  && m_selectedText.from().m_col > m_selectedText.to().m_col))
-		std::swap(m_selectedText.from(), m_selectedText.to());//swap from with to
+		std::swap(m_selectedText.from(), m_selectedText.to());//swap from with to, if to < from
 }
 
 void Cursor::addLastRowFromMultilineSelection(std::string& selectedText, const Container& container) noexcept

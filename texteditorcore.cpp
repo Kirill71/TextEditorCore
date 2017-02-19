@@ -1,13 +1,13 @@
 #include "texteditorcore.hpp"
 
-TextEditorCore::TextEditorCore() 
+TextEditorCore::TextEditorCore() noexcept
 	: m_cursor{std::make_unique<Cursor>()},
 	m_finderReplacer{std::make_unique<Replacer>()},
 	m_container{ constants::DEFAULT_DOCUMENT_SIZE, ""}
 {}
 
-TextEditorCore::TextEditorCore(std::istream & stream) 
-	: TextEditorCore(){
+TextEditorCore::TextEditorCore(std::istream & stream)  noexcept
+	: TextEditorCore() {
 	stream >> *this;
 }
 // cursor methods
@@ -47,8 +47,8 @@ TextEditorCore & TextEditorCore::insert(char character){
 	return *this;
 }
 
-TextEditorCore & TextEditorCore::insert( std::string & str){
-	insertText(const_cast<position&>(m_cursor->getCursorPosition()), str);
+TextEditorCore & TextEditorCore::insert( const std::string & str){
+	insertText(const_cast<position&>(m_cursor->getCursorPosition()), const_cast<std::string&>(str));
 	return *this;
 }
 
@@ -109,7 +109,7 @@ bool TextEditorCore::replaceAll(const std::string & old_str, const std::string &
 }
 
 // private methods 
-void TextEditorCore::insertText(position& pos, const std::string& text)  noexcept {
+void TextEditorCore::insertText(position& pos,  std::string& text)  noexcept {
 	if (text.empty()) // empty input string => return
 		return;
 

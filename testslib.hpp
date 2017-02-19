@@ -10,12 +10,12 @@
 #include <algorithm>
 #include <iostream>
 #include <string>
+#include<locale>
 #include<functional>
 
 /*****************************************************************************/
 
-typedef void ( *TestProcedure )( );
-//using TestProcedure =  std::function<void()>;
+using TestProcedure =  std::function<void()>; // - по-молодежнее что-ли.
 /*****************************************************************************/
 
 class TestsRunner
@@ -47,7 +47,7 @@ public:
 			, [ & ] ( std::pair< std::string, TestProcedure > const & _test )
 		{
 			std::cout << "Test #" << counter << " \"" << _test.first << "\" ";
-			( *_test.second )( );
+			(_test.second )( );
 			std::cout << "\n> Success... " << '\n';
 			++counter;
 		}
@@ -116,6 +116,7 @@ public:
 
 int main ()
 {
+	setlocale(LC_ALL, "Russian");
 	gs_TestsRunner.runTests();
 	system("pause");
 }

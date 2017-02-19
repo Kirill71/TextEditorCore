@@ -144,7 +144,7 @@
   <ItemGroup>
     <ClInclude Include="cursor.hpp" />
     <ClInclude Include="finder.hpp" />
-    <ClInclude Include="lineinputiterator.hpp" />
+    <ClInclude Include="customIterator.hpp" />
     <ClInclude Include="message.hpp" />
     <ClInclude Include="position.hpp" />
     <ClInclude Include="replacer.hpp" />
@@ -163,8 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="empty.txt" />
-    <Text Include="loremIO.txt" />
-    <Text Include="testIO.txt" />
+    <Text Include="test.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

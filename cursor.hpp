@@ -29,8 +29,7 @@ class Cursor{
 		}
 	} m_selectedText;
 	
-	//tested
-	// methods
+	//cursor methods
 	// if mode == Edit return coursor, if Select return first position of selection;
 	position& getPositionObject() noexcept{
 		return (m_currentMode == mode::Edit) ? m_cursor : m_selectedText.to();
@@ -39,7 +38,6 @@ class Cursor{
 	void addLastRowFromMultilineSelection(std::string& selectedText, const Container& container) noexcept;
 	void addSingleRow(std::string& selectedText, const Container& container) noexcept;
 	void addFirstRowFromMiltilineSelection(std::string& selectedText, const Container& container) noexcept;
-	//WARNING NOT TESTED
 	void multilineRowSelection(std::string& selectedText, const Container& container) noexcept;
 public:
 	Cursor();
@@ -49,28 +47,21 @@ public:
 	Cursor& operator=(const Cursor& csr) = delete;
 	Cursor& operator=(const Cursor&& csr) = delete;
 	~Cursor() = default;
-	// tested
 	const position& getCursorPosition() const noexcept{
 		return m_cursor;
 	}
-	//RVO //tested
+	//RVO
 	 position maxPosition(const Container& container) const noexcept{
 		return position(container.size() - 1, container.back().length());
 	}
 	 unsigned currentRowMaxCol(unsigned row,const Container& container) const noexcept {
 		 return container.at(row).length();
 	}
-	//tested
 	void cursorLeft(const Container& container);
-	//tested
 	void cursorRight(const Container& container);
-	//tested
 	void cursorDown(const Container& container);
-	//tested
 	void cursorUp(const Container& container);
-	// tested  think to int int.
 	void setCursor(unsigned row, unsigned col, const Container& container);
-	//tested
 	void setCursor(const position& pos, const Container& container);
 
 	void currentLineBegin() noexcept 
@@ -93,15 +84,10 @@ public:
 	}
 
 	// selection
-	//tested
 	void startSelection() noexcept;
-	//tested
 	void finishSelection() noexcept;
-	//tested
 	void continueSelection();
-	//tested
 	void resetSelection() noexcept;
-	//tested
 	std::string getSelectedText(const Container& container) noexcept;
 };
 #endif // !CURSOR_HPP

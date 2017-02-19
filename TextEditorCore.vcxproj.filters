@@ -47,9 +47,6 @@
     <ClInclude Include="message.hpp">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="lineinputiterator.hpp">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="finder.hpp">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
@@ -65,10 +62,12 @@
     <ClInclude Include="testslib.hpp">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="customIterator.hpp">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="empty.txt" />
-    <Text Include="loremIO.txt" />
-    <Text Include="testIO.txt" />
+    <Text Include="test.txt" />
   </ItemGroup>
 </Project>

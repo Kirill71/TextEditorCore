@@ -56,7 +56,7 @@ DECLARE_OOP_TEST(empty_constructor) {
 DECLARE_OOP_TEST(istream_constructor) {
 
 //	setlocale(LC_ALL, "Russian");
-	TextEditorCore t1{ std::ifstream("loremIO.txt") };
+	TextEditorCore t1{ std::ifstream("test.txt") };
 	assert(t1.getCursorPosition() == position{});//initial position is  0,0
 };
 
@@ -64,7 +64,7 @@ DECLARE_OOP_TEST(getCursorPosition_and_cursormoving) {
 	TextEditorCore t1{};
 	assert(t1.getCursorPosition() == position{});
 
-	TextEditorCore t2{ std::ifstream{ "loremIO.txt" } };
+	TextEditorCore t2{ std::ifstream{ "test.txt" } };
 
 	assert(t2.getCursorPosition() == position{});
 	const unsigned SIZE{ 50 };
@@ -140,7 +140,7 @@ DECLARE_OOP_TEST(insertion) {
 	TextEditorCore t1{};
 
 	position t1_p = t1.getCursorPosition();
-	t1.insert(std::string{ "0123456789" });
+	t1.insert( "0123456789");
 
 	try {
 		
@@ -163,7 +163,7 @@ DECLARE_OOP_TEST(insertion) {
 
 
 DECLARE_OOP_TEST( keys ) {
-	TextEditorCore t1{ std::ifstream("loremIO.txt") };
+	TextEditorCore t1{ std::ifstream("test.txt") };
 
 	t1.EndKeyPressed();
 	assert(t1.getCursorPosition()  == position(0, 30));
@@ -197,13 +197,13 @@ DECLARE_OOP_TEST(write) {
 
 TextEditorCore t{ std::ifstream{ "file.txt" }};
 
-std::ofstream ofile("newIO.txt");
+std::ofstream ofile("new.txt");
 
 ofile << t;
 ofile.close();
 
 std::ifstream ifile1("file.txt");
-std::ifstream ifile2("newIO.txt");
+std::ifstream ifile2("new.txt");
 ifile1.close();
 ifile2.close();
 std::stringstream first,second;
@@ -211,11 +211,11 @@ std::stringstream first,second;
 first << ifile1.rdbuf();
 second << ifile2.rdbuf();
 assert( !first.str().compare(second.str()));
-std::remove("newIO.txt");
+std::remove("new.txt");
 };
 
 DECLARE_OOP_TEST(selection) {
-	std::ifstream  infile("loremIO.txt");
+	std::ifstream  infile("test.txt");
 	TextEditorCore t1(infile);
 	infile.close();
 
@@ -248,7 +248,6 @@ DECLARE_OOP_TEST(selection) {
 			.cursorDown()
 			.finishSelection()
 			.getSelectedText();
-	//error
 	assert( !got.compare("12345678901234567890123456789\n012345678901234567890123456789\n012\n01"));
 
 
@@ -265,7 +264,7 @@ DECLARE_OOP_TEST(selection) {
 };
 
 DECLARE_OOP_TEST(delete_selected) {
-	std::ifstream  infile("loremIO.txt");
+	std::ifstream  infile("test.txt");
 	TextEditorCore t1(infile);
 	infile.close();
 
@@ -284,7 +283,7 @@ DECLARE_OOP_TEST(delete_selected) {
 };
 
 DECLARE_OOP_TEST(find) {
-	std::ifstream  infile("loremIO.txt");
+	std::ifstream  infile("test.txt");
 	TextEditorCore t1(infile);
 	infile.close();
 
@@ -319,7 +318,7 @@ DECLARE_OOP_TEST(find) {
 };
 
 DECLARE_OOP_TEST(replace) {
-	TextEditorCore t1(std::ifstream("loremIO.txt"));
+	TextEditorCore t1(std::ifstream("test.txt"));
 
 	t1.replaceAll("0123456789", "*");
 	t1.replaceAll("01234", "");

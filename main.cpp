@@ -23,18 +23,19 @@ void inserter(TextEditorCore& t, const position& from,  std::string& text) {
 //	TextEditorCore t8(std::ifstream{ "file.txt" });
 //	TextEditorCore t9(std::ifstream{ "file.txt" });
 //	TextEditorCore t10(std::ifstream{ "file.txt" });
-//	inserter(t,position{ 0,0 }, std::string{ "Pussy little pussy\n" });
+//	inserter(t,position{ 0,0 }, std::string{ "Jully little Jully\n" });
+//
 //	t.insert(std::string{ "bla-bla-bla" });
-//	inserter(t1, position{ 1,0 }, std::string{ "Pussy little pussy\n" });
-//	inserter(t2, position{ 1,4 }, std::string{ "Pussy little pussy\n" });
-//	inserter(t3, position{ 0,0 }, std::string{ "Pussy little pussy" });
-//	inserter(t4, position{ 0,4 }, std::string{ "Pussy little pussy\n" });
-//	inserter(t5, position{ 0,0 }, std::string{ "Pussy little\n pussy\n" });
-//	inserter(t6, position{ 0,5 }, std::string{ "Pussy little\n pussy\n" });
+//	inserter(t1, position{ 1,0 }, std::string{ "Jully little Jully\n" });
+//	inserter(t2, position{ 1,4 }, std::string{ "Jully little Jully\n" });
+//	inserter(t3, position{ 0,0 }, std::string{ "Jully little Jully" });
+//	inserter(t4, position{ 0,4 }, std::string{ "Jully little Jully\n" });
+//	inserter(t5, position{ 0,0 }, std::string{ "Jully little\n Jully\n" });
+//	inserter(t6, position{ 0,5 }, std::string{ "Jully little\n Jully\n" });
 //	inserter(t7, position{ 1,3 }, std::string{});
 //	inserter(t8, position{ 0,0 }, std::string{ constants::END_OF_LINE });
 //	inserter(t9, position{ 0,4 }, std::string{ constants::END_OF_LINE });
 //	inserter(t10, position{ 0,21 }, std::string{ constants::END_OF_LINE });
 //	std::cout << t;
-//	system("pause");
+//system("pause");
 //}

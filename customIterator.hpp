@@ -47,8 +47,6 @@ namespace customIterator {
 		StringT value;
 	};
 
-
-
 	template <class StringT = std::string>
 	class LineInsertIterator :
 		public std::iterator<std::input_iterator_tag, StringT, std::ptrdiff_t, const StringT*, const StringT&>
@@ -85,7 +83,7 @@ namespace customIterator {
 		char* line;
 		StringT value;
 	};
-} // end ub
+} 
 using InputIterator = customIterator::LineInputIterator<>;
 using InsertIterator = customIterator::LineInsertIterator<>;
 #endif

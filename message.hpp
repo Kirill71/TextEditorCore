@@ -4,10 +4,11 @@
 #include<string>
 #include<stdexcept>
 using Container = std::vector<std::string>;
-/*Базовый размер документа,
-чтобы не делать частые перевыделения памяти, устанавливаю размер в 1000 элементов.*/
+
 namespace constants 
 {
+	/*Базовый размер документа,
+	чтобы не делать частые перевыделения памяти, устанавливаю размер в 1000 элементов.*/
 	const unsigned	  DEFAULT_DOCUMENT_SIZE{ 1000 };
 	const unsigned    LINE_BEGIN{ 0 };
 	const std::string END_OF_LINE{ "\n" };
