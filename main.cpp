@@ -23,7 +23,7 @@ void deleter(TextEditorCore& t, const position& from, const position& to) {
 	std::cout << " ==========================================================" << std::endl;
 }
 //int main() {
-//	TextEditorCore t(std::ifstream{ "file.txt" });
+	//TextEditorCore t(std::ifstream{ "file.txt" });
 //	TextEditorCore t1(std::ifstream{ "file.txt" });
 //	TextEditorCore t2(std::ifstream{ "file.txt" });
 //	TextEditorCore t3(std::ifstream{ "file.txt" });
@@ -35,7 +35,7 @@ void deleter(TextEditorCore& t, const position& from, const position& to) {
 //	TextEditorCore t9(std::ifstream{ "file.txt" });
 //	TextEditorCore t10(std::ifstream{ "file.txt" });
 //	inserter(t,position{ 0,0 }, std::string{ "Jully\n My little Jully\n" });
-//	deleter(t, position{ 0,0 }, position{1,16});
+//	deleter(t, position{ 1,0 }, position{2,7});
 ////	t.insert(std::string{ "bla-bla-bla" });
 ////	inserter(t1, position{ 1,0 }, std::string{ "Jully, My little Jully\n" });
 ////	inserter(t2, position{ 1,4 }, std::string{ "Jully, My little Jully\n" });
