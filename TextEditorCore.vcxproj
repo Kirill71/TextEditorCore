@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClCompile Include="cursor.cpp" />
     <ClCompile Include="finder.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="replacer.cpp" />
     <ClCompile Include="tests.cpp" />
     <ClCompile Include="texteditorcore.cpp" />

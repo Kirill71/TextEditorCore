@@ -121,5 +121,6 @@ private:
 	void getEndPartOfChangeString(const std::string& text, std::string& end_of_current_string, const position& pos);
 	// this method or add last row on new line or append last row; 
 	void addLastRow(bool is_new_line_need,const position& pos, const std::string& last_row) noexcept;
+	void newLineInsert(const std::string& text,  std::string& end_of_string, position& pos ) noexcept;
 };
 #endif // !TEXT_EDITOR_CORE_HPP
