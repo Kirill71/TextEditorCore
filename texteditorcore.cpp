@@ -144,6 +144,8 @@ void TextEditorCore::insertText(position& pos,  std::string& text)  noexcept {
 void TextEditorCore::deleteText(const position & from, position & to) {
 	if (from >= maxPosition() || to >= maxPosition())
 		throw std::logic_error(errorMessage::INVALID_POSITION);
+	if (m_cursor->m_currentMode == Cursor::mode::Select)
+		finishSelection();
 	if (from == to) // nothing delete
 		return;
 	m_cursor->setCursor(from, m_container);

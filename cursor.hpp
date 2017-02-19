@@ -47,7 +47,7 @@ public:
 	Cursor& operator=(const Cursor& csr) = delete;
 	Cursor& operator=(const Cursor&& csr) = delete;
 	~Cursor() = default;
-	const position& getCursorPosition() const noexcept{
+	const position& getCursorPosition() const noexcept {
 		return m_cursor;
 	}
 	//RVO
