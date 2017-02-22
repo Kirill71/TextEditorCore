@@ -22,31 +22,10 @@ void deleter(TextEditorCore& t, const position& from, const position& to) {
 	std::cout << t.getCursorPosition();
 	std::cout << " ==========================================================" << std::endl;
 }
-//int main() {
-	//TextEditorCore t(std::ifstream{ "file.txt" });
-//	TextEditorCore t1(std::ifstream{ "file.txt" });
-//	TextEditorCore t2(std::ifstream{ "file.txt" });
-//	TextEditorCore t3(std::ifstream{ "file.txt" });
-//	TextEditorCore t4(std::ifstream{ "file.txt" });
-//	TextEditorCore t5(std::ifstream{ "file.txt" });
-//	TextEditorCore t6(std::ifstream{ "file.txt" });
-//	TextEditorCore t7(std::ifstream{ "file.txt" });
-//	TextEditorCore t8(std::ifstream{ "file.txt" });
-//	TextEditorCore t9(std::ifstream{ "file.txt" });
-//	TextEditorCore t10(std::ifstream{ "file.txt" });
-//	inserter(t,position{ 0,0 }, std::string{ "Jully\n My little Jully\n" });
-//	deleter(t, position{ 1,0 }, position{2,7});
-////	t.insert(std::string{ "bla-bla-bla" });
-////	inserter(t1, position{ 1,0 }, std::string{ "Jully, My little Jully\n" });
-////	inserter(t2, position{ 1,4 }, std::string{ "Jully, My little Jully\n" });
-////	inserter(t3, position{ 0,0 }, std::string{ "Jully, My little Jully" });
-////	inserter(t4, position{ 0,4 }, std::string{ "Jully, My little Jully\n" });
-////	inserter(t5, position{ 0,0 }, std::string{ "Jully, My little\n Jully\n" });
-////	inserter(t6, position{ 0,5 }, std::string{ "Jully, My little\n Jully\n" });
-////	inserter(t7, position{ 1,3 }, std::string{});
-////	inserter(t8, position{ 0,0 }, std::string{ constants::END_OF_LINE });
-////	inserter(t9, position{ 0,4 }, std::string{ constants::END_OF_LINE });
-////	inserter(t10, position{ 0,21 }, std::string{ constants::END_OF_LINE });
-////	std::cout << t;
-//system("pause");
-//}
+int main() {
+	TextEditorCore t(std::ifstream{ "file.txt" });
+	std::cout << t;
+std::cout<< t.find("student");
+
+system("pause");
+}

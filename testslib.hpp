@@ -113,13 +113,13 @@ public:
 
 
 /*****************************************************************************/
-
-int main ()
-{
-	setlocale(LC_ALL, "Russian");
-	gs_TestsRunner.runTests();
-	system("pause");
-}
+//
+//int main ()
+//{
+//	setlocale(LC_ALL, "Russian");
+//	gs_TestsRunner.runTests();
+//	system("pause");
+//}
 
 /*****************************************************************************/
 #endif //  _TESTSLIB_HPP_
