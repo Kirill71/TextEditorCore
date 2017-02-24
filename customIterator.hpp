@@ -1,13 +1,12 @@
 #ifndef LINE_INPUT_ITERATOR_HPP
 #define LINE_INPUT_ITERATOR_HPP
-
 #include <iterator>
 #include <istream>
 #include <string>
 #include<cstring>
 #include"message.hpp"
 
-namespace customIterator {
+namespace customIterator{
 	template <class StringT = std::string>
 	class LineInputIterator :
 		public std::iterator<std::input_iterator_tag, StringT, std::ptrdiff_t, const StringT*, const StringT&>
@@ -18,14 +17,13 @@ namespace customIterator {
 		typedef std::basic_istream<char_type, traits_type> istream_type;
 
 		LineInputIterator() : is{ nullptr }, value{} {}
-		explicit LineInputIterator(istream_type& is_) : is{ &is_ }, value{} { std::getline(*is, value); }
+		explicit LineInputIterator(istream_type& is_) : is{ &is_ }, value{} { std::getline(*is, value,'\n'); }
 		const StringT& operator*() const { return value; }
 		const StringT* operator->() const { return &value; }
 
 		LineInputIterator<StringT>& operator++(){
-			if (is && !std::getline(*is, value)) {
+			if (is && !std::getline(*is, value)) 
 				is = nullptr;
-			}
 			return *this;
 		}
 
@@ -34,6 +32,7 @@ namespace customIterator {
 			++*this;
 			return prev;
 		}
+
 		bool operator!=(const LineInputIterator<StringT>& other) const noexcept{
 			return is != other.is;
 		}
@@ -52,12 +51,11 @@ namespace customIterator {
 		public std::iterator<std::input_iterator_tag, StringT, std::ptrdiff_t, const StringT*, const StringT&>
 	{
 	public:
-		LineInsertIterator() : line{ nullptr }, value{} {};
-		explicit LineInsertIterator(std::string& text_) : LineInsertIterator() { line = strtok(const_cast<char*>(text_.c_str()), constants::END_OF_LINE.c_str()); value = line; }
+		LineInsertIterator() : line{ nullptr }, nextToken{nullptr}, value{} {};
+		explicit LineInsertIterator(std::string& text_) : LineInsertIterator() { line = strtok_s(const_cast<char*>(text_.c_str()), constants::END_OF_LINE.c_str(), &nextToken); value = line; }
 		LineInsertIterator<StringT>& operator++(){
-			if (line = strtok(nullptr, constants::END_OF_LINE.c_str())) {
+			if (line = strtok_s(nullptr, constants::END_OF_LINE.c_str(), &nextToken)) 
 				value = line;
-			}
 			return *this;
 		}
 
@@ -80,6 +78,7 @@ namespace customIterator {
 
 	private:
 		char* line;
+		char* nextToken;
 		StringT value;
 	};
 } 

@@ -3,7 +3,7 @@
 TextEditorCore::TextEditorCore() noexcept
 	: m_cursor{std::make_unique<Cursor>()},
 	m_finderReplacer{std::make_unique<Replacer>()},
-	m_container{ constants::DEFAULT_DOCUMENT_SIZE, ""}
+	m_container{ constants::DEFAULT_DOCUMENT_SIZE, constants::SPACE}
 {}
 
 TextEditorCore::TextEditorCore(std::istream & stream)  noexcept
@@ -111,7 +111,7 @@ void TextEditorCore::insertText(position& pos,  std::string& text)  noexcept {
 
 	bool is_new_line_need{ text.back() == constants::END_OF_LINE_CHAR }, central_insertion{}; // this variable keeps two value 0 or 1																		  // get end part of current change string
 	getEndPartOfChangeString(text, end_of_current_string, pos);
-	auto begin{ InsertIterator{ copy_text } };
+	auto begin{ InsertIterator{copy_text } };
 	// if insertion in string from index not zero
 
 	if (pos.m_col > 0) {
@@ -121,7 +121,7 @@ void TextEditorCore::insertText(position& pos,  std::string& text)  noexcept {
 
 	m_container.insert(m_container.begin() + pos.m_row +/*implicit cast for uint*/ central_insertion, begin, InsertIterator());
 	//count insertion string
-	unsigned count = std::distance(InsertIterator{ std::string{ text } }, InsertIterator());
+	unsigned count = std::distance(InsertIterator{ std::string{ text }}, InsertIterator());
 	//  calculate new current row( and remeber about c-style(numeration from zero))(--count)
 	unsigned row{ pos.m_row + --count }, col{ m_container[row].length() };
 	m_cursor->setCursor(position{ row,col }, m_container);
@@ -197,7 +197,7 @@ void TextEditorCore::addLastRow(bool is_new_line_need, const position & pos, con
 }
 
 void TextEditorCore::newLineInsert(const std::string & text, std::string & end_of_string, position & pos) noexcept{
-	if (pos.m_col == 0) 
+	if (pos.m_col == constants::LINE_BEGIN) 
 		m_container.insert(m_container.begin() + pos.m_row, constants::SPACE);
 	else{
 		getEndPartOfChangeString(text, end_of_string, pos);

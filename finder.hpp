@@ -25,7 +25,7 @@ protected:
 	private:
 		std::pair<position, std::string> m_find;
 	} m_findText;
-	const position& find_base(const std::string & str, const position & max_pos, const Container& container, const position & pos = { 0,0 });
+	const position& find_base(const std::string & str, const position & max_pos, const MyContainer& container, const position & pos = { 0,0 });
 public:
 	Finder() = default;
 	Finder(const Finder& rhs) = delete;
@@ -33,7 +33,7 @@ public:
 	Finder(const Finder&& rhs) = delete;
 	Finder& operator=(const Finder&&) = delete;
 	virtual ~Finder() = default;
-	const position& find(const std::string& str, const position& max_pos, const Container& container);
-	const position& findNext(const position& max_pos, const Container& container, bool is_replace = false);
+	const position& find(const std::string& str, const position& max_pos, const MyContainer& container);
+	const position& findNext(const position& max_pos, const MyContainer& container, bool is_replace = false);
 };
 #endif

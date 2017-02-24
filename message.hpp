@@ -3,7 +3,7 @@
 #include<vector>
 #include<string>
 #include<stdexcept>
-using Container = std::vector<std::string>;
+using MyContainer = std::vector<std::string>;
 
 namespace constants {
 	/*Базовый размер документа,

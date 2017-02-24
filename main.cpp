@@ -22,10 +22,3 @@ void deleter(TextEditorCore& t, const position& from, const position& to) {
 	std::cout << t.getCursorPosition();
 	std::cout << " ==========================================================" << std::endl;
 }
-int main() {
-	TextEditorCore t(std::ifstream{ "file.txt" });
-	std::cout << t;
-std::cout<< t.find("student");
-
-system("pause");
-}

@@ -1,6 +1,6 @@
 #include "finder.hpp"
 
-const position & Finder::find_base(const std::string & str, const position & max_pos, const Container& container, const position & pos){
+const position & Finder::find_base(const std::string & str, const position & max_pos, const MyContainer& container, const position & pos){
 	Utils::checkEmptyString(str, errorMessage::EMPTY_SEARCH_STRING);
 	m_findText.setParams(pos, str);
 
@@ -20,11 +20,11 @@ const position & Finder::find_base(const std::string & str, const position & max
 	return m_findText.lastPosition();
 }
 
-const position & Finder::find(const std::string & str, const position & max_pos, const Container & container){
+const position & Finder::find(const std::string & str, const position & max_pos, const MyContainer & container){
 	return  (find_base(str, max_pos, container) != max_pos) ? m_findText.lastPosition() : max_pos;
 }
 
-const position & Finder::findNext(const position& max_pos, const Container& container, bool is_replace){
+const position & Finder::findNext(const position& max_pos, const MyContainer& container, bool is_replace){
 	auto length{ (is_replace) ? 0 : m_findText.searchString().length() };
 	return find_base(m_findText.searchString(), max_pos, container,
 		position{ m_findText.lastPosition().m_row,

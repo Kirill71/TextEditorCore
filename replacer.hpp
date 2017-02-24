@@ -5,7 +5,7 @@
 class Replacer
 	: public Finder{
 	bool m_isSuccessfully;
-	void replaceInContainer(const position& current_pos, Container& container, const std::string new_str);
+	void replaceInContainer(const position& current_pos, MyContainer& container, const std::string new_str);
 public:
 	Replacer() = default; // call Finder ctor on default
 	Replacer(const Replacer& rhs) = delete;
@@ -14,7 +14,7 @@ public:
 	Replacer& operator=(const Replacer&&) = delete;
 	~Replacer() = default;
 
-	bool replace(const std::string & old_str, const std::string & new_str, const position& max_pos, Container& container);
-	bool replaceAll(const std::string& old_str, const std::string& new_str, const position& max_pos, Container& container);
+	bool replace(const std::string & old_str, const std::string & new_str, const position& max_pos, MyContainer& container);
+	bool replaceAll(const std::string& old_str, const std::string& new_str, const position& max_pos, MyContainer& container);
 };
 #endif // !REPLACER_HPP

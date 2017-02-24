@@ -83,7 +83,7 @@ private:
 	friend  std::istream& operator>> (std::istream& lhs, TextEditorCore& rhs) noexcept;
 	std::unique_ptr<Cursor> m_cursor;
 	std::unique_ptr<Replacer> m_finderReplacer;
-	Container m_container;
+	MyContainer m_container;
 
 	//private methods
 	void insertText( position& pos, std::string& text) noexcept;

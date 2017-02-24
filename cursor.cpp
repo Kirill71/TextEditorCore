@@ -5,20 +5,20 @@ void Cursor::cancelReverseSelection(){
 		std::swap(m_selectedText.from(), m_selectedText.to());//swap from with to, if to < from
 }
 
-void Cursor::addLastRowFromMultilineSelection(std::string& selectedText, const Container& container) noexcept{
+void Cursor::addLastRowFromMultilineSelection(std::string& selectedText, const MyContainer& container) noexcept{
 	selectedText
 		.append(container[m_selectedText.to().m_row]
 			.substr(constants::LINE_BEGIN, m_selectedText.to().m_col));
 }
 
-void Cursor::addSingleRow(std::string& selectedText, const Container & container) noexcept{
+void Cursor::addSingleRow(std::string& selectedText, const MyContainer & container) noexcept{
 	unsigned count_characters { m_selectedText.to().m_col - m_selectedText.from().m_col };
 	selectedText
 		.assign(container[m_selectedText.from().m_row]
 			.substr(m_selectedText.from().m_col, count_characters));
 }
 
-void Cursor::addFirstRowFromMiltilineSelection(std::string& selectedText, const Container & container) noexcept{
+void Cursor::addFirstRowFromMiltilineSelection(std::string& selectedText, const MyContainer & container) noexcept{
 	unsigned count_characters{ container[m_selectedText.from().m_row].length() - m_selectedText.from().m_col };
 	selectedText
 		.append(container[m_selectedText.from().m_row]
@@ -27,7 +27,7 @@ void Cursor::addFirstRowFromMiltilineSelection(std::string& selectedText, const 
 			.append(constants::END_OF_LINE));
 }
 
-void Cursor::multilineRowSelection(std::string& selectedText, const Container & container) noexcept{
+void Cursor::multilineRowSelection(std::string& selectedText, const MyContainer & container) noexcept{
 	auto begin{ container.begin() + (m_selectedText.from().m_row +1 ) },
 		 end{ container.begin() + m_selectedText.to().m_row};
 	auto add_row = [&selectedText](const std::string& curr_str)
@@ -43,7 +43,7 @@ Cursor::Cursor(unsigned row, unsigned col) : m_cursor{ row,col }, m_currentMode{
 // проверять индекс через at() смысла нет, 
 //так как возвращаемый getPositionObject() курсор, всегда меньше или равен максимально возможной позиции.
 
-void Cursor::cursorLeft(const Container& container){
+void Cursor::cursorLeft(const MyContainer& container){
 	auto& cursor{ getPositionObject() };
 
 	if (cursor.m_col > constants::LINE_BEGIN)
@@ -54,7 +54,7 @@ void Cursor::cursorLeft(const Container& container){
 	}
 }
 
-void Cursor::cursorRight(const Container& container){
+void Cursor::cursorRight(const MyContainer& container){
 	auto& cursor{ getPositionObject() };
 
 	if (cursor.m_col < container[cursor.m_row].length())
@@ -65,25 +65,25 @@ void Cursor::cursorRight(const Container& container){
 	}
 }
 
-void Cursor::cursorDown(const Container& container){
+void Cursor::cursorDown(const MyContainer& container){
 	auto& cursor{ getPositionObject() };
 	if (cursor.m_row < container.size() - 1 && /*check next row  cursor column position*/cursor.m_col > container[++cursor.m_row].length()) {
 		cursor.m_col = container[cursor.m_row].length();
 	}
 }
 
-void Cursor::cursorUp(const Container& container){
+void Cursor::cursorUp(const MyContainer& container){
 	auto& cursor{ getPositionObject() };
 	if (cursor.m_row > constants::LINE_BEGIN && /*check prev row  cursor column position*/ cursor.m_col > container[--cursor.m_row].length()) {
 		cursor.m_col = container[cursor.m_row].length();
 	}
 }
 
-void Cursor::setCursor(unsigned row, unsigned col, const Container& container){
+void Cursor::setCursor(unsigned row, unsigned col, const MyContainer& container){
 	setCursor(position(row, col),  container);
 }
 
-void Cursor::setCursor(const position& pos, const Container& container){
+void Cursor::setCursor(const position& pos, const MyContainer& container){
 	auto& cursor{ getPositionObject() };
 	if (pos <= maxPosition(container) && /* check current row lenght*/pos.m_col <= currentRowMaxCol(pos.m_row, container))
 		cursor = pos;
@@ -121,7 +121,7 @@ void Cursor::resetSelection() noexcept{
 	}
 }
 
-std::string Cursor::getSelectedText(const Container& container) noexcept{
+std::string Cursor::getSelectedText(const MyContainer& container) noexcept{
 	if (m_currentMode == mode::Select)
 		finishSelection();
 	std::string selectedText{};
