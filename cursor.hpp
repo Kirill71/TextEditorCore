@@ -50,7 +50,7 @@ public:
 	const position& getCursorPosition() const noexcept {
 		return m_cursor;
 	}
-	//RVO
+	//RVO or move semantic
 	 position maxPosition(const Container& container) const noexcept{
 		return position(container.size() - 1, container.back().length());
 	}
@@ -63,21 +63,6 @@ public:
 	void cursorUp(const Container& container);
 	void setCursor(unsigned row, unsigned col, const Container& container);
 	void setCursor(const position& pos, const Container& container);
-
-	void currentLineBegin() noexcept {
-		getPositionObject().m_col = constants::LINE_BEGIN;
-	}
-
-	void currentLineEnd(const Container & container) noexcept{
-		getPositionObject().m_col = container[m_cursor.m_row].length();
-	}
-
-	void documentBegin() noexcept {
-		getPositionObject().m_row = getPositionObject().m_col = constants::LINE_BEGIN;
-	}
-	void documentEnd(const Container & container) noexcept{
-		getPositionObject() = maxPosition(container);
-	}
 
 	// selection
 	void startSelection() noexcept;

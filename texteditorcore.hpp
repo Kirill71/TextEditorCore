@@ -38,29 +38,29 @@ public:
 	TextEditorCore& setCursor(const position& pos);
 
 	// insertion 
- TextEditorCore& insert(char character);
+	TextEditorCore& insert(char character);
 
 	TextEditorCore& insert(const std::string& str);
 	TextEditorCore& removeSelectedText();
 
 	// some specified keys
 	TextEditorCore& HomeKeyPressed() noexcept {
-		m_cursor->currentLineBegin();
+		m_cursor->getPositionObject().m_col = constants::LINE_BEGIN;
 		return *this;
 	}
 
 	TextEditorCore& EndKeyPressed() noexcept {
-		m_cursor->currentLineEnd(m_container);
+		m_cursor->getPositionObject().m_col = m_container[m_cursor->getPositionObject().m_row].length();
 		return *this;
 	}
 
 	TextEditorCore& CtrlHomeKeyPressed() noexcept {
-		m_cursor->documentBegin();
+		m_cursor->getPositionObject().m_row = m_cursor->getPositionObject().m_col = constants::LINE_BEGIN;
 		return *this;
 	}
 
 	TextEditorCore& CtrlEndKeyPressed() noexcept {
-		m_cursor->documentEnd(m_container);
+		m_cursor->getPositionObject() = maxPosition();
 		return *this;
 	}
 

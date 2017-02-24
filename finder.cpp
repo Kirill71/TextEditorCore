@@ -4,12 +4,6 @@ const position & Finder::find_base(const std::string & str, const position & max
 	Utils::checkEmptyString(str, errorMessage::EMPTY_SEARCH_STRING);
 	m_findText.setParams(pos, str);
 
-	auto searchPredicate = [](const std::string & current_string, const std::string & search_text, position * find_pos) noexcept {
-		++find_pos->m_row;
-		find_pos->m_col = current_string.find(search_text, (find_pos->m_col != std::string::npos) ? find_pos->m_col : 0);
-		return  find_pos->m_col != std::string::npos;
-	};
-
 	auto it = std::find_if(container.begin() + pos.m_row, container.end(),
 		std::bind([](const std::string & current_string, const std::string & search_text, position * find_pos) {
 		++find_pos->m_row;
@@ -27,7 +21,7 @@ const position & Finder::find_base(const std::string & str, const position & max
 }
 
 const position & Finder::find(const std::string & str, const position & max_pos, const Container & container){
-	return  (find_base(str, max_pos, container) != max_pos) ? m_findText.lastPosition() : throw std::logic_error(errorMessage::TEXT_NOT_FOUND);
+	return  (find_base(str, max_pos, container) != max_pos) ? m_findText.lastPosition() : max_pos;
 }
 
 const position & Finder::findNext(const position& max_pos, const Container& container, bool is_replace){
