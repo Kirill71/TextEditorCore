@@ -15,7 +15,8 @@
 
 /*****************************************************************************/
 
-using TestProcedure =  std::function<void()>; // - по-молодежнее что-ли.
+using TestProcedure =  std::function< void() >; // - по-молодежнее что-ли. by Kirill Zharenkov NURE
+
 /*****************************************************************************/
 
 class TestsRunner
@@ -113,13 +114,13 @@ public:
 
 
 /*****************************************************************************/
-//
-//int main ()
-//{
-//	setlocale(LC_ALL, "Russian");
-//	gs_TestsRunner.runTests();
-//	system("pause");
-//}
+
+int main ()
+{
+	setlocale(LC_ALL, "Russian");
+	gs_TestsRunner.runTests();
+	system("pause");
+}
 
 /*****************************************************************************/
 #endif //  _TESTSLIB_HPP_

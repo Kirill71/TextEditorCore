@@ -1,32 +1,74 @@
 #include "finder.hpp"
 
-const position & Finder::find_base(const std::string & str, const position & max_pos, const MyContainer& container, const position & pos){
-	Utils::checkEmptyString(str, errorMessage::EMPTY_SEARCH_STRING);
-	m_findText.setParams(pos, str);
+/*---------------------------------------------------------------------------*/
 
-	auto it = std::find_if(container.begin() + pos.m_row, container.end(),
-		std::bind([](const std::string & current_string, const std::string & search_text, position * find_pos) {
-		++find_pos->m_row;
-		find_pos->m_col = current_string.find(search_text, (find_pos->m_col != std::string::npos) ? find_pos->m_col : 0);
-		return  find_pos->m_col != std::string::npos;
+const position &
+Finder::find_base( 
+		const std::string & _str
+	,	const position & _maxPos
+	,	const MyContainer& _container
+	,	const position & _pos )
+{
+	Utils::checkEmptyString( _str, errorMessage::EMPTY_SEARCH_STRING );
+	m_findText.setParams( _pos, _str );
+
+	auto it = std::find_if( _container.begin() + _pos.m_row, _container.end(),
+		std::bind( [] ( 
+				const std::string & _currentString
+			,	const std::string & _searchText
+			,	position * _findPos)
+	{
+		++_findPos->m_row;
+		_findPos->m_col = _currentString.find( 
+												_searchText
+											,	( _findPos->m_col != std::string::npos ) 
+																?	_findPos->m_col 
+																:	0 );
+
+		return  _findPos->m_col != std::string::npos;
+
 	} , std::placeholders::_1,
-			str, &m_findText.lastPosition()));
+			_str, &m_findText.lastPosition() ) );
 
 	--m_findText.lastPosition().m_row; // return to c-style numeration from zero
 
-	if (it == container.end())
-		m_findText.lastPosition() = max_pos;
+	if ( it == _container.end() )
+		m_findText.lastPosition() = _maxPos;
 
 	return m_findText.lastPosition();
-}
 
-const position & Finder::find(const std::string & str, const position & max_pos, const MyContainer & container){
-	return  (find_base(str, max_pos, container) != max_pos) ? m_findText.lastPosition() : max_pos;
-}
+} // Finder::find_base
 
-const position & Finder::findNext(const position& max_pos, const MyContainer& container, bool is_replace){
-	auto length{ (is_replace) ? 0 : m_findText.searchString().length() };
-	return find_base(m_findText.searchString(), max_pos, container,
-		position{ m_findText.lastPosition().m_row,
-		m_findText.lastPosition().m_col + length});
-}
+/*---------------------------------------------------------------------------*/
+
+const position &
+Finder::find( 
+		const std::string & _str
+	,	const position & _maxPos
+	,	const MyContainer & _container )
+{
+	return find_base( _str, _maxPos, _container) != _maxPos
+		?	m_findText.lastPosition() 
+		:	_maxPos;
+
+} // Finder::find
+
+/*---------------------------------------------------------------------------*/
+
+const position & 
+Finder::findNext( const position& _maxPos, const MyContainer& _container, bool _isReplace)
+{
+	auto length{ _isReplace ? 0 : m_findText.searchString().length() };
+
+	return find_base( 
+				m_findText.searchString()
+			,	_maxPos
+			,	_container
+			,	position{ 
+							m_findText.lastPosition().m_row
+						,	m_findText.lastPosition().m_col + length }
+	);
+
+} //  Finder::findNext
+
+/*---------------------------------------------------------------------------*/

@@ -6,34 +6,102 @@
 #include"utils.hpp"
 #include"message.hpp"
 
+/*---------------------------------------------------------------------------*/
+
 class Finder
 {
+
+/*---------------------------------------------------------------------------*/
+
 protected:
-	struct findText {
+
+/*---------------------------------------------------------------------------*/
+
+	struct findText
+	{
+
+/*---------------------------------------------------------------------------*/
+
+	public:
+
+/*---------------------------------------------------------------------------*/
+
 		findText() = default;
-		position& lastPosition() noexcept{
+
+/*---------------------------------------------------------------------------*/
+
+
+		position&
+		lastPosition() noexcept
+		{
 			return m_find.first;
 		}
 
-		std::string& searchString()  noexcept{
+/*---------------------------------------------------------------------------*/
+
+
+		std::string& 
+		searchString()  noexcept
+		{
 			return m_find.second;
 		}
-		void setParams(const position& pos, const std::string& find_text) noexcept {
-			m_find.first = pos;
-			m_find.second = find_text;
-		 }
+
+/*---------------------------------------------------------------------------*/
+
+
+		void 
+		setParams( const position& _pos, const std::string& _findText ) noexcept 
+		{
+			m_find.first = _pos;
+			m_find.second = _findText;
+		}
+
+/*---------------------------------------------------------------------------*/
+
 	private:
-		std::pair<position, std::string> m_find;
-	} m_findText;
-	const position& find_base(const std::string & str, const position & max_pos, const MyContainer& container, const position & pos = { 0,0 });
+
+/*---------------------------------------------------------------------------*/
+
+		std::pair< position, std::string > m_find;
+
+/*---------------------------------------------------------------------------*/
+
+	} //  struct findText
+	m_findText;
+
+	const position& find_base(		const std::string & _str
+								,	const position & _maxPos
+								,	const MyContainer& _container
+								,	const position & _pos = { 0,0 } );
+
+/*---------------------------------------------------------------------------*/
+
 public:
+
+/*---------------------------------------------------------------------------*/
+
 	Finder() = default;
-	Finder(const Finder& rhs) = delete;
-	Finder& operator=(const Finder&) = delete;
-	Finder(const Finder&& rhs) = delete;
-	Finder& operator=(const Finder&&) = delete;
+
+	Finder( const Finder& _rhs ) = delete;
+
+	Finder& operator= ( const Finder& ) = delete;
+
+	Finder( const Finder&& _rhs ) = delete;
+
+	Finder& operator= ( const Finder&& ) = delete;
+
 	virtual ~Finder() = default;
-	const position& find(const std::string& str, const position& max_pos, const MyContainer& container);
-	const position& findNext(const position& max_pos, const MyContainer& container, bool is_replace = false);
-};
+
+	const position& find(		const std::string& _str
+							,	const position& _maxPos
+							,	const MyContainer& _container );
+
+	const position& findNext(		const position& _maxPos
+								,	const MyContainer& _container
+								,	bool _isReplace = false );
+
+/*---------------------------------------------------------------------------*/
+
+}; // class Finder
+
 #endif
