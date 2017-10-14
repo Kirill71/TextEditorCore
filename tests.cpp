@@ -4,7 +4,11 @@
 #include <cassert>
 #include <sstream>
 
-DECLARE_OOP_TEST(empty_constructor) {
+
+/*---------------------------------------------------------------------------*/
+
+
+DECLARE_OOP_TEST( emptyConstructor ) {
 	TextEditorCore t1{};
 	position t1_p = t1.getCursorPosition();
 
@@ -48,19 +52,27 @@ DECLARE_OOP_TEST(empty_constructor) {
 		assert(errorMessage::EMPTY_REPLACE_STRING == err.what());
 	}
 	
-}
+} // emptyConstructor
 
 
+/*---------------------------------------------------------------------------*/
 
 
-DECLARE_OOP_TEST(istream_constructor) {
+DECLARE_OOP_TEST( istreamConstructor )
+{
 
 //	setlocale(LC_ALL, "Russian");
 	TextEditorCore t1{ std::ifstream("test.txt") };
-	assert(t1.getCursorPosition() == position{});//initial position is  0,0
-};
+	assert( t1.getCursorPosition() == position{} );//initial position is  0,0
 
-DECLARE_OOP_TEST(getCursorPosition_and_cursormoving) {
+}; // instreamConstractor
+
+
+/*---------------------------------------------------------------------------*/
+
+
+DECLARE_OOP_TEST( getCursorPositionAndCursorMoving )
+{
 	TextEditorCore t1{};
 	assert(t1.getCursorPosition() == position{});
 
@@ -136,7 +148,12 @@ DECLARE_OOP_TEST(getCursorPosition_and_cursormoving) {
 	assert(t2.getCursorPosition() == position(0, 30));
 };
 
-DECLARE_OOP_TEST(insertion) {
+
+/*---------------------------------------------------------------------------*/
+
+
+DECLARE_OOP_TEST( insertion ) 
+{
 	TextEditorCore t1{};
 
 	position t1_p = t1.getCursorPosition();
@@ -159,10 +176,15 @@ DECLARE_OOP_TEST(insertion) {
 	t1.setCursor(position{ 4, 0 });
 
 	assert( t1.getCursorPosition() == position( 4, 0 ) );
-};
+
+}; // insertion
 
 
-DECLARE_OOP_TEST( keys ) {
+/*---------------------------------------------------------------------------*/
+
+
+DECLARE_OOP_TEST( keys )
+{
 	TextEditorCore t1{ std::ifstream("test.txt") };
 
 	t1.EndKeyPressed();
@@ -190,31 +212,41 @@ DECLARE_OOP_TEST( keys ) {
 
 	t2.CtrlHomeKeyPressed();
 	assert(t2.getCursorPosition() == position(0, 0));
-};
+
+}; // keys
 
 
-DECLARE_OOP_TEST(write) {
+/*---------------------------------------------------------------------------*/
 
-TextEditorCore t{ std::ifstream{ "file.txt" }};
 
-std::ofstream ofile("new.txt");
+DECLARE_OOP_TEST(write)
+{
 
-ofile << t;
-ofile.close();
+	TextEditorCore t{ std::ifstream{ "file.txt" }};
 
-std::ifstream ifile1("file.txt");
-std::ifstream ifile2("new.txt");
-ifile1.close();
-ifile2.close();
-std::stringstream first,second;
+	std::ofstream ofile("new.txt");
 
-first << ifile1.rdbuf();
-second << ifile2.rdbuf();
-assert( !first.str().compare(second.str()));
-std::remove("new.txt");
-};
+	ofile << t;
+	ofile.close();
 
-DECLARE_OOP_TEST(selection) {
+	std::ifstream ifile1("file.txt");
+	std::ifstream ifile2("new.txt");
+	ifile1.close();
+	ifile2.close();
+	std::stringstream first,second;
+
+	first << ifile1.rdbuf();
+	second << ifile2.rdbuf();
+	assert( !first.str().compare(second.str()));
+	std::remove("new.txt");
+
+}; // write
+
+
+/*---------------------------------------------------------------------------*/
+
+
+DECLARE_OOP_TEST( selection ) {
 	std::ifstream  infile("test.txt");
 	TextEditorCore t1(infile);
 	infile.close();
@@ -224,10 +256,7 @@ DECLARE_OOP_TEST(selection) {
 		.setCursor(position(0, 30))
 		.finishSelection().getSelectedText();
 
-	
 	assert(got ==  "012345678901234567890123456789" );
-
-	
 	got = t1
 			.startSelection()
 			.setCursor(position(0, 30))
@@ -236,8 +265,6 @@ DECLARE_OOP_TEST(selection) {
 			.getSelectedText();
 
 	assert(got == std::string{});
-
-
 
 	got = t1.CtrlHomeKeyPressed()
 			.cursorRight()
@@ -250,7 +277,6 @@ DECLARE_OOP_TEST(selection) {
 			.getSelectedText();
 	assert( !got.compare("12345678901234567890123456789\n012345678901234567890123456789\n012\n01"));
 
-
 	t1.CtrlEndKeyPressed();
 		t1.startSelection();
 		t1.cursorUp();
@@ -261,9 +287,14 @@ DECLARE_OOP_TEST(selection) {
 	got = t1.getSelectedText();
 
 	assert(!got.compare("01234\n\n\n\n012345678901234567890123456789"));
-};
 
-DECLARE_OOP_TEST(delete_selected) {
+}; // selection
+
+
+/*---------------------------------------------------------------------------*/
+
+
+DECLARE_OOP_TEST( delete_selected ) {
 	std::ifstream  infile("test.txt");
 	TextEditorCore t1(infile);
 	infile.close();
@@ -280,9 +311,14 @@ DECLARE_OOP_TEST(delete_selected) {
 					.getSelectedText();
 
 	assert( !got.compare( "012\n01234\n" ) );
-};
 
-DECLARE_OOP_TEST(find) {
+}; // delete_selected
+
+
+/*---------------------------------------------------------------------------*/
+
+
+DECLARE_OOP_TEST( find ) {
 	std::ifstream  infile("test.txt");
 	TextEditorCore t1(infile);
 	infile.close();
@@ -315,9 +351,14 @@ DECLARE_OOP_TEST(find) {
 		catch (std::logic_error err) {
 			assert(errorMessage::TEXT_NOT_FOUND == err.what());
 		}		
-};
+}; // find
 
-DECLARE_OOP_TEST(replace) {
+
+/*---------------------------------------------------------------------------*/
+
+
+DECLARE_OOP_TEST( replace ) 
+{
 	TextEditorCore t1(std::ifstream("test.txt"));
 
 	t1.replaceAll("0123456789", "*");
@@ -329,4 +370,8 @@ DECLARE_OOP_TEST(replace) {
 	assert(t1.replace("0","") == false);
 	std::string str = t1.CtrlHomeKeyPressed().startSelection().CtrlEndKeyPressed().finishSelection(). getSelectedText();
 	assert(! str.compare( "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" ));
-};
+
+}; // replace
+
+
+/*---------------------------------------------------------------------------*/

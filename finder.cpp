@@ -1,6 +1,8 @@
 #include "finder.hpp"
 
+
 /*---------------------------------------------------------------------------*/
+
 
 const position &
 Finder::find_base( 
@@ -16,14 +18,15 @@ Finder::find_base(
 		std::bind( [] ( 
 				const std::string & _currentString
 			,	const std::string & _searchText
-			,	position * _findPos)
+			,	position* _findPos )
 	{
 		++_findPos->m_row;
-		_findPos->m_col = _currentString.find( 
-												_searchText
-											,	( _findPos->m_col != std::string::npos ) 
-																?	_findPos->m_col 
-																:	0 );
+		_findPos->m_col =
+			_currentString.find( 
+				_searchText
+			,	( _findPos->m_col != std::string::npos ) 
+				?	_findPos->m_col 
+				:	0 );
 
 		return  _findPos->m_col != std::string::npos;
 
@@ -39,7 +42,9 @@ Finder::find_base(
 
 } // Finder::find_base
 
+
 /*---------------------------------------------------------------------------*/
+
 
 const position &
 Finder::find( 
@@ -56,7 +61,10 @@ Finder::find(
 /*---------------------------------------------------------------------------*/
 
 const position & 
-Finder::findNext( const position& _maxPos, const MyContainer& _container, bool _isReplace)
+Finder::findNext(
+		const position& _maxPos
+	,	const MyContainer& _container
+	,	bool _isReplace )
 {
 	auto length{ _isReplace ? 0 : m_findText.searchString().length() };
 
@@ -70,5 +78,6 @@ Finder::findNext( const position& _maxPos, const MyContainer& _container, bool _
 	);
 
 } //  Finder::findNext
+
 
 /*---------------------------------------------------------------------------*/

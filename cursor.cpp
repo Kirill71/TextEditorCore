@@ -126,7 +126,7 @@ Cursor::cursorDown( const MyContainer& _container )
 	auto& cursor{ getPositionObject() };
 
 	if (		cursor.m_row < _container.size() - 1 
-			&& /*check next row  cursor column position*/cursor.m_col > _container[ ++cursor.m_row ].length() ) 
+			&&	cursor.m_col > _container[ ++cursor.m_row ].length() ) /*check next row  cursor column position*/
 	{
 		cursor.m_col = _container[ cursor.m_row ].length();
 	}
@@ -141,7 +141,7 @@ Cursor::cursorUp( const MyContainer& _container )
 	auto& cursor{ getPositionObject() };
 
 	if (		cursor.m_row > constants::LINE_BEGIN 
-			&& /*check prev row  cursor column position*/ cursor.m_col > _container[ --cursor.m_row ].length() ) 
+			&&  cursor.m_col > _container[ --cursor.m_row ].length() ) /*check prev row  cursor column position*/
 	{
 		cursor.m_col = _container[ cursor.m_row ].length();
 	}

@@ -1,4 +1,12 @@
-// (C) 2013-2016, Sergei Zaychenko, KNURE, Kharkiv, Ukraine
+/* 
+date: 2013 - 2017, 
+author : Sergei Zaychenko, NURE, Kharkiv, Ukraine, Aldec-KTC (c)
+
+purpose : Simple Unit-testing lib.
+
+refactored by Kirill Zharenkov, Aldec-KTC(c)
+
+*/
 
 #ifndef _TESTSLIB_HPP_
 #define _TESTSLIB_HPP_
@@ -15,7 +23,7 @@
 
 /*****************************************************************************/
 
-using TestProcedure =  std::function< void() >; // - по-молодежнее что-ли. by Kirill Zharenkov NURE
+using TestProcedure =  std::function< void() >; 
 
 /*****************************************************************************/
 
@@ -63,7 +71,12 @@ private:
 
 /*-----------------------------------------------------------------*/
 
-	std::vector< std::pair< std::string, TestProcedure > > m_testProcedures;
+	using TestProcedureres = 
+		std::vector< std::pair< std::string, TestProcedure > >;
+
+/*-----------------------------------------------------------------*/
+
+	 TestProcedureres m_testProcedures;
 
 /*-----------------------------------------------------------------*/
 
@@ -73,7 +86,7 @@ private:
 /*****************************************************************************/
 
 
-static TestsRunner gs_TestsRunner;
+static TestsRunner testsRunner;
 
 
 /*****************************************************************************/
@@ -84,7 +97,7 @@ class TestProcedureWrapper
 public:
 	TestProcedureWrapper ( std::string const & _tpName, TestProcedure _tp )
 	{
-		gs_TestsRunner.addTest( _tpName, _tp );
+		testsRunner.addTest( _tpName, _tp );
 	}
 };
 
@@ -118,7 +131,7 @@ public:
 int main ()
 {
 	setlocale(LC_ALL, "Russian");
-	gs_TestsRunner.runTests();
+	testsRunner.runTests();
 	system("pause");
 }
 

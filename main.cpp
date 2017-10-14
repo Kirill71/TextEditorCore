@@ -2,7 +2,9 @@
 #include<fstream>
 #include<iostream>
 
+
 /*---------------------------------------------------------------------------*/
+
 
 void 
 inserter( TextEditorCore& _t, const position& _from,  std::string& _text) {
@@ -17,7 +19,9 @@ inserter( TextEditorCore& _t, const position& _from,  std::string& _text) {
 
 } // inserter
 
+
 /*---------------------------------------------------------------------------*/
+
 
 void 
 deleter(TextEditorCore& _t, const position& _from, const position& to ) {
@@ -31,5 +35,6 @@ deleter(TextEditorCore& _t, const position& _from, const position& to ) {
 	std::cout << " ==========================================================" << std::endl;
 
 } // deleter
+
 
 /*---------------------------------------------------------------------------*/
