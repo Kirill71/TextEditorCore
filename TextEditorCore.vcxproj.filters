@@ -69,5 +69,8 @@
   <ItemGroup>
     <Text Include="empty.txt" />
     <Text Include="test.txt" />
+    <Text Include="ToDo.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
   </ItemGroup>
 </Project>

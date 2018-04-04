@@ -16,12 +16,10 @@ Cursor::cancelReverseSelection()
 /*---------------------------------------------------------------------------*/
 
 void
-Cursor::addLastRowFromMultilineSelection( 
-		std::string& _selectedText
-	,	const MyContainer& _container ) noexcept
+Cursor::addLastRowFromMultilineSelection( std::string& _selectedText ) noexcept
 {
 	_selectedText
-		.append( _container[ m_selectedText.to().m_row ]
+		.append( m_container[ m_selectedText.to().m_row ]
 			.substr( constants::LINE_BEGIN, m_selectedText.to().m_col ) );
 
 } // Cursor::addLastRowFromMultilineSelection
@@ -29,13 +27,11 @@ Cursor::addLastRowFromMultilineSelection(
 /*---------------------------------------------------------------------------*/
 
 void
-Cursor::addSingleRow( 
-		std::string& _selectedText
-	,	const MyContainer & _container ) noexcept
+Cursor::addSingleRow( std::string& _selectedText ) noexcept
 {
 	unsigned countCharacters { m_selectedText.to().m_col - m_selectedText.from().m_col };
 	_selectedText
-		.assign( _container[ m_selectedText.from().m_row ]
+		.assign( m_container[ m_selectedText.from().m_row ]
 			.substr( m_selectedText.from().m_col, countCharacters ) );
 
 } // Cursor::addSingleRow
@@ -43,13 +39,11 @@ Cursor::addSingleRow(
 /*---------------------------------------------------------------------------*/
 
 void
-Cursor::addFirstRowFromMiltilineSelection( 
-		std::string& _selectedText
-	,	const MyContainer & _container ) noexcept
+Cursor::addFirstRowFromMiltilineSelection( std::string& _selectedText ) noexcept
 {
-	unsigned countCharacters{ _container[m_selectedText.from().m_row].length() - m_selectedText.from().m_col };
+	unsigned countCharacters{ m_container[m_selectedText.from().m_row].length() - m_selectedText.from().m_col };
 	_selectedText
-		.append( _container[ m_selectedText.from().m_row ]
+		.append( m_container[ m_selectedText.from().m_row ]
 			.substr( m_selectedText.from().m_col, countCharacters )
 				.append(constants::END_OF_LINE));
 
@@ -58,12 +52,10 @@ Cursor::addFirstRowFromMiltilineSelection(
 /*---------------------------------------------------------------------------*/
 
 void
-Cursor::multilineRowSelection( 
-		std::string& _selectedText
-	,	const MyContainer & _container ) noexcept
+Cursor::multilineRowSelection( std::string& _selectedText ) noexcept
 {
-	auto begin{ _container.begin() + (m_selectedText.from().m_row +1 ) },
-		 end{ _container.begin() + m_selectedText.to().m_row};
+	auto begin{ m_container.begin() + ( m_selectedText.from().m_row + 1 ) },
+		 end{ m_container.begin() + m_selectedText.to().m_row};
 	auto add_row = [ &_selectedText ]( const std::string& _currStr )
 	{ _selectedText.append( _currStr ).append( constants:: END_OF_LINE ); };
 	 
@@ -73,22 +65,25 @@ Cursor::multilineRowSelection(
 
 /*---------------------------------------------------------------------------*/
 
-Cursor::Cursor() 
-	:	Cursor( constants::LINE_BEGIN, constants::LINE_BEGIN ) 
+Cursor::Cursor( const MyContainer& _container )
+	:	Cursor( constants::LINE_BEGIN, constants::LINE_BEGIN, _container )
 {
 } // Cursor::Cursor() 
 
 /*---------------------------------------------------------------------------*/
 
-Cursor::Cursor( unsigned row, unsigned col ) 
-	:	m_cursor{ row,col }, m_currentMode{ mode::Edit }, m_selectedText{} 
+Cursor::Cursor( unsigned _row, unsigned _col, const MyContainer& _container ) 
+	:	m_cursor{ _row, _col }
+	,	m_currentMode{ mode::Edit }
+	,	m_selectedText{}
+	,	m_container{ _container }
 {
 } // Cursor::Cursor
 
 /*---------------------------------------------------------------------------*/
 
 void 
-Cursor::cursorLeft( const MyContainer& _container )
+Cursor::cursorLeft()
 {
 	auto& cursor{ getPositionObject() };
 
@@ -96,8 +91,8 @@ Cursor::cursorLeft( const MyContainer& _container )
 		--cursor.m_col;
 	else if ( cursor.m_row > constants::LINE_BEGIN )
 	{
-		cursorUp( _container );
-		cursor.m_col = _container[ cursor.m_row ].length();
+		cursorUp();
+		cursor.m_col = m_container[ cursor.m_row ].length();
 	}
 
 } // Cursor::cursorLeft
@@ -105,15 +100,15 @@ Cursor::cursorLeft( const MyContainer& _container )
 /*---------------------------------------------------------------------------*/
 
 void
-Cursor::cursorRight(const MyContainer& container)
+Cursor::cursorRight()
 {
 	auto& cursor{ getPositionObject() };
 
-	if ( cursor.m_col < container[ cursor.m_row ].length() )
+	if ( cursor.m_col < m_container[ cursor.m_row ].length() )
 		++cursor.m_col;
-	else if ( cursor.m_row < container.size() - 1 )
+	else if ( cursor.m_row < m_container.size() - 1 )
 	{
-		cursorDown( container );
+		cursorDown();
 		cursor.m_col = constants::LINE_BEGIN;
 	}
 } //  Cursor::cursorRight
@@ -121,14 +116,14 @@ Cursor::cursorRight(const MyContainer& container)
 /*---------------------------------------------------------------------------*/
 
 void
-Cursor::cursorDown( const MyContainer& _container )
+Cursor::cursorDown()
 {
 	auto& cursor{ getPositionObject() };
 
-	if (		cursor.m_row < _container.size() - 1 
-			&&	cursor.m_col > _container[ ++cursor.m_row ].length() ) /*check next row  cursor column position*/
+	if (		cursor.m_row < m_container.size() - 1 
+			&&	cursor.m_col > m_container[ ++cursor.m_row ].length() ) /*check next row  cursor column position*/
 	{
-		cursor.m_col = _container[ cursor.m_row ].length();
+		cursor.m_col = m_container[ cursor.m_row ].length();
 	}
 
 } // Cursor::cursorDown
@@ -136,14 +131,14 @@ Cursor::cursorDown( const MyContainer& _container )
 /*---------------------------------------------------------------------------*/
 
 void
-Cursor::cursorUp( const MyContainer& _container ) 
+Cursor::cursorUp() 
 {
 	auto& cursor{ getPositionObject() };
 
 	if (		cursor.m_row > constants::LINE_BEGIN 
-			&&  cursor.m_col > _container[ --cursor.m_row ].length() ) /*check prev row  cursor column position*/
+			&&  cursor.m_col > m_container[ --cursor.m_row ].length() ) /*check prev row  cursor column position*/
 	{
-		cursor.m_col = _container[ cursor.m_row ].length();
+		cursor.m_col = m_container[ cursor.m_row ].length();
 	}
 
 } // Cursor::cursorUp
@@ -151,25 +146,22 @@ Cursor::cursorUp( const MyContainer& _container )
 /*---------------------------------------------------------------------------*/
 
 void
-Cursor::setCursor(
-		unsigned _row
-	,	unsigned _col
-	,	const MyContainer& _container ) 
+Cursor::setCursor( unsigned _row,	unsigned _col ) 
 {
-	setCursor( position( _row, _col),  _container );
+	setCursor( position( _row, _col) );
 
 } // Cursor::setCursor
 
 /*---------------------------------------------------------------------------*/
 
 void
-Cursor::setCursor(const position& pos, const MyContainer& container)
+Cursor::setCursor( const position& pos )
 {
 	auto& cursor{ getPositionObject() };
-	if (pos <= maxPosition(container) && /* check current row lenght*/pos.m_col <= currentRowMaxCol(pos.m_row, container))
+	if (pos <= maxPosition() && /* check current row lenght*/pos.m_col <= currentRowMaxCol( pos.m_row ) )
 		cursor = pos;
 	else
-		throw std::logic_error(errorMessage::INVALID_POSITION);
+		throw std::logic_error( errorMessage::INVALID_POSITION );
 
 } // Cursor::setCursor
 
@@ -228,7 +220,7 @@ Cursor::resetSelection() noexcept
 /*---------------------------------------------------------------------------*/
 
 std::string 
-Cursor::getSelectedText( const MyContainer& _container ) noexcept
+Cursor::getSelectedText() noexcept
 {
 	if ( m_currentMode == mode::Select )
 		finishSelection();
@@ -237,16 +229,16 @@ Cursor::getSelectedText( const MyContainer& _container ) noexcept
 	// if from == to return.
 	if ( !( m_selectedText.from() == m_selectedText.to() ) )
 	{
-		if ( (m_selectedText.from().m_row == m_selectedText.to().m_row ) ) 
+		if ( ( m_selectedText.from().m_row == m_selectedText.to().m_row ) ) 
 		{
-			addSingleRow(selectedText, _container);
+			addSingleRow( selectedText );
 		}
 		else 
 		{
-			addFirstRowFromMiltilineSelection( selectedText, _container );
+			addFirstRowFromMiltilineSelection( selectedText );
 			if ( (m_selectedText.to() - m_selectedText.from()) > 1 )
-				multilineRowSelection( selectedText, _container );
-			addLastRowFromMultilineSelection( selectedText, _container );
+				multilineRowSelection( selectedText );
+			addLastRowFromMultilineSelection( selectedText );
 		}
 	}
 	//Return value optimization

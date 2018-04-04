@@ -1,5 +1,6 @@
 #ifndef FINDER_HPP
 #define FINDER_HPP
+
 #include<string>
 #include<functional>
 #include<algorithm>
@@ -69,10 +70,16 @@ protected:
 	} //  struct findText
 	m_findText;
 
+
+	const MyContainer& m_container;
+
 	const position& find_base(		const std::string & _str
-								,	const position & _maxPos
-								,	const MyContainer& _container
 								,	const position & _pos = { 0,0 } );
+
+	position maxPosition() const noexcept
+	{
+		return position( m_container.size() - 1, m_container.back().length() );
+	}
 
 /*---------------------------------------------------------------------------*/
 
@@ -80,11 +87,11 @@ public:
 
 /*---------------------------------------------------------------------------*/
 
-	Finder() = default;
+	Finder( const MyContainer& _conatiner );
 
 	Finder( const Finder& _rhs ) = delete;
 
-	Finder& operator= ( const Finder& ) = delete;
+	Finder& operator= ( const Finder&  _rhs ) = delete;
 
 	Finder( const Finder&& _rhs ) = delete;
 
@@ -92,13 +99,9 @@ public:
 
 	virtual ~Finder() = default;
 
-	const position& find(		const std::string& _str
-							,	const position& _maxPos
-							,	const MyContainer& _container );
+	const position& find( const std::string& _str );
 
-	const position& findNext(		const position& _maxPos
-								,	const MyContainer& _container
-								,	bool _isReplace = false );
+	const position& findNext( bool _isReplace = false );
 
 /*---------------------------------------------------------------------------*/
 

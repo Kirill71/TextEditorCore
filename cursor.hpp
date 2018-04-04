@@ -21,9 +21,10 @@ class Cursor{
 public:
 
 /*---------------------------------------------------------------------------*/
-	Cursor();
 
-	Cursor( unsigned _row, unsigned _col );
+	explicit Cursor( const MyContainer& _container );
+
+	Cursor( unsigned _row, unsigned _col, const MyContainer& _container );
 
 	Cursor( const Cursor& _csr ) = delete;
 
@@ -46,32 +47,32 @@ public:
 /*---------------------------------------------------------------------------*/
 
 
-	position maxPosition( const MyContainer& _container ) const noexcept
+	position maxPosition() const noexcept
 	{
-		return position( _container.size() - 1, _container.back().length() );
+		return position( m_container.size() - 1, m_container.back().length() );
 	}
 
 /*---------------------------------------------------------------------------*/
 
 
-	unsigned currentRowMaxCol( unsigned _row , const MyContainer& _container ) const noexcept 
+	unsigned currentRowMaxCol( unsigned _row  ) const noexcept 
 	{
-		return _container.at( _row ).length();
+		return m_container.at( _row ).length();
 	}
 
 /*---------------------------------------------------------------------------*/
 
-	void cursorLeft( const MyContainer& _container );
+	void cursorLeft();
 
-	void cursorRight( const MyContainer& _container );
+	void cursorRight();
 
-	void cursorDown( const MyContainer& _container );
+	void cursorDown();
 
-	void cursorUp( const MyContainer& _container );
+	void cursorUp();
 
-	void setCursor( unsigned _row , unsigned _col , const MyContainer& _container );
+	void setCursor( unsigned _row , unsigned _col );
 
-	void setCursor( const position& _pos , const MyContainer& _container );
+	void setCursor( const position& _pos );
 
 	void startSelection() noexcept;
 
@@ -81,7 +82,7 @@ public:
 
 	void resetSelection() noexcept;
 
-	std::string getSelectedText( const MyContainer& _container ) noexcept;
+	std::string getSelectedText() noexcept;
 
 /*---------------------------------------------------------------------------*/
 
@@ -91,20 +92,20 @@ private:
 
 	position& getPositionObject() noexcept
 	{
-		return ( m_currentMode == mode::Edit ) ? m_cursor : m_selectedText.to();
+		return  m_currentMode == mode::Edit ? m_cursor : m_selectedText.to();
 	}
 
 /*---------------------------------------------------------------------------*/
 
 	void cancelReverseSelection();
 
-	void addLastRowFromMultilineSelection( std::string& _selectedText , const MyContainer& _container ) noexcept;
+	void addLastRowFromMultilineSelection( std::string& _selectedText ) noexcept;
 
-	void addSingleRow( std::string& _selectedText , const MyContainer& _container ) noexcept;
+	void addSingleRow( std::string& _selectedText ) noexcept;
 
-	void addFirstRowFromMiltilineSelection( std::string& _selectedText , const MyContainer& _container ) noexcept;
+	void addFirstRowFromMiltilineSelection( std::string& _selectedText ) noexcept;
 
-	void multilineRowSelection( std::string& _selectedText , const MyContainer& _container ) noexcept;
+	void multilineRowSelection( std::string& _selectedText ) noexcept;
 
 /*---------------------------------------------------------------------------*/
 
@@ -162,6 +163,8 @@ private:
 	} //  struct selectedText
 
 	m_selectedText;
+
+	const MyContainer& m_container;
 
 /*---------------------------------------------------------------------------*/
 

@@ -1,9 +1,9 @@
 #ifndef LINE_INPUT_ITERATOR_HPP
 #define LINE_INPUT_ITERATOR_HPP
 
-#include <iterator>
-#include <istream>
-#include <string>
+#include<iterator>
+#include<istream>
+#include<string>
 #include<cstring>
 #include"message.hpp"
 

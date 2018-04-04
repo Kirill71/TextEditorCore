@@ -1,0 +1,2 @@
+1. To refactore classes Cursor & TextEditorCore  Priority : Hight
+2 Code Style : Priority : Low;

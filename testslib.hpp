@@ -13,11 +13,11 @@ refactored by Kirill Zharenkov, Aldec-KTC(c)
 
 /*****************************************************************************/
 
-#include <cassert>
-#include <vector>
-#include <algorithm>
-#include <iostream>
-#include <string>
+#include<cassert>
+#include<vector>
+#include<algorithm>
+#include<iostream>
+#include<string>
 #include<locale>
 #include<functional>
 

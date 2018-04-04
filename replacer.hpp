@@ -16,10 +16,7 @@ private:
 
 	bool m_isSuccessfully;
 
-	void replaceInContainer( 
-									const position& _currentPos
-								,	MyContainer& _container
-								,	const std::string _newStr );
+	void replaceInContainer( const position& _currentPos, const std::string _newStr );
 
 /*---------------------------------------------------------------------------*/
 
@@ -27,7 +24,7 @@ public:
 
 /*---------------------------------------------------------------------------*/
 
-	Replacer() = default;
+	explicit Replacer( const MyContainer& _container );
 
 	Replacer( const Replacer& _rhs ) = delete;
 
@@ -39,17 +36,9 @@ public:
 
 	~Replacer() = default;
 
-	bool replace(	
-							const std::string & _oldStr
-					,		const std::string & _newStr 
-					,		const position& _maxPos
-					,		 MyContainer& _container );
+	bool replace( const std::string & _oldStr, const std::string & _newStr );
 
-	bool replaceAll(
-								const std::string& oldStr
-						,		const std::string& newStr
-						,		const position& maxPos
-						,		MyContainer& container );
+	bool replaceAll( const std::string& oldStr, const std::string& newStr );
 
 /*---------------------------------------------------------------------------*/
 

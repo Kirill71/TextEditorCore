@@ -1,14 +1,14 @@
 #ifndef TEXT_EDITOR_CORE_HPP
 #define TEXT_EDITOR_CORE_HPP
 
-#include<istream>
-#include<memory>
-#include<iterator>
-#include<sstream>
 #include"message.hpp"
 #include"cursor.hpp"
 #include"replacer.hpp"
 #include"customIterator.hpp"
+#include<istream>
+#include<memory>
+#include<iterator>
+#include<sstream>
 
 /*---------------------------------------------------------------------------*/
 
@@ -50,7 +50,7 @@ public:
 	 position 
 	 maxPosition() const noexcept 
 	 {
-		return m_cursor->maxPosition( m_container );
+		return m_cursor->maxPosition();
 
 	 }
 
@@ -151,12 +151,11 @@ private:
 
 /*---------------------------------------------------------------------------*/
 
+	MyContainer m_container;
+
 	std::unique_ptr< Cursor > m_cursor;
 
 	std::unique_ptr< Replacer > m_finderReplacer;
-
-	MyContainer m_container;
-
 
 /*---------------------------------------------------------------------------*/
 

@@ -5,9 +5,9 @@
 
 
 TextEditorCore::TextEditorCore() noexcept
-	:	m_cursor{ std::make_unique< Cursor >() }
-	,	m_finderReplacer{ std::make_unique< Replacer >() }
-	,	m_container{ constants::DEFAULT_DOCUMENT_SIZE, constants::SPACE }
+	:	m_container{ constants::DEFAULT_DOCUMENT_SIZE, constants::SPACE }
+	,	m_cursor{ std::make_unique< Cursor >( m_container ) }
+	,	m_finderReplacer{ std::make_unique< Replacer >( m_container ) }
 {
 } // TextEditorCore::TextEditorCore
 
@@ -29,7 +29,7 @@ TextEditorCore::TextEditorCore( std::istream & _stream ) noexcept
 TextEditorCore& 
 TextEditorCore::cursorLeft()
 {
-	m_cursor->cursorLeft( m_container );
+	m_cursor->cursorLeft();
 	return *this;
 
 } // TextEditorCore::cursorLeft
@@ -41,7 +41,7 @@ TextEditorCore::cursorLeft()
 TextEditorCore& 
 TextEditorCore::cursorRight()
 {
-	m_cursor->cursorRight( m_container );
+	m_cursor->cursorRight();
 	return *this;
 
 } // TextEditorCore::cursorRight
@@ -53,7 +53,7 @@ TextEditorCore::cursorRight()
 TextEditorCore& 
 TextEditorCore::cursorDown()
 {
-	m_cursor->cursorDown( m_container );
+	m_cursor->cursorDown();
 	return *this;
 
 } // TextEditorCore::cursorDown
@@ -65,7 +65,7 @@ TextEditorCore::cursorDown()
 TextEditorCore& 
 TextEditorCore::cursorUp()
 {
-	m_cursor->cursorUp( m_container );
+	m_cursor->cursorUp();
 	return *this;
 
 } // TextEditorCore::cursorUp 
@@ -77,7 +77,7 @@ TextEditorCore::cursorUp()
 TextEditorCore&
 TextEditorCore::setCursor( unsigned _row, unsigned _col )
 {
-	m_cursor->setCursor( _row, _col, m_container );
+	m_cursor->setCursor( _row, _col );
 	return *this;
 
 } // TextEditorCore::setCursor
@@ -89,7 +89,7 @@ TextEditorCore::setCursor( unsigned _row, unsigned _col )
 TextEditorCore&
 TextEditorCore::setCursor( const position & _pos )
 {
-	m_cursor->setCursor( _pos, m_container );
+	m_cursor->setCursor( _pos );
 	return *this;
 } // TextEditorCore::setCursor
 
@@ -193,7 +193,7 @@ TextEditorCore::resetSelection() noexcept
 std::string
 TextEditorCore::getSelectedText() noexcept
 {
-	return m_cursor->getSelectedText( m_container );
+	return m_cursor->getSelectedText();
 
 } // TextEditorCore::getSelectedText
 
@@ -204,7 +204,7 @@ TextEditorCore::getSelectedText() noexcept
 const position &
 TextEditorCore::find( const std::string & _str )
 {
-	return m_finderReplacer->find( _str, maxPosition(), m_container );
+	return m_finderReplacer->find( _str );
 
 } // TextEditorCore::find
 
@@ -215,7 +215,7 @@ TextEditorCore::find( const std::string & _str )
 const position &
 TextEditorCore::findNext()
 {
-	return m_finderReplacer->findNext( maxPosition(), m_container );
+	return m_finderReplacer->findNext();
 
 } // TextEditorCore::findNext
 
@@ -226,7 +226,7 @@ TextEditorCore::findNext()
 bool
 TextEditorCore::replace( const std::string & _oldStr, const std::string & _newStr )
 {
-	return  m_finderReplacer->replace( _oldStr, _newStr, maxPosition(), m_container );
+	return  m_finderReplacer->replace( _oldStr, _newStr);
 
 } // TextEditorCore::replace
 
@@ -237,7 +237,7 @@ TextEditorCore::replace( const std::string & _oldStr, const std::string & _newSt
 bool
 TextEditorCore::replaceAll( const std::string & _oldStr, const std::string & _newStr )
 {
-	return m_finderReplacer->replaceAll( _oldStr, _newStr, maxPosition(), m_container );
+	return m_finderReplacer->replaceAll( _oldStr, _newStr );
 
 } // TextEditorCore::replaceAll
 
@@ -279,12 +279,12 @@ TextEditorCore::insertText( position & _pos,  std::string& _text )  noexcept
 
 	//  calculate new current row( and remeber about c-style(numeration from zero))(--count)
 	unsigned row{ _pos.m_row + --count }, col{ m_container[ row ].length() };
-	m_cursor->setCursor( position{ row, col }, m_container );
+	m_cursor->setCursor( position{ row, col } );
 	// this method or add new last row on new line or append  string to end last row; 
 	addLastRow( isNewLineNeed, _pos, endOfCurrentString );
 
 	if ( isNewLineNeed )
-		m_cursor->setCursor( position{ ++row, constants::LINE_BEGIN }, m_container );
+		m_cursor->setCursor( position{ ++row, constants::LINE_BEGIN } );
 
 } // TextEditorCore::insertText
 
@@ -304,7 +304,7 @@ TextEditorCore::deleteText( const position & _from, position & _to )
 	if ( _from == _to ) // nothing delete
 		return;
 
-	m_cursor->setCursor( _from, m_container );
+	m_cursor->setCursor( _from );
 	if ( _from.m_row == _to.m_row ) 
 	{
 		m_container.at( _from.m_row ).erase( _from.m_col, _to.m_col - _from.m_col );
@@ -423,7 +423,7 @@ TextEditorCore::newLineInsert(
 		m_container.insert( m_container.begin() + _pos.m_row + 1, _endOfString );
 	}
 
-	m_cursor->setCursor( position{ _pos.m_row + 1, constants::LINE_BEGIN }, m_container );
+	m_cursor->setCursor( position{ _pos.m_row + 1, constants::LINE_BEGIN } );
 
 }  //TextEditorCore::newLineInsert
 
@@ -448,13 +448,13 @@ operator<<( std::ostream & _lhs,  TextEditorCore & _rhs ) noexcept
 
 
 std::istream &
-operator >> ( std::istream & lhs, TextEditorCore & rhs ) noexcept
+operator >> ( std::istream & _lhs, TextEditorCore & _rhs ) noexcept
 {
-	rhs.m_container.assign( 
-			(InputIterator{ lhs } )
+	_rhs.m_container.assign( 
+			(InputIterator{ _lhs } )
 		,	InputIterator{} );
 
-	return lhs;
+	return _lhs;
 
 } // operator>>
 

@@ -10,20 +10,20 @@
 
 DECLARE_OOP_TEST( emptyConstructor ) {
 	TextEditorCore t1{};
-	position t1_p = t1.getCursorPosition();
+	 
 
-	assert(t1_p == position(0, 0));
+	assert(t1.getCursorPosition() == position(0, 0));
 
 	t1
 		.cursorDown()
 		.cursorRight();
 
-	assert(t1_p == position(0, 0));
+	assert(t1.getCursorPosition() == position(0, 0));
 
 	t1
 		.cursorUp()
 		.cursorLeft();
-	assert(t1_p == position(0, 0));
+	assert( t1.getCursorPosition() == position(0, 0));
 
 	try {
 		t1.setCursor(position{ 100, 100 });

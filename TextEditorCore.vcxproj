@@ -22,7 +22,7 @@
     <ProjectGuid>{4763E7F8-0B63-4F1E-B8C4-E8F55B7A9E85}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>TextEditorCore</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -164,6 +164,7 @@
   <ItemGroup>
     <Text Include="empty.txt" />
     <Text Include="test.txt" />
+    <Text Include="ToDo.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
