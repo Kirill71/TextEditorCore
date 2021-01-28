@@ -274,11 +274,11 @@ TextEditorCore::insertText( position & _pos,  std::string& _text )  noexcept
 			m_container.begin() + _pos.m_row + centralInsertion /*implicit cast for uint*/
 		,	begin, InsertIterator() );
 	//count insertion string
-	unsigned count =
+	auto count =
 		std::distance( InsertIterator{ std::string{ _text } }, InsertIterator() );
 
 	//  calculate new current row( and remeber about c-style(numeration from zero))(--count)
-	unsigned row{ _pos.m_row + --count }, col{ m_container[ row ].length() };
+	auto row{ _pos.m_row + --count }, col{ m_container[ row ].length() };
 	m_cursor->setCursor( position{ row, col } );
 	// this method or add new last row on new line or append  string to end last row; 
 	addLastRow( isNewLineNeed, _pos, endOfCurrentString );
@@ -347,7 +347,7 @@ TextEditorCore::deleteRow( unsigned _row ) noexcept
 void
 TextEditorCore::deleteRowTextFragment( const position& _from ) noexcept
 {
-	unsigned count{ m_container.at( _from.m_row ).length() - _from.m_col };
+	const auto count{ m_container.at( _from.m_row ).length() - _from.m_col };
 	if ( _from.m_col == 0 )
 	{
 		deleteRow( _from.m_row );
@@ -387,7 +387,7 @@ TextEditorCore::getEndPartOfChangeString(
 	,	std::string & _endOfCurrentString
 	,	const position& _pos )
 {
-	unsigned count{ m_container.at( _pos.m_row ).length() - _pos.m_col };
+	const auto count{ m_container.at( _pos.m_row ).length() - _pos.m_col };
 	//  remember end of string
 	  _endOfCurrentString
 		  .assign( m_container.at( _pos.m_row )
