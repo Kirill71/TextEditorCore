@@ -5,8 +5,7 @@
 void 
 Cursor::cancelReverseSelection()
 { 
-	if ( 
-		   ( m_selectedText.from().m_row > m_selectedText.to().m_row )
+	if ( ( m_selectedText.from().m_row > m_selectedText.to().m_row )
 		|| ( m_selectedText.from().m_row == m_selectedText.to().m_row )  
 		&& ( m_selectedText.from().m_col > m_selectedText.to().m_col ) )
 		std::swap( m_selectedText.from(), m_selectedText.to() ); //swap from with to, if to < from
@@ -55,9 +54,12 @@ void
 Cursor::multilineRowSelection( std::string& _selectedText ) noexcept
 {
 	auto begin{ m_container.begin() + ( m_selectedText.from().m_row + 1 ) },
-		 end{ m_container.begin() + m_selectedText.to().m_row};
+	end{ m_container.begin() + m_selectedText.to().m_row};
+	
 	auto add_row = [ &_selectedText ]( const std::string& _currStr )
-	{ _selectedText.append( _currStr ).append( constants:: END_OF_LINE ); };
+	{ 
+		_selectedText.append( _currStr ).append( constants:: END_OF_LINE ); 
+	};
 	 
 	std::for_each( begin, end, add_row );
 
@@ -88,7 +90,9 @@ Cursor::cursorLeft()
 	auto& cursor{ getPositionObject() };
 
 	if ( cursor.m_col > constants::LINE_BEGIN )
+	{
 		--cursor.m_col;
+	}
 	else if ( cursor.m_row > constants::LINE_BEGIN )
 	{
 		cursorUp();
@@ -105,7 +109,9 @@ Cursor::cursorRight()
 	auto& cursor{ getPositionObject() };
 
 	if ( cursor.m_col < m_container[ cursor.m_row ].length() )
+	{
 		++cursor.m_col;
+	}
 	else if ( cursor.m_row < m_container.size() - 1 )
 	{
 		cursorDown();
@@ -119,9 +125,8 @@ void
 Cursor::cursorDown()
 {
 	auto& cursor{ getPositionObject() };
-
-	if (		cursor.m_row < m_container.size() - 1 
-			&&	cursor.m_col > m_container[ ++cursor.m_row ].length() ) /*check next row  cursor column position*/
+	/*check next row  cursor column position*/
+	if ( cursor.m_row < m_container.size() - 1 && cursor.m_col > m_container[ ++cursor.m_row ].length() ) 
 	{
 		cursor.m_col = m_container[ cursor.m_row ].length();
 	}
@@ -134,9 +139,8 @@ void
 Cursor::cursorUp() 
 {
 	auto& cursor{ getPositionObject() };
-
-	if (		cursor.m_row > constants::LINE_BEGIN 
-			&&  cursor.m_col > m_container[ --cursor.m_row ].length() ) /*check prev row  cursor column position*/
+	/*check prev row  cursor column position*/
+	if ( cursor.m_row > constants::LINE_BEGIN && cursor.m_col > m_container[ --cursor.m_row ].length() ) 
 	{
 		cursor.m_col = m_container[ cursor.m_row ].length();
 	}
@@ -146,7 +150,7 @@ Cursor::cursorUp()
 /*---------------------------------------------------------------------------*/
 
 void
-Cursor::setCursor( unsigned _row,	unsigned _col ) 
+Cursor::setCursor( unsigned _row, unsigned _col ) 
 {
 	setCursor( position( _row, _col) );
 
@@ -158,10 +162,15 @@ void
 Cursor::setCursor( const position& pos )
 {
 	auto& cursor{ getPositionObject() };
-	if (pos <= maxPosition() && /* check current row lenght*/pos.m_col <= currentRowMaxCol( pos.m_row ) )
+	/* check current row lenght*/
+	if (pos <= maxPosition() && pos.m_col <= currentRowMaxCol( pos.m_row ) )
+	{
 		cursor = pos;
+	}
 	else
+	{
 		throw std::logic_error( errorMessage::INVALID_POSITION );
+	}
 
 } // Cursor::setCursor
 
@@ -192,12 +201,15 @@ Cursor::finishSelection() noexcept
 void 
 Cursor::continueSelection()
 {
-	// åñëè êóðñîð â êîíöå è ðåæèì íå ðàâåí ðåæèìó âûäåëåíèÿ, çíà÷èò ìû çàêîí÷èëè âûäåëåíèå è îñòàëèñü íà òîé æå ïîçèöèè(òîãäà ïðîäîëæàåì âûäåëÿòü)
-	if (		m_cursor == m_selectedText.to()
-			&&	m_currentMode == mode::Edit )
+	// Ã¥Ã±Ã«Ã¨ ÃªÃ³Ã°Ã±Ã®Ã° Ã¢ ÃªÃ®Ã­Ã¶Ã¥ Ã¨ Ã°Ã¥Ã¦Ã¨Ã¬ Ã­Ã¥ Ã°Ã Ã¢Ã¥Ã­ Ã°Ã¥Ã¦Ã¨Ã¬Ã³ Ã¢Ã»Ã¤Ã¥Ã«Ã¥Ã­Ã¨Ã¿, Ã§Ã­Ã Ã·Ã¨Ã² Ã¬Ã» Ã§Ã ÃªÃ®Ã­Ã·Ã¨Ã«Ã¨ Ã¢Ã»Ã¤Ã¥Ã«Ã¥Ã­Ã¨Ã¥ Ã¨ Ã®Ã±Ã²Ã Ã«Ã¨Ã±Ã¼ Ã­Ã  Ã²Ã®Ã© Ã¦Ã¥ Ã¯Ã®Ã§Ã¨Ã¶Ã¨Ã¨(Ã²Ã®Ã£Ã¤Ã  Ã¯Ã°Ã®Ã¤Ã®Ã«Ã¦Ã Ã¥Ã¬ Ã¢Ã»Ã¤Ã¥Ã«Ã¿Ã²Ã¼)
+	if ( m_cursor == m_selectedText.to() &&	m_currentMode == mode::Edit )
+	{
 		m_currentMode = mode::Select;
+	}
 	else
+	{
 		throw std::logic_error( errorMessage::BAD_CONTINUE_SELECTION );
+	}
 
 } // Cursor::continueSelection
 
@@ -206,13 +218,13 @@ Cursor::continueSelection()
 void 
 Cursor::resetSelection() noexcept
 {
-	// åñëè âûáðàí ðåæèì âûäåëåíèÿ çíà÷èò, ñáðàñûâàåì åãî è âîçðàùàåì êóðñîð â íà÷àëî âûäåëåíèÿ, èíà÷å íè÷åãî 
+	// Ã¥Ã±Ã«Ã¨ Ã¢Ã»Ã¡Ã°Ã Ã­ Ã°Ã¥Ã¦Ã¨Ã¬ Ã¢Ã»Ã¤Ã¥Ã«Ã¥Ã­Ã¨Ã¿ Ã§Ã­Ã Ã·Ã¨Ã², Ã±Ã¡Ã°Ã Ã±Ã»Ã¢Ã Ã¥Ã¬ Ã¥Ã£Ã® Ã¨ Ã¢Ã®Ã§Ã°Ã Ã¹Ã Ã¥Ã¬ ÃªÃ³Ã°Ã±Ã®Ã° Ã¢ Ã­Ã Ã·Ã Ã«Ã® Ã¢Ã»Ã¤Ã¥Ã«Ã¥Ã­Ã¨Ã¿, Ã¨Ã­Ã Ã·Ã¥ Ã­Ã¨Ã·Ã¥Ã£Ã® 
 	if ( m_currentMode == mode::Select ) 
 	{
 		m_currentMode = mode::Edit;
-		m_cursor = m_selectedText.from(); // ïðè íàëè÷èè ðåæèìà âûäåëåíèÿ ýòà ñòðîêà íå ê ÷åìó, 
-										  //îäíàêî ÿ õî÷ó â áóäóùåì îò íåãî îòêàçàòüñÿ, òàê êàê äóìàþ,
-										  //÷òî ñìîãó ðåàëèçîâàòü ýêâèâàëåíòíûé ôóíêöèîíàë è áåç íåãî è òàì îíà ïðèãîäèòñÿ.
+		m_cursor = m_selectedText.from(); // Ã¯Ã°Ã¨ Ã­Ã Ã«Ã¨Ã·Ã¨Ã¨ Ã°Ã¥Ã¦Ã¨Ã¬Ã  Ã¢Ã»Ã¤Ã¥Ã«Ã¥Ã­Ã¨Ã¿ Ã½Ã²Ã  Ã±Ã²Ã°Ã®ÃªÃ  Ã­Ã¥ Ãª Ã·Ã¥Ã¬Ã³, 
+										  //Ã®Ã¤Ã­Ã ÃªÃ® Ã¿ ÃµÃ®Ã·Ã³ Ã¢ Ã¡Ã³Ã¤Ã³Ã¹Ã¥Ã¬ Ã®Ã² Ã­Ã¥Ã£Ã® Ã®Ã²ÃªÃ Ã§Ã Ã²Ã¼Ã±Ã¿, Ã²Ã Ãª ÃªÃ Ãª Ã¤Ã³Ã¬Ã Ã¾,
+										  //Ã·Ã²Ã® Ã±Ã¬Ã®Ã£Ã³ Ã°Ã¥Ã Ã«Ã¨Ã§Ã®Ã¢Ã Ã²Ã¼ Ã½ÃªÃ¢Ã¨Ã¢Ã Ã«Ã¥Ã­Ã²Ã­Ã»Ã© Ã´Ã³Ã­ÃªÃ¶Ã¨Ã®Ã­Ã Ã« Ã¨ Ã¡Ã¥Ã§ Ã­Ã¥Ã£Ã® Ã¨ Ã²Ã Ã¬ Ã®Ã­Ã  Ã¯Ã°Ã¨Ã£Ã®Ã¤Ã¨Ã²Ã±Ã¿.
 	}
 
 } // Cursor::resetSelection
@@ -223,7 +235,9 @@ std::string
 Cursor::getSelectedText() noexcept
 {
 	if ( m_currentMode == mode::Select )
+	{
 		finishSelection();
+	}
 
 	std::string selectedText{};
 	// if from == to return.
@@ -237,7 +251,9 @@ Cursor::getSelectedText() noexcept
 		{
 			addFirstRowFromMiltilineSelection( selectedText );
 			if ( (m_selectedText.to() - m_selectedText.from()) > 1 )
+			{
 				multilineRowSelection( selectedText );
+			}
 			addLastRowFromMultilineSelection( selectedText );
 		}
 	}
