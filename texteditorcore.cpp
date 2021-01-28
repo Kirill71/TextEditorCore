@@ -284,7 +284,9 @@ TextEditorCore::insertText( position & _pos,  std::string& _text )  noexcept
 	addLastRow( isNewLineNeed, _pos, endOfCurrentString );
 
 	if ( isNewLineNeed )
+	{
 		m_cursor->setCursor( position{ ++row, constants::LINE_BEGIN } );
+	}
 
 } // TextEditorCore::insertText
 
@@ -299,10 +301,14 @@ TextEditorCore::deleteText( const position & _from, position & _to )
 		throw std::logic_error(errorMessage::INVALID_POSITION);
 
 	if ( m_cursor->m_currentMode == Cursor::mode::Select )
+	{
 		finishSelection();
+	}
 
 	if ( _from == _to ) // nothing delete
+	{
 		return;
+	}
 
 	m_cursor->setCursor( _from );
 	if ( _from.m_row == _to.m_row ) 
@@ -342,11 +348,14 @@ void
 TextEditorCore::deleteRowTextFragment( const position& _from ) noexcept
 {
 	unsigned count{ m_container.at( _from.m_row ).length() - _from.m_col };
-	if ( _from.m_col == 0 ) {
+	if ( _from.m_col == 0 )
+	{
 		deleteRow( _from.m_row );
 	}
 	else 
+	{
 		m_container[ _from.m_row ].erase( _from.m_col, count );
+	}
 
 } // TextEditorCore::deleteRowTextFragment
 
@@ -358,9 +367,13 @@ void
 TextEditorCore::deleteColTextFragment( const position & _to ) noexcept
 {
 	if (_to.m_col == m_container.at( _to.m_row ).length()) 
+	{
 		deleteRow( _to.m_row );
+	}
 	else 
+	{
 		m_container.at( _to.m_row ).erase( constants::LINE_BEGIN, _to.m_col );
+	}
 
 } // TextEditorCore::deleteColTextFragment
 
@@ -385,8 +398,10 @@ TextEditorCore::getEndPartOfChangeString(
 			m_container.at( _pos.m_row ).begin() + _pos.m_col
 		,	m_container.at( _pos.m_row ).end() );
 
-	if ( _pos.m_col == constants::LINE_BEGIN ) // if get all string. 
+	if ( _pos.m_col == constants::LINE_BEGIN ) // if get all string.
+	{
 		m_container.erase( m_container.begin() + _pos.m_row );
+	}
 
 } // TextEditorCore::getEndPartOfChangeString
 
@@ -400,9 +415,13 @@ void TextEditorCore::addLastRow(
 	,	const std::string & _partOfString ) noexcept
 {
 	if ( _isNewLineNeed )
+	{
 		m_container.insert( m_container.begin() + _pos.m_row + 1, _partOfString );
+	}
 	else
+	{
 		m_container[ _pos.m_row ].append( _partOfString );
+	}
 }
 
 
@@ -416,7 +435,9 @@ TextEditorCore::newLineInsert(
 	,	position & _pos ) noexcept
 {
 	if ( _pos.m_col == constants::LINE_BEGIN ) 
+	{
 		m_container.insert( m_container.begin() + _pos.m_row, constants::SPACE );
+	}
 	else
 	{
 		getEndPartOfChangeString( _text, _endOfString, _pos );
