@@ -30,9 +30,9 @@ public:
 
 	Replacer& operator= ( const Replacer& ) = delete;
 
-	Replacer( const Replacer&& ) = delete;
+	Replacer( Replacer&& ) = delete;
 
-	Replacer& operator= ( const Replacer&& ) = delete;
+	Replacer& operator= ( Replacer&& ) = delete;
 
 	~Replacer() = default;
 
