@@ -29,9 +29,9 @@ public:
 
 	TextEditorCore& operator= ( const TextEditorCore& ) = delete;
 
-	TextEditorCore( const TextEditorCore&& ) = delete;
+	TextEditorCore( TextEditorCore&& ) = delete;
 
-	TextEditorCore& operator= ( const TextEditorCore&& ) = delete;
+	TextEditorCore& operator= ( TextEditorCore&& ) = delete;
 
 	~TextEditorCore() = default;
 
