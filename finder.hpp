@@ -93,9 +93,9 @@ public:
 
 	Finder& operator= ( const Finder&  _rhs ) = delete;
 
-	Finder( const Finder&& _rhs ) = delete;
+	Finder( Finder&& _rhs ) = delete;
 
-	Finder& operator= ( const Finder&& ) = delete;
+	Finder& operator= ( Finder&& ) = delete;
 
 	virtual ~Finder() = default;
 
