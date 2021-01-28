@@ -24,18 +24,6 @@ public:
 
 /*---------------------------------------------------------------------------*/
 
-	position( const position& _pos ) = default;
-
-	position& operator= ( const position& _pos ) = default;
-
-	position( const position&& _pos )	
-		:	m_row{ std::move( _pos.m_row ) }
-		,	m_col{ std::move( _pos.m_col ) } 
-	{
-	}
-
-/*---------------------------------------------------------------------------*/
-
 
 	bool 
 	operator== ( const position& _rhs ) const noexcept 
