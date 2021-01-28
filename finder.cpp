@@ -44,7 +44,9 @@ Finder::find_base(
 	--m_findText.lastPosition().m_row; // return to c-style numeration from zero
 
 	if (it == m_container.end())
+	{
 		m_findText.lastPosition() = maxPosition();
+	}
 
 	return m_findText.lastPosition();
 
