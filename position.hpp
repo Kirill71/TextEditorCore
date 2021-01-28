@@ -16,7 +16,7 @@ public:
 	{
 	}
 
-	position( unsigned _row, unsigned _col ) 
+	position( size_t _row, size_t _col ) 
 		:	m_row{ validate( _row ) }
 		,	m_col{ validate( _col ) } 
 	{
@@ -96,7 +96,7 @@ public:
 
 /*---------------------------------------------------------------------------*/
 
-	unsigned m_row, m_col;
+	size_t m_row, m_col;
 
 /*---------------------------------------------------------------------------*/
 
