@@ -28,11 +28,11 @@ public:
 
 	Cursor( const Cursor& _csr ) = delete;
 
-	Cursor( const Cursor&& _csr ) = delete;
+	Cursor( Cursor&& _csr ) = delete;
 
 	Cursor& operator=( const Cursor& _csr ) = delete;
 
-	Cursor& operator=( const Cursor&& _csr ) = delete;
+	Cursor& operator=( Cursor&& _csr ) = delete;
 
 	~Cursor() = default;
 
