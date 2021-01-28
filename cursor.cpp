@@ -40,7 +40,7 @@ Cursor::addSingleRow( std::string& _selectedText ) noexcept
 void
 Cursor::addFirstRowFromMiltilineSelection( std::string& _selectedText ) noexcept
 {
-	unsigned countCharacters{ m_container[m_selectedText.from().m_row].length() - m_selectedText.from().m_col };
+	size_t countCharacters{ m_container[m_selectedText.from().m_row].length() - m_selectedText.from().m_col };
 	_selectedText
 		.append( m_container[ m_selectedText.from().m_row ]
 			.substr( m_selectedText.from().m_col, countCharacters )
