@@ -1,5 +1,5 @@
-#ifndef MESSAGE_HPP
-#define MESSAGE_HPP
+#pragma once
+
 
 #include<vector>
 #include<string>
@@ -7,16 +7,16 @@
 
 /*---------------------------------------------------------------------------*/
 
-using MyContainer = std::vector< std::string >;
+using TextEditorCoreBase = std::vector< std::string >;
 
 /*---------------------------------------------------------------------------*/
 
 namespace constants 
 {
 
-	const unsigned	  DEFAULT_DOCUMENT_SIZE{ 1000 };
+	const size_t	  DEFAULT_DOCUMENT_SIZE{ 1000 };
 
-	const unsigned    LINE_BEGIN{ 0 };
+	const size_t    LINE_BEGIN{ 0 };
 
 	const std::string END_OF_LINE{ "\n" };
 
@@ -44,5 +44,3 @@ namespace errorMessage
 }; // errorMessage
 
 /*---------------------------------------------------------------------------*/
-
-#endif

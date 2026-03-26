@@ -1,11 +1,10 @@
-#ifndef FINDER_HPP
-#define FINDER_HPP
+#pragma once
 
 #include<string>
-#include<functional>
 #include<algorithm>
-#include"utils.hpp"
-#include"message.hpp"
+#include "position.hpp"
+#include "message.hpp"
+
 
 /*---------------------------------------------------------------------------*/
 
@@ -32,8 +31,7 @@ protected:
 /*---------------------------------------------------------------------------*/
 
 
-		position&
-		lastPosition() noexcept
+		position& lastPosition() noexcept
 		{
 			return m_find.first;
 		}
@@ -41,8 +39,7 @@ protected:
 /*---------------------------------------------------------------------------*/
 
 
-		std::string& 
-		searchString()  noexcept
+		std::string& searchString()  noexcept
 		{
 			return m_find.second;
 		}
@@ -71,14 +68,14 @@ protected:
 	m_findText;
 
 
-	const MyContainer& m_container;
+	const TextEditorCoreBase& m_container;
 
 	const position& find_base(		const std::string & _str
 								,	const position & _pos = { 0,0 } );
 
 	position maxPosition() const noexcept
 	{
-		return position( m_container.size() - 1, m_container.back().length() );
+		return { m_container.size() - 1, m_container.back().length() };
 	}
 
 /*---------------------------------------------------------------------------*/
@@ -87,7 +84,7 @@ public:
 
 /*---------------------------------------------------------------------------*/
 
-	Finder( const MyContainer& _conatiner );
+	explicit Finder( const TextEditorCoreBase& _container );
 
 	Finder( const Finder& _rhs ) = delete;
 
@@ -106,5 +103,3 @@ public:
 /*---------------------------------------------------------------------------*/
 
 }; // class Finder
-
-#endif

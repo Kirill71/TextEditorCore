@@ -1,18 +1,13 @@
-#ifndef TEXT_EDITOR_CORE_HPP
-#define TEXT_EDITOR_CORE_HPP
+#pragma once
 
-#include"message.hpp"
-#include"cursor.hpp"
-#include"replacer.hpp"
-#include"customIterator.hpp"
-#include<istream>
+#include "message.hpp"
+#include "cursor.hpp"
+#include "replacer.hpp"
 #include<memory>
-#include<iterator>
-#include<sstream>
 
 /*---------------------------------------------------------------------------*/
 
-class TextEditorCore
+class TextEditorCore final
 {
 
 /*---------------------------------------------------------------------------*/
@@ -38,8 +33,7 @@ public:
 /*---------------------------------------------------------------------------*/
 
 
-	const position& 
-	getCursorPosition() const noexcept
+	const position& getCursorPosition() const noexcept
 	{
 		return m_cursor->getCursorPosition();
 	}
@@ -47,8 +41,7 @@ public:
 /*---------------------------------------------------------------------------*/
 
 
-	 position 
-	 maxPosition() const noexcept 
+	 position maxPosition() const noexcept
 	 {
 		return m_cursor->maxPosition();
 
@@ -64,7 +57,7 @@ public:
 
 	TextEditorCore& cursorUp();
 
-	TextEditorCore& setCursor( unsigned _row, unsigned _col);
+	TextEditorCore& setCursor( size_t _row, size_t _col);
 
 	TextEditorCore& setCursor( const position& _pos );
 
@@ -77,8 +70,7 @@ public:
 /*---------------------------------------------------------------------------*/
 
 
-	TextEditorCore& 
-	HomeKeyPressed() noexcept
+	TextEditorCore& homeKeyPressed() noexcept
 	{
 		m_cursor->getPositionObject().m_col = constants::LINE_BEGIN;
 		return *this;
@@ -88,7 +80,7 @@ public:
 
 
 	TextEditorCore&
-	EndKeyPressed() noexcept 
+	endKeyPressed() noexcept
 	{
 		m_cursor->getPositionObject().m_col 
 			= m_container[ m_cursor->getPositionObject().m_row ].length();
@@ -100,7 +92,7 @@ public:
 
 
 	TextEditorCore&
-	CtrlHomeKeyPressed() noexcept 
+	ctrlHomeKeyPressed() noexcept
 	{
 		m_cursor->getPositionObject().m_row 
 			= m_cursor->getPositionObject().m_col 
@@ -113,7 +105,7 @@ public:
 
 
 	TextEditorCore&
-	CtrlEndKeyPressed() noexcept 
+	ctrlEndKeyPressed() noexcept
 	{
 		m_cursor->getPositionObject() = maxPosition();
 		return *this;
@@ -129,7 +121,7 @@ public:
 
 	TextEditorCore& resetSelection() noexcept;
 
-	std::string getSelectedText() noexcept;
+	std::string getSelectedText() const noexcept;
 
 	const position& find( const std::string& _str );
 
@@ -145,13 +137,13 @@ private:
 
 /*---------------------------------------------------------------------------*/
 
-	friend  std::ostream& operator<< ( std::ostream& _lhs, TextEditorCore& _rhs ) noexcept;
+	friend std::ostream& operator<< ( std::ostream& _lhs, const TextEditorCore& _rhs ) noexcept;
 
-	friend  std::istream& operator>> ( std::istream& _lhs, TextEditorCore& _rhs ) noexcept;
+	friend std::istream& operator>> ( std::istream& _lhs, TextEditorCore& _rhs ) noexcept;
 
 /*---------------------------------------------------------------------------*/
 
-	MyContainer m_container;
+	TextEditorCoreBase m_container;
 
 	std::unique_ptr< Cursor > m_cursor;
 
@@ -159,11 +151,11 @@ private:
 
 /*---------------------------------------------------------------------------*/
 
-	void insertText( position& _pos, std::string& _text) noexcept;
+	void insertText( const position& _pos, const std::string& _text) noexcept;
 
-	void deleteText( const position& _from, position& _to );
+	void deleteText( const position& _from, const position& _to );
 
-	void deleteRow( unsigned _row ) noexcept;
+	void deleteRow( size_t _row ) noexcept;
 
 	void deleteRowTextFragment( const position& _from ) noexcept;
 
@@ -174,20 +166,18 @@ private:
 										,	std::string& _endOfCurrentString
 										,	const position& _pos 
 								 ); 
-	void addLastRow(	 
+	void addLastRow(
 							bool _isNewLineNeed
 						,	const position& _pos
-						,	const std::string& lastRow 
+						,	const std::string& _text
 				   ) noexcept;
 
 	void newLineInsert( 
 							const std::string& _text
 						,	std::string& _endOfString
-						,	position& _pos 
+						,	const position& _pos
 					  ) noexcept;
 
 /*---------------------------------------------------------------------------*/
 
 }; // class TextEditorCore
-
-#endif // !TEXT_EDITOR_CORE_HPP

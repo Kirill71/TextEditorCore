@@ -1,20 +1,16 @@
-#ifndef LINE_INPUT_ITERATOR_HPP
-#define LINE_INPUT_ITERATOR_HPP
+#pragma once
 
 #include<iterator>
-#include<istream>
 #include<string>
 #include<cstring>
-#include"message.hpp"
+#include "message.hpp"
 
 /*---------------------------------------------------------------------------*/
 
-namespace customIterator{
+namespace customIterator {
 
 	template < class StringT = std::string >
-	class LineInputIterator :
-		public std::iterator< std::input_iterator_tag ,
-		StringT , std::ptrdiff_t , const StringT* , const StringT& >
+	class LineInputIterator
 	{
 
 /*---------------------------------------------------------------------------*/
@@ -22,9 +18,16 @@ namespace customIterator{
 	public:
 
 /*---------------------------------------------------------------------------*/
-		typedef typename StringT::value_type char_type;
-		typedef typename StringT::traits_type traits_type;
-		typedef std::basic_istream< char_type, traits_type > istream_type;
+
+		using iterator_category = std::input_iterator_tag;
+		using value_type        = StringT;
+		using difference_type   = std::ptrdiff_t;
+		using pointer           = const StringT*;
+		using reference         = const StringT&;
+
+		using char_type         = typename StringT::value_type;
+		using traits_type       = typename StringT::traits_type;
+		using istream_type      = std::basic_istream< char_type, traits_type >;
 
 /*---------------------------------------------------------------------------*/
 
@@ -51,7 +54,7 @@ namespace customIterator{
 /*---------------------------------------------------------------------------*/
 
 
-		LineInputIterator<StringT>& operator++ (){
+		LineInputIterator& operator++ (){
 			if ( is && !std::getline( *is, value ) ) 
 				is = nullptr;
 			return *this;
@@ -60,9 +63,9 @@ namespace customIterator{
 /*---------------------------------------------------------------------------*/
 
 
-		LineInputIterator<StringT> operator++ ( int )
+		LineInputIterator operator++ ( int )
 		{
-			LineInputIterator<StringT> prev( *this );
+			LineInputIterator prev( *this );
 			++*this;
 			return prev;
 		}
@@ -70,7 +73,7 @@ namespace customIterator{
 /*---------------------------------------------------------------------------*/
 
 
-		bool operator!= ( const LineInputIterator< StringT >& other ) const noexcept
+		bool operator!= ( const LineInputIterator& other ) const noexcept
 		{
 			return is != other.is;
 		}
@@ -78,7 +81,7 @@ namespace customIterator{
 /*---------------------------------------------------------------------------*/
 
 
-		bool operator== ( const LineInputIterator< StringT >& other ) const noexcept{
+		bool operator== ( const LineInputIterator& other ) const noexcept{
 			return !( *this != other );
 		}
 
@@ -101,14 +104,20 @@ namespace customIterator{
 
 
 	template < class StringT = std::string >
-	class LineInsertIterator :
-		public std::iterator< std::input_iterator_tag ,
-		StringT , std::ptrdiff_t , const StringT* , const StringT& >
+	class LineInsertIterator
 	{
 
 /*---------------------------------------------------------------------------*/
 
 	public:
+
+/*---------------------------------------------------------------------------*/
+
+		using iterator_category = std::input_iterator_tag;
+		using value_type        = StringT;
+		using difference_type   = std::ptrdiff_t;
+		using pointer           = const StringT*;
+		using reference         = const StringT&;
 
 /*---------------------------------------------------------------------------*/
 
@@ -124,23 +133,20 @@ namespace customIterator{
 		explicit LineInsertIterator( std::string& _text )
 			: LineInsertIterator() 
 					{ 
-						line = strtok_s( 
+						line = std::strtok(
 								const_cast< char* >( _text.c_str() ) 
-							,	constants::END_OF_LINE.c_str()
-							,	&nextToken );
+							,	constants::END_OF_LINE.c_str() );
 						value = line; 
 					}
 
 /*---------------------------------------------------------------------------*/
 
 
-		LineInsertIterator< StringT >& operator++ ()
+		LineInsertIterator& operator++ ()
 		{
-			if ( line = strtok_s(
-						nullptr
-					,	constants::END_OF_LINE.c_str()
-					,	&nextToken ) 
-			    ) 
+			if ( (line = std::strtok(
+				      nullptr
+				      ,	constants::END_OF_LINE.c_str() ) ) )
 				value = line;
 
 			return *this;
@@ -149,9 +155,9 @@ namespace customIterator{
 /*---------------------------------------------------------------------------*/
 
 
-		LineInsertIterator<StringT> operator++ ( int )
+		LineInsertIterator operator++ ( int )
 		{
-			LineInsertIterator< StringT > prev( *this );
+			LineInsertIterator prev( *this );
 			++*this;
 
 			return prev;
@@ -160,7 +166,7 @@ namespace customIterator{
 /*---------------------------------------------------------------------------*/
 
 
-		bool operator!= ( const LineInsertIterator< StringT >& _other ) const noexcept
+		bool operator!= ( const LineInsertIterator& _other ) const noexcept
 		{
 			return line != _other.line;
 		}
@@ -168,7 +174,7 @@ namespace customIterator{
 /*---------------------------------------------------------------------------*/
 
 
-		bool operator== ( const LineInsertIterator< StringT >& _other ) const noexcept
+		bool operator== ( const LineInsertIterator& _other ) const noexcept
 		{
 			return ! ( *this != _other );
 		}
@@ -206,5 +212,3 @@ using InputIterator = customIterator::LineInputIterator<>;
 using InsertIterator = customIterator::LineInsertIterator<>;
 
 /*---------------------------------------------------------------------------*/
-
-#endif

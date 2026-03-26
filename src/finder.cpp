@@ -1,10 +1,12 @@
 #include "finder.hpp"
+#include "utils.hpp"
 
+#include <functional>
 
 /*---------------------------------------------------------------------------*/
 
 
-Finder::Finder( const MyContainer& _container )
+Finder::Finder( const TextEditorCoreBase& _container )
 	:	m_container( _container )
 {
 } // Finder::Finder
@@ -22,7 +24,7 @@ Finder::find_base(
 	Utils::checkEmptyString( _str, errorMessage::EMPTY_SEARCH_STRING );
 	m_findText.setParams( _pos, _str );
 
-	auto it = std::find_if( m_container.begin() + _pos.m_row, m_container.end(),
+	const auto it = std::find_if( m_container.begin() + static_cast<long>(_pos.m_row), m_container.end(),
 		std::bind( [] ( 
 				const std::string & _currentString
 			,	const std::string & _searchText
@@ -59,7 +61,7 @@ Finder::find_base(
 const position &
 Finder::find( const std::string & _str )
 {
-	auto & maxPos = maxPosition();
+	const auto & maxPos = maxPosition();
 
 	return find_base(_str) != maxPos
 		?	m_findText.lastPosition() 
@@ -70,9 +72,9 @@ Finder::find( const std::string & _str )
 /*---------------------------------------------------------------------------*/
 
 const position & 
-Finder::findNext( bool _isReplace )
+Finder::findNext(const bool _isReplace )
 {
-	auto length{ _isReplace ? 0 : m_findText.searchString().length() };
+	const auto length{ _isReplace ? 0 : m_findText.searchString().length() };
 
 	return find_base( 
 				m_findText.searchString() 

@@ -1,8 +1,6 @@
-#ifndef UTILS_HPP
-#define UTILS_HPP
+#pragma once
 
 #include<string>
-#include"position.hpp"
 
 /*---------------------------------------------------------------------------*/
 
@@ -15,11 +13,9 @@ public:
 
 /*---------------------------------------------------------------------------*/
 
-	static void  checkEmptyString(		const std::string _str
+	static void checkEmptyString(		const std::string& _str
 									,	const std::string& _exceptionString );
 
 /*---------------------------------------------------------------------------*/
 
 }; // class Utils
-
-#endif // !UTILS_HPP

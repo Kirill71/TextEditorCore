@@ -1,5 +1,6 @@
-#ifndef POSITION_HPP
-#define POSITION_HPP
+#pragma once
+
+#include <iostream>
 
 /*---------------------------------------------------------------------------*/
 
@@ -16,7 +17,7 @@ public:
 	{
 	}
 
-	position( size_t _row, size_t _col ) 
+	position(const size_t _row, const size_t _col )
 		:	m_row{ validate( _row ) }
 		,	m_col{ validate( _col ) } 
 	{
@@ -53,16 +54,16 @@ public:
 
 
 	bool
-	operator>= ( const position& _rhs ) const  noexcept 
+	operator >= ( const position& _rhs ) const  noexcept
 	{
-		return  !( *this <= _rhs );
+		return !( *this <= _rhs );
 	}
 
 /*---------------------------------------------------------------------------*/
 
 
 	bool 
-	operator< ( const position& _rhs ) const  noexcept 
+	operator < ( const position& _rhs ) const  noexcept
 	{
 		return ( this->m_row < _rhs.m_row );
 	}
@@ -70,16 +71,16 @@ public:
 /*---------------------------------------------------------------------------*/
 
 	bool 
-	operator>( const position& _rhs ) const  noexcept
+	operator > ( const position& _rhs ) const  noexcept
 	{
-		return  !( *this < _rhs );
+		return !( *this < _rhs );
 	}
 
 /*---------------------------------------------------------------------------*/
 
 
 	int 
-	operator- ( const position& _rhs ) const noexcept
+	operator - ( const position& _rhs ) const noexcept
 	{
 		return static_cast< int >( this->m_row - _rhs.m_row );
 	}
@@ -105,10 +106,9 @@ private:
 /*---------------------------------------------------------------------------*/
 
 
-	unsigned 
-	validate( unsigned _param ) const noexcept 
+	size_t validate(const size_t _param ) const noexcept
 	{
-		return _param >= 0 
+		return _param > 0
 			?	_param 
 			:	0;
 	}
@@ -116,5 +116,3 @@ private:
 /*---------------------------------------------------------------------------*/
 
 }; // position
-
-#endif

@@ -1,19 +1,20 @@
-#include"texteditorcore.hpp"
+#include "texteditorcore.hpp"
 #include<fstream>
 #include<iostream>
+
+#include "position.hpp"
 
 
 /*---------------------------------------------------------------------------*/
 
 
 void 
-inserter( TextEditorCore& _t, const position& _from,  std::string& _text) {
-	static unsigned counter{};
+inserter( TextEditorCore& _t, const position& _from,  const std::string& _text) {
+	static size_t counter{};
 	++counter;
 	std::cout << "Test #" << counter << std::endl;
 	_t.setCursor( _from );
 	_t.insert( _text );
-	std::cout << _t;
 	std::cout << _t.getCursorPosition();
 	std::cout << " ==========================================================" << std::endl;
 
@@ -24,13 +25,12 @@ inserter( TextEditorCore& _t, const position& _from,  std::string& _text) {
 
 
 void 
-deleter(TextEditorCore& _t, const position& _from, const position& to ) {
-	static unsigned counter{};
+deleter(TextEditorCore& _t, const position& _from, const position& _to ) {
+	static size_t counter{1};
 	++counter;
 	std::cout << "Test #" << counter << std::endl;
-	_t.setCursor( _from ).startSelection().setCursor( 2,1 );
+	_t.setCursor( _from ).startSelection().setCursor( _to );
 	_t.removeSelectedText();
-	std::cout << _t;
 	std::cout << _t.getCursorPosition();
 	std::cout << " ==========================================================" << std::endl;
 
@@ -38,3 +38,10 @@ deleter(TextEditorCore& _t, const position& _from, const position& to ) {
 
 
 /*---------------------------------------------------------------------------*/
+
+int main() {
+	TextEditorCore t;
+	const std::string text = "Just some text";
+	inserter( t, t.getCursorPosition(), text);
+	deleter( t, {0,0}, {2,1} );
+}

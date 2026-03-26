@@ -28,7 +28,7 @@ Cursor::addLastRowFromMultilineSelection( std::string& _selectedText ) noexcept
 void
 Cursor::addSingleRow( std::string& _selectedText ) noexcept
 {
-	auto countCharacters { m_selectedText.to().m_col - m_selectedText.from().m_col };
+	const auto countCharacters { m_selectedText.to().m_col - m_selectedText.from().m_col };
 	_selectedText
 		.assign( m_container[ m_selectedText.from().m_row ]
 			.substr( m_selectedText.from().m_col, countCharacters ) );
@@ -38,9 +38,9 @@ Cursor::addSingleRow( std::string& _selectedText ) noexcept
 /*---------------------------------------------------------------------------*/
 
 void
-Cursor::addFirstRowFromMiltilineSelection( std::string& _selectedText ) noexcept
+Cursor::addFirstRowFromMultilineSelection( std::string& _selectedText ) noexcept
 {
-	auto countCharacters{ m_container[m_selectedText.from().m_row].length() - m_selectedText.from().m_col };
+	const auto countCharacters{ m_container[m_selectedText.from().m_row].length() - m_selectedText.from().m_col };
 	_selectedText
 		.append( m_container[ m_selectedText.from().m_row ]
 			.substr( m_selectedText.from().m_col, countCharacters )
@@ -67,14 +67,14 @@ Cursor::multilineRowSelection( std::string& _selectedText ) noexcept
 
 /*---------------------------------------------------------------------------*/
 
-Cursor::Cursor( const MyContainer& _container )
+Cursor::Cursor( const TextEditorCoreBase& _container )
 	:	Cursor( constants::LINE_BEGIN, constants::LINE_BEGIN, _container )
 {
 } // Cursor::Cursor() 
 
 /*---------------------------------------------------------------------------*/
 
-Cursor::Cursor( unsigned _row, unsigned _col, const MyContainer& _container ) 
+Cursor::Cursor(const size_t _row, const size_t _col, const TextEditorCoreBase& _container )
 	:	m_cursor{ _row, _col }
 	,	m_currentMode{ mode::Edit }
 	,	m_selectedText{}
@@ -150,7 +150,7 @@ Cursor::cursorUp()
 /*---------------------------------------------------------------------------*/
 
 void
-Cursor::setCursor( unsigned _row, unsigned _col ) 
+Cursor::setCursor(const size_t _row, const size_t _col )
 {
 	setCursor( position( _row, _col) );
 
@@ -159,19 +159,18 @@ Cursor::setCursor( unsigned _row, unsigned _col )
 /*---------------------------------------------------------------------------*/
 
 void
-Cursor::setCursor( const position& pos )
+Cursor::setCursor(const position& _pos )
 {
 	auto& cursor{ getPositionObject() };
-	/* check current row lenght*/
-	if (pos <= maxPosition() && pos.m_col <= currentRowMaxCol( pos.m_row ) )
+	/* check current row length*/
+	if (_pos <= maxPosition() && _pos.m_col <= currentRowMaxCol( _pos.m_row ) )
 	{
-		cursor = pos;
+		cursor = _pos;
 	}
 	else
 	{
 		throw std::logic_error( errorMessage::INVALID_POSITION );
 	}
-
 } // Cursor::setCursor
 
 /*---------------------------------------------------------------------------*/
@@ -180,7 +179,7 @@ void
 Cursor::startSelection() noexcept
 {
 	m_currentMode = mode::Select;
-	// selection begin == selection end and equils current cursor position;
+	// selection begin == selection end and equals current cursor position;
 	m_selectedText.from() = m_selectedText.to() = m_cursor;
 
 } // Cursor::startSelection
@@ -243,13 +242,13 @@ Cursor::getSelectedText() noexcept
 	// if from == to return.
 	if ( !( m_selectedText.from() == m_selectedText.to() ) )
 	{
-		if ( ( m_selectedText.from().m_row == m_selectedText.to().m_row ) ) 
+		if ( m_selectedText.from().m_row == m_selectedText.to().m_row )
 		{
 			addSingleRow( selectedText );
 		}
 		else 
 		{
-			addFirstRowFromMiltilineSelection( selectedText );
+			addFirstRowFromMultilineSelection( selectedText );
 			if ( (m_selectedText.to() - m_selectedText.from()) > 1 )
 			{
 				multilineRowSelection( selectedText );

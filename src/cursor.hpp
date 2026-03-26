@@ -1,12 +1,10 @@
-#ifndef CURSOR_HPP
-#define CURSOR_HPP
+#pragma once
 
 #include<utility>
 #include<string>
 #include<algorithm>
-#include<functional>
-#include"position.hpp"
-#include"message.hpp"
+#include "position.hpp"
+#include "message.hpp"
 
 /*---------------------------------------------------------------------------*/
 
@@ -22,9 +20,9 @@ public:
 
 /*---------------------------------------------------------------------------*/
 
-	explicit Cursor( const MyContainer& _container );
+	explicit Cursor( const TextEditorCoreBase& _container );
 
-	Cursor( unsigned _row, unsigned _col, const MyContainer& _container );
+	Cursor( size_t _row, size_t _col, const TextEditorCoreBase& _container );
 
 	Cursor( const Cursor& _csr ) = delete;
 
@@ -49,14 +47,17 @@ public:
 
 	position maxPosition() const noexcept
 	{
-		return position( m_container.size() - 1, m_container.back().length() );
+		return { m_container.size() - 1, m_container.back().length() };
 	}
 
 /*---------------------------------------------------------------------------*/
 
 
-	unsigned currentRowMaxCol( unsigned _row  ) const noexcept 
+	size_t currentRowMaxCol(const size_t _row ) const noexcept
 	{
+		if (_row >= m_container.size()) {
+			return 0;
+		}
 		return m_container.at( _row ).length();
 	}
 
@@ -70,7 +71,7 @@ public:
 
 	void cursorUp();
 
-	void setCursor( unsigned _row , unsigned _col );
+	void setCursor( size_t _row , size_t _col );
 
 	void setCursor( const position& _pos );
 
@@ -103,7 +104,7 @@ private:
 
 	void addSingleRow( std::string& _selectedText ) noexcept;
 
-	void addFirstRowFromMiltilineSelection( std::string& _selectedText ) noexcept;
+	void addFirstRowFromMultilineSelection( std::string& _selectedText ) noexcept;
 
 	void multilineRowSelection( std::string& _selectedText ) noexcept;
 
@@ -140,7 +141,7 @@ private:
 	/*---------------------------------------------------------------------------*/
 
 		selectedText() 
-			: m_selection {} {};
+			: m_selection {} {}
 
 	/*---------------------------------------------------------------------------*/
 
@@ -164,10 +165,8 @@ private:
 
 	m_selectedText;
 
-	const MyContainer& m_container;
+	const TextEditorCoreBase& m_container;
 
 /*---------------------------------------------------------------------------*/
 
 }; // class Cursor
-
-#endif // !CURSOR_HPP

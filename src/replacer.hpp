@@ -1,6 +1,5 @@
-#ifndef REPLACER_HPP
-#define REPLACER_HPP
-#include"finder.hpp"
+#pragma once
+#include "finder.hpp"
 
 /*---------------------------------------------------------------------------*/
 
@@ -16,7 +15,7 @@ private:
 
 	bool m_isSuccessfully;
 
-	void replaceInContainer( const position& _currentPos, const std::string _newStr );
+	void replaceInContainer( const position& _currentPos, const std::string& _newStr );
 
 /*---------------------------------------------------------------------------*/
 
@@ -24,7 +23,7 @@ public:
 
 /*---------------------------------------------------------------------------*/
 
-	explicit Replacer( const MyContainer& _container );
+	explicit Replacer( const TextEditorCoreBase& _container );
 
 	Replacer( const Replacer& _rhs ) = delete;
 
@@ -34,14 +33,12 @@ public:
 
 	Replacer& operator= ( Replacer&& ) = delete;
 
-	~Replacer() = default;
+	~Replacer() override = default;
 
 	bool replace( const std::string & _oldStr, const std::string & _newStr );
 
-	bool replaceAll( const std::string& oldStr, const std::string& newStr );
+	bool replaceAll( const std::string& _oldStr, const std::string& _newStr );
 
 /*---------------------------------------------------------------------------*/
 
 }; // class Replacer
-
-#endif // !REPLACER_HPP

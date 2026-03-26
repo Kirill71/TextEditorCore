@@ -1,14 +1,15 @@
 #include "replacer.hpp"
+#include "utils.hpp"
 
 /*---------------------------------------------------------------------------*/
 
 
 void
-Replacer::replaceInContainer( const position & current_pos,	const std::string new_str )
+Replacer::replaceInContainer( const position & _currentPos,	const std::string& new_str )
 {
-	const_cast< MyContainer& >( m_container )[ current_pos.m_row ]
+	const_cast< TextEditorCoreBase& >( m_container )[ _currentPos.m_row ]
 		.replace(
-				current_pos.m_col
+				_currentPos.m_col
 			,	m_findText.searchString().length()
 			,	new_str );
 
@@ -20,8 +21,9 @@ Replacer::replaceInContainer( const position & current_pos,	const std::string ne
 /*---------------------------------------------------------------------------*/
 
 
-Replacer::Replacer( const MyContainer & _container )
+Replacer::Replacer( const TextEditorCoreBase & _container )
 	: Finder( _container )
+	, m_isSuccessfully{false}
 {
 } // Replacer::Replacer
 
@@ -36,7 +38,7 @@ Replacer::replace( const std::string & _oldStr , const std::string & _newStr )
 	Utils::checkEmptyString( _oldStr, errorMessage::EMPTY_REPLACE_STRING );
 
 	auto & current_pos = find_base( _oldStr);
-	if ( current_pos !=  maxPosition() )
+	if ( current_pos != maxPosition() )
 		replaceInContainer( current_pos, _newStr );
 
 	return m_isSuccessfully;
@@ -53,9 +55,7 @@ Replacer::replaceAll( const std::string & _oldStr, const std::string & _newStr )
 	if ( replace( _oldStr, _newStr ) ) 
 	{
 		position current_pos{};
-		auto & maxPos{ maxPosition() };
-		// подумать про предидущую позицию с учетом замены.
-		while ( ( current_pos = findNext( true ) ) != maxPos )
+		while ( ( current_pos = findNext( true ) ) != maxPosition() )
 			replaceInContainer( current_pos,  _newStr );
 	}
 	return m_isSuccessfully;
