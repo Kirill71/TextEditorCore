@@ -14,14 +14,12 @@ endif()
 
 add_subdirectory(src)
 
+add_executable(${PROJECT_NAME})
+target_sources(${PROJECT_NAME} PRIVATE main.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE TextEditorCoreLib)
+
 if (BUILD_TESTING)
     message(STATUS "Testing is enabled")
     enable_testing()
     add_subdirectory(tests)
 endif ()
-
-add_executable(${PROJECT_NAME})
-
-target_sources(${PROJECT_NAME} PRIVATE main.cpp)
-
-target_link_libraries(${PROJECT_NAME} PRIVATE TextEditorCoreLib)
