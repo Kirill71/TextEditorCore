@@ -1,19 +1,19 @@
-project(TextEditorCoreLib)
+set(TARGET_NAME TextEditorCoreLib)
 
-add_library(${PROJECT_NAME} SHARED)
+add_library(${TARGET_NAME} SHARED)
 target_include_directories(
-        ${PROJECT_NAME}
+        ${TARGET_NAME}
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 if(ENABLE_COVERAGE)
-    target_compile_options(${PROJECT_NAME} PRIVATE -O0 -g --coverage)
-    target_link_options(${PROJECT_NAME} PRIVATE --coverage)
+    target_compile_options(${TARGET_NAME} PRIVATE -O0 -g --coverage)
+    target_link_options(${TARGET_NAME} PRIVATE --coverage)
 endif()
 
 target_sources(
-        ${PROJECT_NAME}
+        ${TARGET_NAME}
         PRIVATE
             cursor.cpp
             finder.cpp

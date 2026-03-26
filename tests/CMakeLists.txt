@@ -1,4 +1,4 @@
-project(TextEditorCoreTests)
+set(TARGET_NAME TextEditorCoreTests)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -12,11 +12,11 @@ endif()
 
 FetchContent_MakeAvailable(googletest)
 
-add_executable(${PROJECT_NAME})
+add_executable(${TARGET_NAME})
 
-target_sources(${PROJECT_NAME} PRIVATE tests.cpp)
+target_sources(${TARGET_NAME} PRIVATE tests.cpp)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE
+target_link_libraries(${TARGET_NAME} PRIVATE
         TextEditorCoreLib
         GTest::gtest_main
 )
@@ -38,7 +38,7 @@ if(ENABLE_COVERAGE)
 endif()
 
 include(GoogleTest)
-gtest_discover_tests(${PROJECT_NAME})
+gtest_discover_tests(${TARGET_NAME})
 
 set(TEST_FILES
     test.txt
@@ -47,9 +47,9 @@ set(TEST_FILES
 )
 
 foreach(file ${TEST_FILES})
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
             ${CMAKE_CURRENT_SOURCE_DIR}/${file}
-            $<TARGET_FILE_DIR:${PROJECT_NAME}>
+            $<TARGET_FILE_DIR:${TARGET_NAME}>
     )
 endforeach()
