@@ -7,6 +7,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(BUILD_TESTING "Enable tests" ON)
 option(ENABLE_COVERAGE "Enable coverage reporting" ON)
 
+if (MSVC)
+    MESSAGE(STATUS "Test coverage is not supported on the Windows platform")
+    set(ENABLE_COVERAGE OFF)
+endif()
+
 add_subdirectory(src)
 
 if (BUILD_TESTING)
