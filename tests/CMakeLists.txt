@@ -42,10 +42,16 @@ endif()
 
 include(GoogleTest)
 
-# specify work dir directly in order to find test files.
-gtest_discover_tests(${TARGET_NAME} WORKING_DIRECTORY ${TEST_WORK_DIR}/bin)
+if (WIN32 AND MSVC)
+    #MSVC supports multi-conf generator so we need to specify conf. type.
+    set(TEST_WORK_DIR ${TEST_WORK_DIR}/bin/${CMAKE_BUILD_TYPE})
+else()
+    set(TEST_WORK_DIR ${TEST_WORK_DIR}/bin)
+endif()
 
-MESSAGE(STATUS ${TEST_WORK_DIR}/bin)
+MESSAGE(STATUS ${TEST_WORK_DIR})
+# specify work dir directly in order to find test files.
+gtest_discover_tests(${TARGET_NAME} WORKING_DIRECTORY ${TEST_WORK_DIR})
 
 
 set(TEST_FILES
@@ -54,9 +60,6 @@ set(TEST_FILES
     empty.txt
 )
 
-add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E echo "Build-time: ${TARGET_NAME} executable directory = $<TARGET_FILE_DIR:${TARGET_NAME}>"
-)
 foreach(file ${TEST_FILES})
     add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
