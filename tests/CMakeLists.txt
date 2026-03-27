@@ -43,7 +43,7 @@ endif()
 include(GoogleTest)
 
 # specify work dir directly in order to find test files.
-gtest_discover_tests(${TARGET_NAME} WORKING_DIRECTORY ${TEST_WORK_DIR})
+gtest_discover_tests(${TARGET_NAME} WORKING_DIRECTORY ${TEST_WORK_DIR}/bin)
 
 set(TEST_FILES
     test.txt
