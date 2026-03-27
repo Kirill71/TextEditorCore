@@ -43,13 +43,12 @@ endif()
 include(GoogleTest)
 
 if (WIN32 AND MSVC)
-    #MSVC supports multi-conf generator so we need to specify conf. type.
+    #MSVC supports multi-conf generator so we need to specify conf. type. trick for Github CI
     set(TEST_WORK_DIR ${TEST_WORK_DIR}/bin/${CMAKE_BUILD_TYPE})
 else()
     set(TEST_WORK_DIR ${TEST_WORK_DIR}/bin)
 endif()
 
-MESSAGE(STATUS ${TEST_WORK_DIR})
 # specify work dir directly in order to find test files.
 gtest_discover_tests(${TARGET_NAME} WORKING_DIRECTORY ${TEST_WORK_DIR})
 
