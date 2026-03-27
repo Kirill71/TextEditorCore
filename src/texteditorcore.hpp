@@ -3,11 +3,13 @@
 #include "message.hpp"
 #include "cursor.hpp"
 #include "replacer.hpp"
+#include "export.hpp"
+
 #include<memory>
 
 /*---------------------------------------------------------------------------*/
 
-class TextEditorCore final
+class API TextEditorCore final
 {
 
 /*---------------------------------------------------------------------------*/
@@ -137,9 +139,9 @@ private:
 
 /*---------------------------------------------------------------------------*/
 
-	friend std::ostream& operator<< ( std::ostream& _lhs, const TextEditorCore& _rhs ) noexcept;
+	API friend std::ostream& operator<< ( std::ostream& _lhs, const TextEditorCore& _rhs ) noexcept;
 
-	friend std::istream& operator>> ( std::istream& _lhs, TextEditorCore& _rhs ) noexcept;
+	API friend std::istream& operator>> ( std::istream& _lhs, TextEditorCore& _rhs ) noexcept;
 
 /*---------------------------------------------------------------------------*/
 

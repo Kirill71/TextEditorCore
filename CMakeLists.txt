@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(BUILD_TESTING "Enable tests" ON)
 option(ENABLE_COVERAGE "Enable coverage reporting" ON)
 
-if (MSVC)
+if (WIN32)
     MESSAGE(STATUS "Test coverage is not supported on the Windows platform")
     set(ENABLE_COVERAGE OFF)
 endif()
@@ -15,6 +15,8 @@ endif()
 add_subdirectory(src)
 
 add_executable(${PROJECT_NAME})
+# test, lib, exe in one place
+set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 target_sources(${PROJECT_NAME} PRIVATE main.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE TextEditorCoreLib)
 

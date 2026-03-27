@@ -1,11 +1,11 @@
 set(TARGET_NAME TextEditorCoreLib)
 
 add_library(${TARGET_NAME} SHARED)
-target_include_directories(
-        ${TARGET_NAME}
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
-)
+
+target_compile_definitions(${TARGET_NAME} PRIVATE TEXTEDITORCORELIB_EXPORTS)
+
+# test, lib, exe in one place
+set_target_properties(${TARGET_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 if(ENABLE_COVERAGE)
     target_compile_options(${TARGET_NAME} PRIVATE -O0 -g --coverage)
@@ -25,6 +25,7 @@ target_sources(
             customiterator.hpp
             replacer.hpp
             utils.hpp
+            export.hpp
         PUBLIC
         FILE_SET HEADERS FILES
             texteditorcore.hpp

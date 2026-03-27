@@ -6,7 +6,7 @@ FetchContent_Declare(
         URL https://github.com/google/googletest/archive/52eb8108c5bdec04579160ae17225d66034bd723.zip
 )
 
-if(MSVC)
+if(WIN32)
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 endif()
 
@@ -15,6 +15,9 @@ FetchContent_MakeAvailable(googletest)
 add_executable(${TARGET_NAME})
 
 target_sources(${TARGET_NAME} PRIVATE tests.cpp)
+
+# test, lib, exe in one place
+set_target_properties(${TARGET_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 target_link_libraries(${TARGET_NAME} PRIVATE
         TextEditorCoreLib
@@ -38,7 +41,9 @@ if(ENABLE_COVERAGE)
 endif()
 
 include(GoogleTest)
-gtest_discover_tests(${TARGET_NAME})
+
+# specify work dir directly in order to find test files.
+gtest_discover_tests(${TARGET_NAME} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(TEST_FILES
     test.txt

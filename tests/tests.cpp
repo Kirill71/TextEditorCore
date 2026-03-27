@@ -354,16 +354,15 @@ TEST( TextEditorCoreSuit, find ) {
 /*---------------------------------------------------------------------------*/
 
 
-TEST( TextEditorCoreSuit, replace )
-{
-	std::ifstream stream("test.txt");
-	TextEditorCore t1{stream};
+TEST( TextEditorCoreSuit, replace ) {
+	std::ifstream stream{ "test.txt" };
+	TextEditorCore t1{ stream };
 
-	t1.replaceAll("0123456789", "*");
-	t1.replaceAll("01234", "");
-	t1.replaceAll("012", "");
-	t1.replaceAll("01", "");
-	t1.replaceAll("*", "");
+	t1.replaceAll( "0123456789", "*" );
+	t1.replaceAll( "01234", "" );
+	t1.replaceAll( "012", "" );
+	t1.replaceAll( "01", "" );
+	t1.replaceAll( "*", "" );
 
 	EXPECT_FALSE( t1.replace("0","") );
 	std::string str = t1.ctrlHomeKeyPressed().startSelection().ctrlEndKeyPressed().finishSelection(). getSelectedText();
