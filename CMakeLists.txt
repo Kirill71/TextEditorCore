@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(BUILD_TESTING "Enable tests" ON)
 option(ENABLE_COVERAGE "Enable coverage reporting" ON)
+set (TEST_WORK_DIR ${CMAKE_BINARY_DIR}/bin CACHE STRING "Working directory for tests" FORCE)
 
 if (WIN32)
     MESSAGE(STATUS "Test coverage is not supported on the Windows platform")
