@@ -45,12 +45,18 @@ include(GoogleTest)
 # specify work dir directly in order to find test files.
 gtest_discover_tests(${TARGET_NAME} WORKING_DIRECTORY ${TEST_WORK_DIR}/bin)
 
+MESSAGE(STATUS ${TEST_WORK_DIR}/bin)
+
+
 set(TEST_FILES
     test.txt
     file.txt
     empty.txt
 )
 
+add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E echo "Build-time: ${TARGET_NAME} executable directory = $<TARGET_FILE_DIR:${TARGET_NAME}>"
+)
 foreach(file ${TEST_FILES})
     add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
