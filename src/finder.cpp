@@ -61,11 +61,10 @@ Finder::find_base(
 const position &
 Finder::find( const std::string & _str )
 {
-	const auto & maxPos = maxPosition();
-
-	return find_base(_str) != maxPos
-		?	m_findText.lastPosition() 
-		:	maxPos;
+	// find_base() stores maxPosition() into lastPosition() when nothing is
+	// found, so returning the reference it yields is correct in both cases.
+	// Returning a reference to a local maxPosition() copy here would dangle.
+	return find_base( _str );
 
 } // Finder::find
 
