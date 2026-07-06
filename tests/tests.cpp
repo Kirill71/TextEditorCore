@@ -60,6 +60,7 @@ TEST( TextEditorCoreSuit, istreamConstructor )
 {
 
 	std::ifstream stream{"test.txt"};
+
 	TextEditorCore t1{ stream };
 	EXPECT_TRUE( t1.getCursorPosition() == position{} );//initial position is  0,0
 
@@ -369,6 +370,162 @@ TEST( TextEditorCoreSuit, replace ) {
 	EXPECT_TRUE( str == "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" );
 
 } // replace
+
+
+/*---------------------------------------------------------------------------*/
+
+
+TEST( TextEditorCoreSuit, replaceNotFound ) {
+	std::ifstream stream("test.txt");
+	TextEditorCore t1(stream);
+
+	EXPECT_FALSE( t1.replace("NoSuchTextHere", "x") );
+	EXPECT_FALSE( t1.replaceAll("NoSuchTextHere", "x") );
+
+} // replaceNotFound
+
+
+/*---------------------------------------------------------------------------*/
+
+
+TEST( TextEditorCoreSuit, findNotFoundReturnsMaxPosition ) {
+	std::ifstream stream("test.txt");
+	TextEditorCore t1(stream);
+
+	const position result = t1.find("NoSuchTextHere");
+	EXPECT_TRUE( result == t1.maxPosition() );
+
+	const position nextResult = t1.findNext();
+	EXPECT_TRUE( nextResult == t1.maxPosition() );
+
+} // findNotFoundReturnsMaxPosition
+
+
+/*---------------------------------------------------------------------------*/
+
+
+TEST( TextEditorCoreSuit, emptyFileConstructor ) {
+	std::ifstream stream{ "empty.txt" };
+	TextEditorCore t1{ stream };
+
+	EXPECT_TRUE( t1.getCursorPosition() == position{} );
+	EXPECT_TRUE( t1.maxPosition() == position{} );
+
+	std::ostringstream out;
+	out << t1;
+	EXPECT_TRUE( out.str() == "\n" );
+
+} // emptyFileConstructor
+
+
+/*---------------------------------------------------------------------------*/
+
+
+TEST( TextEditorCoreSuit, insertAtDocumentEnd ) {
+	std::ifstream stream("test.txt");
+	TextEditorCore t1{ stream };
+
+	t1.ctrlEndKeyPressed();
+	EXPECT_TRUE( t1.getCursorPosition() == position(18, 30) );
+
+	t1.insert( std::string{ "END" } );
+	EXPECT_TRUE( t1.getCursorPosition() == position(18, 33) );
+
+	const std::string lastRow = t1.homeKeyPressed()
+		.startSelection()
+		.endKeyPressed()
+		.finishSelection()
+		.getSelectedText();
+
+	EXPECT_TRUE( lastRow == "012345678901234567890123456789END" );
+
+} // insertAtDocumentEnd
+
+
+/*---------------------------------------------------------------------------*/
+
+
+TEST( TextEditorCoreSuit, deleteMultipleFullRows ) {
+	std::ifstream stream("test.txt");
+	TextEditorCore t1{ stream };
+
+	// select from row 2 through row 5, spanning two full rows(3,4) in between
+	t1.setCursor(position(2, 0))
+		.startSelection()
+		.setCursor(position(5, 0))
+		.finishSelection()
+		.removeSelectedText();
+
+	EXPECT_TRUE( t1.getCursorPosition() == position(2, 0) );
+
+	const std::string remainingRow = t1.startSelection()
+		.endKeyPressed()
+		.finishSelection()
+		.getSelectedText();
+
+	EXPECT_TRUE( remainingRow == "012345678901234567890123456789" );
+
+} // deleteMultipleFullRows
+
+
+/*---------------------------------------------------------------------------*/
+
+
+TEST( TextEditorCoreSuit, continueSelection ) {
+	TextEditorCore t1{};
+
+	t1.startSelection()
+		.cursorRight()
+		.finishSelection();
+
+	EXPECT_TRUE( t1.getCursorPosition() == position(0, 1) );
+
+	t1.continueSelection(); // cursor is at selection end and mode is Edit, so this is allowed
+	t1.cursorRight();
+	t1.finishSelection();
+
+	const std::string selectedText = t1.getSelectedText();
+	EXPECT_TRUE( selectedText == " \n" );
+
+	t1.setCursor( position( 5, 0 ) ); // moves cursor away from the selection end
+
+	try {
+		t1.continueSelection();
+		FAIL() << "expected BAD_CONTINUE_SELECTION to be thrown";
+	}
+	catch ( std::logic_error& err ) {
+		EXPECT_TRUE( errorMessage::BAD_CONTINUE_SELECTION == err.what() );
+	}
+
+} // continueSelection
+
+
+/*---------------------------------------------------------------------------*/
+
+
+TEST( PositionSuit, comparisonOperators ) {
+	const position p1{ 1, 5 };
+	const position p2{ 1, 50 };
+	const position p3{ 2, 0 };
+
+	EXPECT_TRUE( p1 == position( 1, 5 ) );
+	EXPECT_TRUE( p1 != p2 );
+
+	// all relational operators only compare m_row; m_col is ignored
+	EXPECT_TRUE( p1 <= p2 );
+	EXPECT_TRUE( p1 < p3 );
+	EXPECT_FALSE( p3 < p1 );
+
+	// operator> and operator>= are defined as negations of operator< and operator<=,
+	// so for equal rows operator> reports true while operator>= reports false
+	EXPECT_TRUE( p1 > p2 );
+	EXPECT_FALSE( p1 >= p2 );
+	EXPECT_TRUE( p3 >= p1 );
+
+	EXPECT_TRUE( p3 - p1 == 1 );
+	EXPECT_TRUE( p1 - p3 == -1 );
+
+} // comparisonOperators
 
 
 /*---------------------------------------------------------------------------*/
